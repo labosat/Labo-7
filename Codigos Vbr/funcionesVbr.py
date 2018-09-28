@@ -133,160 +133,123 @@ def Smooth(V, V_err, I, I_err, degree):
             I_err_temp.append(I_err[i])
     return V, V_err, I, I_err
 
-def SourceError(A, source, scale):
+
+
+def error_I(I, source = False):
+    temp = []
     percentage = 0
     offset = 0
-    if source == 'I':
-        if scale == "10uA":
-            percentage = 0.00033;
-            offset = 2*pow(10, -9);
-        elif scale == "100uA":
-            percentage = 0.00031;
-            offset = 20*pow(10, -9);
-        else:
-            print(scale + " is not a valid range.") 
-        
-    elif source == 'V':
-        if scale == "2V":
-            percentage = 0.0002;
-            offset = 600*pow(10, -6);
-        elif scale == "20V":
-            percentage = 0.0002;
-            offset = 2.4*pow(10, -3);
-        elif scale == "200V":
-            percentage = 0.0002;
-            offset = 50*pow(10, -3);
-        else:
-            print(scale + " is not a valid range.") 
+    if source == True:
+        for i in range(0, len(I)):
+            if I[i] < 100*pow(10, -9):
+                percentage = 0.0006
+                offset = 100*pow(10, -12)
+            elif 100*pow(10, -9) < I[i] and I[i] < 1*pow(10, -6):
+                percentage = 0.0003
+                offset = 800*pow(10, -12)    
+            elif 1*pow(10, -6)<I[i] and I[i]<10*pow(10, -6): 
+                percentage = 0.0003
+                offset = 5*pow(10, -9)
+            elif 10*pow(10, -6)<I[i] and I[i]<100*pow(10, -6): 
+                percentage = 0.0003
+                offset = 60*pow(10, -9)
+            elif 100*pow(10, -6)<I[i] and I[i]<1*pow(10, -3): 
+                percentage = 0.0003
+                offset = 300*pow(10, -9)
+            elif 1*pow(10, -3)<I[i] and I[i]<10*pow(10, -3): 
+                percentage = 0.0003
+                offset = 6*pow(10, -6)
+            elif 10*pow(10, -3)<I[i] and I[i]<100*pow(10, -3): 
+                percentage = 0.0003
+                offset = 30*pow(10, -6)                
+            elif 10*pow(10, -3)<I[i] and I[i]<1: 
+                percentage = 0.0005
+                offset = 1.8*pow(10, -3)
+            elif 1<I[i] and I[i] < 1.5: 
+                percentage = 0.0006
+                offset = 4*pow(10, -3)
+            else:
+                percentage = 0.005
+                offset = 40*pow(10, -3)
+            temp.append(I[i]*percentage + offset)
             
+    elif source==False:
+        for i in range(0, len(I)):
+            if I[i] < 100*pow(10, -9):
+                percentage = 0.0006
+                offset = 100*pow(10, -12)
+            elif 100*pow(10, -9) < I[i] and I[i] < 1*pow(10, -6):
+                percentage = 0.00025
+                offset = 500*pow(10, -12)    
+            elif 1*pow(10, -6)<I[i] and I[i]<10*pow(10, -6): 
+                percentage = 0.00025
+                offset = 1.5*pow(10, -9)
+            elif 10*pow(10, -6)<I[i] and I[i]<100*pow(10, -6): 
+                percentage = 0.0002
+                offset = 25*pow(10, -9)
+            elif 100*pow(10, -6)<I[i] and I[i]<1*pow(10, -3): 
+                percentage = 0.0002
+                offset = 200*pow(10, -9)
+            elif 1*pow(10, -3)<I[i] and I[i]<10*pow(10, -3): 
+                percentage = 0.0002
+                offset = 2.5*pow(10, -6)
+            elif 10*pow(10, -3)<I[i] and I[i]<100*pow(10, -3): 
+                percentage = 0.0002
+                offset = 20*pow(10, -6)                
+            elif 10*pow(10, -3)<I[i] and I[i]<1: 
+                percentage = 0.0003
+                offset = 1.5*pow(10, -3)
+            elif 1<I[i] and I[i] < 1.5: 
+                percentage = 0.0005
+                offset = 3.5*pow(10, -3)
+            else:
+                percentage = 0.004
+                offset = 25*pow(10, -3)
+            temp.append(I[i]*percentage + offset)
     else:
-	    print("Source specified not understood") 
-        
-    temp = []
-    for i in range(len(A)):
-        result = A[i]*percentage + offset
-        temp.append(result)
+        print('Boolean values True or False.')
     return temp
 
 
-
-
-def MeasureError(A, measure, scale):
-    percentage = 0
-    offset = 0
-    if measure == 'I':
-        if scale == "100nA":
-            percentage = 0.0006
-            offset = pow(100, -12)
-        elif scale == '1uA':
-            percentage = 0.00025
-            offset = pow(500, -12)    
-        elif scale == '10uA':
-            percentage = 0.00025
-            offset = 1.5*pow(10, -9)
-        elif scale == '100uA':
-            percentage = 0.00025
-            offset = 6*pow(10,-9)
-        elif scale == '10mA':
-            percentage = 0.00035
-            offset = 600*pow(10,-9)
-        elif scale == '100mA':
-            percentage = 0.00055
-            offset = 6*pow(10, -6)
-        else:
-            print(str(scale) + ' is not a valid range.')
-    elif measure == 'V':
-        if scale == '2V':
-            percentage = 0.00012
-            offset = 300*pow(10, -6)
-        elif scale == '20V':
-            percentage = 0.00015
-            offset = 1.5*pow(10,-3)
-        elif scale == '200V':
-            percentage = 0.0002
-            offset = 24*pow(10,-3)
-        else:
-            print(str(scale) + ' is not a valid range.')
-    else:
-        print('Measure specified not understood.')
-    
-    temp = []
-    for i in range(0, len(A)):
-        temp.append(A[i]*percentage + offset)
-    
-    return temp
-
-def MultiRange(I):
+def error_V(V, source = True):
     temp = []
     percentage = 0
     offset = 0
-    
-    for i in range(0, len(I)):
-        if I[i] < 10E-7:
-            percentage = 0.0006
-            offset = pow(100, -12)
-        elif I[i] > 10E-7 and I[i] < 10E-6:
-            percentage = 0.00025
-            offset = pow(500, -12)    
-        else: 
-            percentage = 0.00025
-            offset = 1.5*pow(10, -9)
+    if source == True:
+        for i in range(0, len(V)):
+            if V[i] < 200*pow(10, -3):
+                percentage = 0.0002
+                offset = 375*pow(10, -6)
+            elif 200*pow(10, -3) < I[i] and I[i] < 2:
+                percentage = 0.0002
+                offset = 600*pow(10, -6)    
+            elif 2<I[i] and I[i]<20: 
+                percentage = 0.0002
+                offset = 5*pow(10, -3)
+            else:
+                percentage = 0.002
+                offset = 50*pow(10, -3)
+            temp.append(I[i]*percentage + offset)
             
-        temp.append(I[i]*percentage + offset)
-    return temp
-
+    elif source==False:
+        for i in range(0, len(I)):
+            if I[i] < 200*pow(10, -3):
+                percentage = 0.00015
+                offset = 225*pow(10, -6)
+            elif 200*pow(10, -9) < I[i] and I[i] < 2:
+                percentage = 0.0002
+                offset = 350*pow(10, -6)    
+            elif 2<I[i] and I[i]<20: 
+                percentage = 0.00015
+                offset = 5*pow(10, -3)
+            else:
+                percentage = 0.00015
+                offset = 50*pow(10, -3)
+            temp.append(I[i]*percentage + offset)
+    else:
+        print('Boolean values True or False.')
+    return temp    
 #Determines range of measurements automatically
-def DetermineRange(v, s):
-    ranges_v = []
-    ranges_i = []
-	#in V
-    range_lib_v = [0.2, 2., 20., 200.]
-	#in I
-    range_lib_i = [10**(-7), 10**(-6),  10**(-5), 10**(-4), 0.01, 0.1]
-	
-    for i in range(len(v)):
-        range_v = 0
-        range_i = 0
-        number_v = 1
-        number_i = 1
-        output_range_v = 0
-        output_range_i = 0
-    
-        comparison_v = [(abs(v[i] - range_lib_v[i])/range_lib_v[i]) for i in range(len(range_lib_v))]
-        
-        
-        output_range_v = range_lib_v[comparison_v.index(np.min(comparison_v))]
-
-        comparison_i = [(abs(s[i] - range_lib_i[i])/range_lib_i[i]) for i in range(len(range_lib_i))]
-        output_range_i = range_lib_i[comparison_i.index(np.min(comparison_i))]
-    
-        if (output_range_v == 0.2):
-            range_v = "200mV"
-        elif (output_range_v == 2):
-            range_v = "2V"
-        elif (output_range_v == 20):
-            range_v = "20V"
-        elif output_range_v == 200:
-            range_v = "200V"
-    	
-        if output_range_i == 10**(-7):
-            range_i = "100nA"
-        elif output_range_i == 10**(-6):
-            range_i = "1uA"
-        elif output_range_i == 10**(-5):
-            range_i = "10uA"
-        elif (output_range_i == 10**(-4)):
-            range_i = "100uA"
-        elif (output_range_i == 0.01):
-            range_i = "10mA"
-        elif (output_range_i == 0.1):
-            range_i = "100mA"
-    
-        ranges_v.append(range_v)
-        ranges_i.append(range_i)
-
-    return ranges_v, ranges_i
-
 
 def vbr(M, x):
     a, b = M
