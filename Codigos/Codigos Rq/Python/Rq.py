@@ -5,66 +5,7 @@ import matplotlib.pyplot as plt
 import funcionesR as f
 from funcionesR import Linear
 
-#path = '/home/labosat/Desktop/Finazzi-Ferreira/Labo7/Rq en T con autorange/results/Estacionario 1'
-def R_Rq(path, tolerancia):
-    array = f.pulidor(tolerancia, path)
-    celdas = 18980
-    parameters = 2
-    R = []
-    R_err = []
-    Rq = []
-    Rq_err = []
-    chi2_out = []
-    for i in array:
-        data1 = np.loadtxt(path+'/res/%s (res).txt' % i, skiprows=1)
-        Res = data1[:, 1]   
-        I = data1[:, 2]
-        V = I*Res
-        V_err = V*0.00015 + 225E-6
-        I_err = I*0.0003 + 60E-9
-        Res_err_estadistico = f.dispersion(Res) 
-        Res_err_sistematico = np.sqrt((1/I**2) * V_err**2 + ((V/(I**2))**2)*I_err**2)
-        Res_err = np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico**2)
-        R.append(f.weightedMean(Res, Res_err))
-        R_err.append(f.weightedError(Res, Res_err))
-        data2 = np.loadtxt(path+'/iv/%s (iv).txt' % i)
-        V = data2[:, 0]
-        I = data2[:, 1]
-        #remember range used is 100mA
-        dI = [0.0002*x + 20E-6 for x in I]
-        dV = [0.0002*x + 600E-6 for x in V]
 
-        chi2 = []
-        Rq_err_temp = []
-        m = []
-        for j in range(0, len(V) - 2):
-            if j != 0:
-                V = np.delete(V, 0)
-                I = np.delete(I, 0)
-                dI = np.delete(dI, 0)
-                dV = np.delete(dV, 0)
-            #ndf = len(V) - parameters
-            
-            linear_model = Model(Linear)
-            data = RealData(V, I, sx=dV, sy=dI)
-            odr = ODR(data, linear_model, beta0=[0., 1.])
-            out = odr.run()
-            
-            m_temp = out.beta[0]
-            b_temp = out.beta[1]
-            m_err_temp = out.sd_beta[0]
-            
-            m.append(m_temp)
-            chi2.append(out.res_var)
-            Rq_err_temp.append((celdas/m_temp**2) * m_err_temp)
-        index = f.ClosestToOne(chi2)
-        Rq.append(celdas/m[index])
-        chi2_out.append(chi2[index])
-        Rq_err.append(Rq_err_temp[index])
-    return R, R_err, Rq, chi2_out, array, Rq_err
-
-
-#%%
 numero_grupos = ['0.1', '0.01', '0.001', '0.0001', '0.05', '0.025', '0.075', '1e-5', '1e-6', '1e-7']
 path_grupos = '/home/labosat/Desktop/Finazzi-Ferreira/Wait Time Multiple (rq)'
 Rq_final = []
