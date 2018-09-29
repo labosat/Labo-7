@@ -482,4 +482,4 @@ def ks_iterative(x, y, x_err, y_err, Foward = True):
     b = b_list[index]
     ks_stat = KS_list[index]
     
-    return m_list, b_list, ks_stat, index, KS_list
+    return m, b, ks_stat, index
