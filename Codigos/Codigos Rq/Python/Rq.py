@@ -1,9 +1,11 @@
 from __future__ import division
+import sys
+sys.path.append('./Labo-7/')
 import numpy as np
 from scipy.odr import Model, RealData, ODR
 import matplotlib.pyplot as plt
 import funcionesR as f
-from funcionesR import Linear
+from Funciones import Linear
 
 
 numero_grupos = ['0.1', '0.01', '0.001', '0.0001', '0.05', '0.025', '0.075', '1e-5', '1e-6', '1e-7']

@@ -1,14 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+sys.path.append('./Labo-7/')
 
-path = '/home/labosat/Desktop/Finazzi-Ferreira/Integration times'
+path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Mediciones/Integration Time'
 
 I = []
 V = []
 for i in np.arange(0, 30, 5):
         data = np.loadtxt(path + '/Integration %s/iv/1 (iv).txt' % i, skiprows=1)
-        I.append(data[:, 1])
-        V.append(data[:, 0])
+        I.append(data[:56, 1])
+        V.append(data[:56, 0])
 
     
 f, ([ax1, ax2, ax3], [ax4, ax5, ax6]) = plt.subplots(2, 3)
