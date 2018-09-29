@@ -1,0 +1,13 @@
+Usage example:
+	./rq.exe argv1 argv2
+
+argv1 is name of data file located in ./data
+argv2 is "y" or "n". "y" plots the data after calculations
+
+
+Data format:
+	
+	-Data is assumed to have increasing Voltage
+	-Data can have alternating zeros
+	-Data has to be positive
+	-Data name must be a%b.txt where a is the temperature and b is the uncertainty in the temperature
