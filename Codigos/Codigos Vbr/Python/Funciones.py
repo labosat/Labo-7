@@ -272,6 +272,7 @@ def pulidor(tolerancia, path):
                 filtro.append(i)
         except IOError:
             break
+    return filtro
         
 def ClosestToOne(v):
     """
@@ -445,7 +446,8 @@ def ks_iterative(x, y, x_err, y_err, Foward = True):
     pvalue_list = []
     m_list = []
     b_list = []
-    
+    m_err_list = []
+    b_err_list = []
     if Foward==True:
         for j in range(0, len(x)-3):
             y_temp = y[:len(y)-j]
@@ -461,6 +463,8 @@ def ks_iterative(x, y, x_err, y_err, Foward = True):
             pvalue_list.append(stats.ks_2samp(y_temp, modelo)[1])
             m_list.append(out.beta[0])
             b_list.append(out.beta[1])
+            m_err_list.append(out.sd_beta[0])
+            b_err_list.append(out.sd_beta[1])
     else:
         for j in range(0, len(x)-3):
             y_temp = y[:len(y)-j]
@@ -476,10 +480,13 @@ def ks_iterative(x, y, x_err, y_err, Foward = True):
             pvalue_list.append(stats.ks_2samp(y_temp, modelo)[1])
             m_list.append(out.beta[0])
             b_list.append(out.beta[1])
-    
+            m_err_list.append(out.sd_beta[0])
+            b_err_list.append(out.sd_beta[1])
     index = KS_list.index(min(KS_list))
     m = m_list[index]
     b = b_list[index]
+    m_err = m_err_list[index]
+    b_err = b_err_list[index]
     ks_stat = KS_list[index]
     
-    return m, b, ks_stat, index
+    return m, b, m_err, b_err, ks_stat, index
