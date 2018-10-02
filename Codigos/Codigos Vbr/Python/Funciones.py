@@ -43,8 +43,8 @@ def R_Rq(path, tolerancia):
         V_err = error_V(V, source = False)
         I_err = error_I(I, source = True)
         Res_err_estadistico = f.dispersion(Res) 
-        Res_err_sistematico = np.sqrt((1/I**2) * V_err**2 + ((V/(I**2))**2)*I_err**2)
-        Res_err = np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico**2)
+        Res_err_sistematico = [np.sqrt((1/I[i]**2) * V_err[i]**2 + ((V[i]/(I[i]**2))**2)*I_err[i]**2) for i in range(len(I))]
+        Res_err = [np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico[i]**2) for i in range(len(Res_err_sistematico))]
         R.append(f.weightedMean(Res, Res_err))
         R_err.append(f.weightedError(Res, Res_err))
         data2 = np.loadtxt(path+'/iv/%s (iv).txt' % i)
@@ -205,7 +205,7 @@ def error_V(x, source = True):
                 percentage = 0.0002
                 offset = 5*pow(10, -3)
             else:
-                percentage = 0.002
+                percentage = 0.0002
                 offset = 50*pow(10, -3)
             temp.append(V_temp[i]*percentage + offset)
             
@@ -384,11 +384,11 @@ def weightedMean(measurements, weights):
     .
     .
     """
-    wTotal = 0
+    wTotal = np.mean([1/i**2 for i in weights])
     mwTotal = 0
-    mean = 0
-    for i in range(0, len(weights)):
-        wTotal += 1 / weights[i]**2
+    mean = 0 
+#    for i in range(0, len(weights)):
+#        wTotal += (1 / weights[i]**2)
     for i in range(0, len(measurements)):
         mwTotal += measurements[i]*(1/weights[i]**2)
     mean = mwTotal / wTotal 
@@ -402,10 +402,7 @@ def weightedError(measurements, weights):
     weights = np.asarray(weights)
     for i in range(0, len(weights)):
         wTotal += 1 / weights[i]**2
-    mean = weightedMean(measurements, weights)
-    rangeI = DetermineRange(0, mean)[1]
-    error = MeasureError([mean], 'I', rangeI)
-    return np.sqrt(1/wTotal**2 + (error[0])**2)
+    return (1/wTotal)
 
 def weightedErrorR(measurements, weights):
     """
@@ -490,3 +487,88 @@ def ks_iterative(x, y, x_err, y_err, Foward = True):
     ks_stat = KS_list[index]
     
     return m, b, m_err, b_err, ks_stat, index
+
+def promediador_grupos(path, tolerancia, punto_a_punto = True):
+    """
+    Esta funcion toma una carpeta con mediciones de curvas IV a una dada temperatura,
+    y promedia punto a punto las curvas.
+    Por otro lado, esta la opcion de promediar punto a punto las resistencias medidas
+    o promediar la resistencia promedio de todas las curvas.
+    La funcion se va a encargar de filtrar aquellas mediciones en que la temperatura
+    fluctuo mas que la tolerancia deseada, utilizando al funcion pulidor(). La tolerancia
+    tipica es de 0.025 para mediciones estacionarias en T.
+    El path de la funcion debe ser la carpeta donde se encuentren las carpetas iv y res.
+
+    La funcion asume que la temperatura se midio con una RTD, sourceando corriente y
+    midiendo voltaje.
+    
+    Input:  (path, tolerancia)   [string, float]    
+    
+    Returns: (V_promedio, I_promedio, R_promedio, R_err_promedio)  lists
+    .
+    .
+    """
+    array = f.pulidor(tolerancia, path)
+    R = []
+    R_err = []
+    I = []
+    V = []
+    if punto_a_punto == True:
+        for h in array:
+            data = np.loadtxt(path+'/res/%s (res).txt' % h, skiprows=1)        
+            Res = data[:, 1]   
+            I = data[:, 2]
+            V = I*Res
+            V_err = f.error_V(V, source = False)
+            I_err = f.error_I(I, source = True)
+            Res_err_estadistico = f.dispersion(Res) 
+            Res_err_sistematico = np.sqrt((1/I**2) * V_err**2 + ((V/(I**2))**2)*I_err**2)
+            Res_err = np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico**2)   
+            R.append(list(Res))
+            R_err.append(list(Res_err))
+        R_promedio = []
+        for i in range(len(R[1])):
+            c = 0
+            for j in range(len(R)):
+                c += R[j][i] 
+            R_promedio.append(c/len(R))
+        R_err_promedio = []
+        for i in range(len(R_err[1])):
+            c = 0
+            for j in range(len(R_err)):
+                c += R_err[j][i] 
+            R_err_promedio.append(c/len(R_err))
+    else:
+        for h in array:
+            data = np.loadtxt(path+'/res/%s (res).txt' % h, skiprows=1)
+            Res = data[:, 1]   
+            I = data[:, 2]
+            V = I*Res
+            V_err = f.error_V(V, source = False)
+            I_err = f.error_I(I, source = True)
+            Res_err_estadistico = f.dispersion(Res) 
+            Res_err_sistematico = np.sqrt((1/I**2) * V_err**2 + ((V/(I**2))**2)*I_err**2)
+            Res_err = np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico**2)
+            R.append(f.weightedMean(Res, Res_err))
+            R_err.append(f.weightedError(Res, Res_err))
+            data2 = np.loadtxt(path+'/iv/%s (iv).txt' % h, skiprows=1)
+            V.append(list(data2[:, 0]))
+            I.append(list(data2[:, 1]))
+        R_promedio = f.weightedMean(R, R_err)
+        R_err_promedio = f.weightedError(R, R_err)
+        
+    I_promedio = []
+    for i in range(len(I[1])):
+        c = 0
+        for j in range(len(I)):
+            c += I[j][i] 
+        I_promedio.append(c/len(I))
+        
+    V_promedio = []  
+    for i in range(len(V[1])):
+        c = 0
+        for j in range(len(V)):
+            c += V[j][i]
+        V_promedio.append(c/len(V))
+        
+    return V_promedio, I_promedio, R_promedio, R_err_promedio
