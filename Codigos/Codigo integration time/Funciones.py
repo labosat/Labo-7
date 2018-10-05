@@ -1,5 +1,7 @@
 from __future__ import division
 import numpy as np
+from scipy.odr import Model, RealData, ODR
+import scipy.stats as stats
 
 def R_Rq(path, tolerancia):
     """
@@ -41,8 +43,8 @@ def R_Rq(path, tolerancia):
         V_err = error_V(V, source = False)
         I_err = error_I(I, source = True)
         Res_err_estadistico = f.dispersion(Res) 
-        Res_err_sistematico = np.sqrt((1/I**2) * V_err**2 + ((V/(I**2))**2)*I_err**2)
-        Res_err = np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico**2)
+        Res_err_sistematico = [np.sqrt((1/I[i]**2) * V_err[i]**2 + ((V[i]/(I[i]**2))**2)*I_err[i]**2) for i in range(len(I))]
+        Res_err = [np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico[i]**2) for i in range(len(Res_err_sistematico))]
         R.append(f.weightedMean(Res, Res_err))
         R_err.append(f.weightedError(Res, Res_err))
         data2 = np.loadtxt(path+'/iv/%s (iv).txt' % i)
@@ -79,7 +81,7 @@ def R_Rq(path, tolerancia):
     return R, R_err, Rq, Rq_err, chi2_out, array
 
 
-def error_I(I, source = False):
+def error_I(y, source = False):
     """
     Esta funcion esta diseniada para crear un array con los errores de la corriente 
     medida o sourceada por un Kiethley 2611B, 2612B, 2614B.
@@ -95,82 +97,83 @@ def error_I(I, source = False):
     .
     .
     """
+    I_temp= y
     temp = []
     percentage = 0
     offset = 0
     if source == True:
-        for i in range(0, len(I)):
-            if I[i] < 100*pow(10, -9):
+        for i in range(0, len(I_temp)):
+            if I_temp[i] < 100*pow(10, -9):
                 percentage = 0.0006
                 offset = 100*pow(10, -12)
-            elif 100*pow(10, -9) < I[i] and I[i] < 1*pow(10, -6):
+            elif 100*pow(10, -9) < I_temp[i] and I_temp[i] < 1*pow(10, -6):
                 percentage = 0.0003
                 offset = 800*pow(10, -12)    
-            elif 1*pow(10, -6)<I[i] and I[i]<10*pow(10, -6): 
+            elif 1*pow(10, -6)<I_temp[i] and I_temp[i]<10*pow(10, -6): 
                 percentage = 0.0003
                 offset = 5*pow(10, -9)
-            elif 10*pow(10, -6)<I[i] and I[i]<100*pow(10, -6): 
+            elif 10*pow(10, -6)<I_temp[i] and I_temp[i]<100*pow(10, -6): 
                 percentage = 0.0003
                 offset = 60*pow(10, -9)
-            elif 100*pow(10, -6)<I[i] and I[i]<1*pow(10, -3): 
+            elif 100*pow(10, -6)<I_temp[i] and I_temp[i]<1*pow(10, -3): 
                 percentage = 0.0003
                 offset = 300*pow(10, -9)
-            elif 1*pow(10, -3)<I[i] and I[i]<10*pow(10, -3): 
+            elif 1*pow(10, -3)<I_temp[i] and I_temp[i]<10*pow(10, -3): 
                 percentage = 0.0003
                 offset = 6*pow(10, -6)
-            elif 10*pow(10, -3)<I[i] and I[i]<100*pow(10, -3): 
+            elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<100*pow(10, -3): 
                 percentage = 0.0003
                 offset = 30*pow(10, -6)                
-            elif 10*pow(10, -3)<I[i] and I[i]<1: 
+            elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<1: 
                 percentage = 0.0005
                 offset = 1.8*pow(10, -3)
-            elif 1<I[i] and I[i] < 1.5: 
+            elif 1<I_temp[i] and I_temp[i] < 1.5: 
                 percentage = 0.0006
                 offset = 4*pow(10, -3)
             else:
                 percentage = 0.005
                 offset = 40*pow(10, -3)
-            temp.append(I[i]*percentage + offset)
+            temp.append(I_temp[i]*percentage + offset)
             
     elif source==False:
-        for i in range(0, len(I)):
-            if I[i] < 100*pow(10, -9):
+        for i in range(0, len(I_temp)):
+            if I_temp[i] < 100*pow(10, -9):
                 percentage = 0.0006
                 offset = 100*pow(10, -12)
-            elif 100*pow(10, -9) < I[i] and I[i] < 1*pow(10, -6):
+            elif 100*pow(10, -9) < I_temp[i] and I_temp[i] < 1*pow(10, -6):
                 percentage = 0.00025
                 offset = 500*pow(10, -12)    
-            elif 1*pow(10, -6)<I[i] and I[i]<10*pow(10, -6): 
+            elif 1*pow(10, -6)<I_temp[i] and I_temp[i]<10*pow(10, -6): 
                 percentage = 0.00025
                 offset = 1.5*pow(10, -9)
-            elif 10*pow(10, -6)<I[i] and I[i]<100*pow(10, -6): 
+            elif 10*pow(10, -6)<I_temp[i] and I_temp[i]<100*pow(10, -6): 
                 percentage = 0.0002
                 offset = 25*pow(10, -9)
-            elif 100*pow(10, -6)<I[i] and I[i]<1*pow(10, -3): 
+            elif 100*pow(10, -6)<I_temp[i] and I_temp[i]<1*pow(10, -3): 
                 percentage = 0.0002
                 offset = 200*pow(10, -9)
-            elif 1*pow(10, -3)<I[i] and I[i]<10*pow(10, -3): 
+            elif 1*pow(10, -3)<I_temp[i] and I_temp[i]<10*pow(10, -3): 
                 percentage = 0.0002
                 offset = 2.5*pow(10, -6)
-            elif 10*pow(10, -3)<I[i] and I[i]<100*pow(10, -3): 
+            elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<100*pow(10, -3): 
                 percentage = 0.0002
                 offset = 20*pow(10, -6)                
-            elif 10*pow(10, -3)<I[i] and I[i]<1: 
+            elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<1: 
                 percentage = 0.0003
                 offset = 1.5*pow(10, -3)
-            elif 1<I[i] and I[i] < 1.5: 
+            elif 1<I_temp[i] and I_temp[i] < 1.5: 
                 percentage = 0.0005
                 offset = 3.5*pow(10, -3)
             else:
                 percentage = 0.004
                 offset = 25*pow(10, -3)
-            temp.append(I[i]*percentage + offset)
+            temp.append(I_temp[i]*percentage + offset)
     else:
         print('Boolean values True or False.')
     return temp
 
 
-def error_V(V, source = True):
+def error_V(x, source = True):
     """
     Esta funcion esta diseniada para crear un array con los errores del voltaje 
     medido o sourceado por un Kiethley 2611B, 2612B, 2614B.
@@ -186,40 +189,41 @@ def error_V(V, source = True):
     .
     .
     """
+    V_temp = x
     temp = []
     percentage = 0
     offset = 0
     if source == True:
-        for i in range(0, len(V)):
-            if V[i] < 200*pow(10, -3):
+        for i in range(0, len(V_temp)):
+            if V_temp[i] < 200*pow(10, -3):
                 percentage = 0.0002
                 offset = 375*pow(10, -6)
-            elif 200*pow(10, -3) < I[i] and I[i] < 2:
+            elif 200*pow(10, -3) < V_temp[i] and V_temp[i] < 2:
                 percentage = 0.0002
                 offset = 600*pow(10, -6)    
-            elif 2<I[i] and I[i]<20: 
+            elif 2<V_temp[i] and V_temp[i]<20: 
                 percentage = 0.0002
                 offset = 5*pow(10, -3)
             else:
-                percentage = 0.002
+                percentage = 0.0002
                 offset = 50*pow(10, -3)
-            temp.append(I[i]*percentage + offset)
+            temp.append(V_temp[i]*percentage + offset)
             
     elif source==False:
-        for i in range(0, len(I)):
-            if I[i] < 200*pow(10, -3):
+        for i in range(0, len(V_temp)):
+            if V_temp[i] < 200*pow(10, -3):
                 percentage = 0.00015
                 offset = 225*pow(10, -6)
-            elif 200*pow(10, -9) < I[i] and I[i] < 2:
+            elif 200*pow(10, -3) < V_temp[i] and V_temp[i] < 2:
                 percentage = 0.0002
                 offset = 350*pow(10, -6)    
-            elif 2<I[i] and I[i]<20: 
+            elif 2<V_temp[i] and V_temp[i]<20: 
                 percentage = 0.00015
                 offset = 5*pow(10, -3)
             else:
                 percentage = 0.00015
                 offset = 50*pow(10, -3)
-            temp.append(I[i]*percentage + offset)
+            temp.append(V_temp[i]*percentage + offset)
     else:
         print('Boolean values True or False.')
     return temp    
@@ -268,6 +272,7 @@ def pulidor(tolerancia, path):
                 filtro.append(i)
         except IOError:
             break
+    return filtro
         
 def ClosestToOne(v):
     """
@@ -379,11 +384,11 @@ def weightedMean(measurements, weights):
     .
     .
     """
-    wTotal = 0
+    wTotal = np.mean([1/i**2 for i in weights])
     mwTotal = 0
-    mean = 0
-    for i in range(0, len(weights)):
-        wTotal += 1 / weights[i]**2
+    mean = 0 
+#    for i in range(0, len(weights)):
+#        wTotal += (1 / weights[i]**2)
     for i in range(0, len(measurements)):
         mwTotal += measurements[i]*(1/weights[i]**2)
     mean = mwTotal / wTotal 
@@ -397,10 +402,7 @@ def weightedError(measurements, weights):
     weights = np.asarray(weights)
     for i in range(0, len(weights)):
         wTotal += 1 / weights[i]**2
-    mean = weightedMean(measurements, weights)
-    rangeI = DetermineRange(0, mean)[1]
-    error = MeasureError([mean], 'I', rangeI)
-    return np.sqrt(1/wTotal**2 + (error[0])**2)
+    return (1/wTotal)
 
 def weightedErrorR(measurements, weights):
     """
@@ -415,3 +417,158 @@ def weightedErrorR(measurements, weights):
     V_err = V*0.00015 + 0.000225
     I_err = I*0.0003 + 0.00000006
     return np.sqrt(1/wTotal**2 + ((1/I)**2 * V_err**2 + (V/(I**2))**2 * I_err**2))
+
+
+def ks_iterative(x, y, x_err, y_err, Foward = True):
+    """
+    Esta funcion agarra un eje X (k), un eje Y (k_nn) y busca los parametros para
+    ajustar la mejor recta, buscando el regimen lineal de la curva. Esto lo hace
+    sacando puntos de la curva, ajustando la curva resultante, y luego comparando 
+    los parametros de los distintos ajustes con el metodo de Kolmogorov Smirnoff.
+    
+    Si Foward=True entonces la funcion va a ir sacando puntos del final para
+    encontrar kmax. Si Foward=False, la funcion va a sacar puntos del principio para
+    calcular kmin. El punto va a estar dado por k[index].
+    
+    Returns: m, b, ks_stat, index
+    
+    m: pendiente de la recta resultante
+    b: ordenada de la recta resultante
+    ks_stat: estadistico de KS de la recta resultante
+    index: indice del elemento donde empieza/termina el regimen lineal.
+    .
+    .
+    """
+    KS_list = []
+    pvalue_list = []
+    m_list = []
+    b_list = []
+    m_err_list = []
+    b_err_list = []
+    if Foward==True:
+        for j in range(0, len(x)-3):
+            y_temp = y[:len(y)-j]
+            x_temp = x[:len(x)-j]
+            x_err_temp = x_err[:len(x_err)-j]
+            y_err_temp = y_err[:len(y_err)-j]
+            linear_model = Model(Linear)
+            data = RealData(x_temp, y_temp, sx=x_err_temp, sy=y_err_temp)
+            odr = ODR(data, linear_model, beta0=[0., 1.])
+            out = odr.run()
+            modelo = [j*out.beta[0]+out.beta[1] for j in x_temp]
+            KS_list.append(stats.ks_2samp(y_temp, modelo)[0])
+            pvalue_list.append(stats.ks_2samp(y_temp, modelo)[1])
+            m_list.append(out.beta[0])
+            b_list.append(out.beta[1])
+            m_err_list.append(out.sd_beta[0])
+            b_err_list.append(out.sd_beta[1])
+    else:
+        for j in range(0, len(x)-3):
+            y_temp = y[:len(y)-j]
+            x_temp = x[:len(x)-j]
+            x_err_temp = x_err[:len(x_err)-j]
+            y_err_temp = y_err[:len(y_err)-j]
+            linear_model = Model(Linear)
+            data = RealData(x_temp, y_temp, sx=x_err_temp, sy=y_err_temp)
+            odr = ODR(data, linear_model, beta0=[0., 1.])
+            out = odr.run()
+            modelo = [j*out.beta[0]+out.beta[1] for j in x_temp]
+            KS_list.append(stats.ks_2samp(y_temp, modelo)[0])
+            pvalue_list.append(stats.ks_2samp(y_temp, modelo)[1])
+            m_list.append(out.beta[0])
+            b_list.append(out.beta[1])
+            m_err_list.append(out.sd_beta[0])
+            b_err_list.append(out.sd_beta[1])
+    index = KS_list.index(min(KS_list))
+    m = m_list[index]
+    b = b_list[index]
+    m_err = m_err_list[index]
+    b_err = b_err_list[index]
+    ks_stat = KS_list[index]
+    
+    return m, b, m_err, b_err, ks_stat, index
+
+def promediador_grupos(path, tolerancia, punto_a_punto = True):
+    """
+    Esta funcion toma una carpeta con mediciones de curvas IV a una dada temperatura,
+    y promedia punto a punto las curvas.
+    Por otro lado, esta la opcion de promediar punto a punto las resistencias medidas
+    o promediar la resistencia promedio de todas las curvas.
+    La funcion se va a encargar de filtrar aquellas mediciones en que la temperatura
+    fluctuo mas que la tolerancia deseada, utilizando al funcion pulidor(). La tolerancia
+    tipica es de 0.025 para mediciones estacionarias en T.
+    El path de la funcion debe ser la carpeta donde se encuentren las carpetas iv y res.
+
+    La funcion asume que la temperatura se midio con una RTD, sourceando corriente y
+    midiendo voltaje.
+    
+    Input:  (path, tolerancia)   [string, float]    
+    
+    Returns: (V_promedio, I_promedio, R_promedio, R_err_promedio)  lists
+    .
+    .
+    """
+    array = f.pulidor(tolerancia, path)
+    R = []
+    R_err = []
+    I = []
+    V = []
+    if punto_a_punto == True:
+        for h in array:
+            data = np.loadtxt(path+'/res/%s (res).txt' % h, skiprows=1)        
+            Res = data[:, 1]   
+            I = data[:, 2]
+            V = I*Res
+            V_err = f.error_V(V, source = False)
+            I_err = f.error_I(I, source = True)
+            Res_err_estadistico = f.dispersion(Res) 
+            Res_err_sistematico = np.sqrt((1/I**2) * V_err**2 + ((V/(I**2))**2)*I_err**2)
+            Res_err = np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico**2)   
+            R.append(list(Res))
+            R_err.append(list(Res_err))
+        R_promedio = []
+        for i in range(len(R[1])):
+            c = 0
+            for j in range(len(R)):
+                c += R[j][i] 
+            R_promedio.append(c/len(R))
+        R_err_promedio = []
+        for i in range(len(R_err[1])):
+            c = 0
+            for j in range(len(R_err)):
+                c += R_err[j][i] 
+            R_err_promedio.append(c/len(R_err))
+    else:
+        for h in array:
+            data = np.loadtxt(path+'/res/%s (res).txt' % h, skiprows=1)
+            Res = data[:, 1]   
+            I = data[:, 2]
+            V = I*Res
+            V_err = f.error_V(V, source = False)
+            I_err = f.error_I(I, source = True)
+            Res_err_estadistico = f.dispersion(Res) 
+            Res_err_sistematico = np.sqrt((1/I**2) * V_err**2 + ((V/(I**2))**2)*I_err**2)
+            Res_err = np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico**2)
+            R.append(f.weightedMean(Res, Res_err))
+            R_err.append(f.weightedError(Res, Res_err))
+            data2 = np.loadtxt(path+'/iv/%s (iv).txt' % h, skiprows=1)
+            V.append(list(data2[:, 0]))
+            I.append(list(data2[:, 1]))
+        R_promedio = f.weightedMean(R, R_err)
+        R_err_promedio = f.weightedError(R, R_err)
+        
+    I_promedio = []
+    for i in range(len(I[1])):
+        c = 0
+        for j in range(len(I)):
+            c += I[j][i] 
+        I_promedio.append(c/len(I))
+        
+    V_promedio = []  
+    for i in range(len(V[1])):
+        c = 0
+        for j in range(len(V)):
+            c += V[j][i]
+        V_promedio.append(c/len(V))
+        
+    return V_promedio, I_promedio, R_promedio, R_err_promedio

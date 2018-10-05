@@ -13,8 +13,8 @@ I = []
 V = []
 I_err = []
 V_err = []
-for i in ['10e-7', '10e-6', '10e-5','10e-4', '10e-2', 6, 7]:
-        data = np.loadtxt(path + '/10e-%s/iv/1 (iv).txt' % i, skiprows=1)
+for i in ['1e-7', '1e-6', '1e-5','0.0001', '0.001', '0.01', '0.025', '0.05', '0.075', '0.1']:
+        data = np.loadtxt(path + '/' + str(i) + '/iv/1 (iv).txt', skiprows=1)
         I.append(data[:, 0])
         #V.append(data[:, 0])        
         I_err.append(f.error_I(data[:, 0]))
@@ -31,4 +31,4 @@ d_max = []
 for i in range(len(distancias)):
     d_max.append(np.max(distancias[i]))
     
-plt.plot(d_max, '.')
+plt.plot([1e-7, 1e-6, 1e-5,0.0001, 0.001, 0.01, 0.025, 0.05, 0.075, 0.1], d_max, 'o')
