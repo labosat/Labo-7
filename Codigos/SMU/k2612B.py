@@ -1,6 +1,6 @@
-from functions import clear_all, gpib, gpib2, usb, plot, save, save_led, P
+from functions import clear_all, gpib, gpib2, plot, save, save_led, P
 from setup import setup
-from tests import ivr, led1, led2
+from tests import ivr, led1
 
 def run(n, mode, group_path, plotFlag, saveFlag, wait_time):
 
@@ -87,6 +87,7 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time):
                                       config[13],
                                       config[14],
                                       config[15],
+                                      config[19],
                                       vPolarization_sipm,
                                       wait_time)
         
@@ -159,7 +160,7 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time):
         
         if plotFlag == 1:
             graphR = plot(Number, readingsR, 'N', 'R', 1)
-            graphIV = plot(readingsV_led, readingsI_sipm, 'Iled', 'Isipm', 2)
+            graphIV = plot(readingsV_led, readingsI_sipm, 'Vled', 'Isipm', 2)
         else:
             graphR = 'NULL'
             graphIV = 'NULL'

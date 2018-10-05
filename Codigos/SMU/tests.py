@@ -173,8 +173,8 @@ def ivr(smu, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela, i_ccb, v_ccb,
 
 
 def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela, 
-        i_ccb, v_ccb, iRangb, vRangb, iStart, iEnd, iStep, vPolarization_sipm, 
-        wait_time):
+        i_ccb, v_ccb, iRangb, vRangb, iStart, iEnd, iStep, return_sweep,
+        vPolarization_sipm, wait_time):
     
     """
     
@@ -268,6 +268,7 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     
     #compliance current
     smu_2400.write(':SOUR:VOLT:LEV ' + str(vPolarization_sipm))
+    #protection for sipm is 18mA
     smu_2400.write('SENS:CURR:PROT ' + str(0.018))
        
     
@@ -278,7 +279,7 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     smu_2612b.write('smua.source.output = smua.OUTPUT_ON') 
     smu_2612b.write('smub.source.output = smub.OUTPUT_ON')
     
-    smu_2400.write('CHANNEL:OUTP ON')
+    smu_2400.write('OUTP ON')
     
     print("Start of measurement")
     
@@ -291,18 +292,39 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
         smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
 
         auxRead = smu_2400.query(':READ?')
-        sipm_current = float(auxRead)
+        sipm_current = float(cast(auxRead)[1])
         
         readingsI_sipm.append(sipm_current)
         
-        i += iStep
+        if i != iEnd:
+            i += iStep
         
 
     #see about this waiting time...
-    time.sleep(4.5)
+    #time.sleep(4.5)
+    
+    i -= iStep
+    
+    if return_sweep == 1:
+        while (i >= iStart):
+            smu_2612b.write('smub.source.leveli = ' + str(i))
+            time.sleep(wait_time)
+            smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
+            smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
+
+            auxRead = smu_2400.query(':READ?')
+            sipm_current = float(cast(auxRead)[1])
+        
+            readingsI_sipm.append(sipm_current)
+        
+            i -= iStep
+            
+        #time.sleep(4.5)
+    
+    
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
     smu_2612b.write('smub.source.output = smub.OUTPUT_OFF')
-    smu_2400.write('CHANNEL:OUTP OFF')
+    smu_2400.write('OUTP OFF')
     #endTime = time.time() - startTime
     
     print("End of measurement")

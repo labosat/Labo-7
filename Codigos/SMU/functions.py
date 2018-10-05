@@ -100,6 +100,8 @@ def plot(x, y, char1, char2, n):
         plt.xlabel('Current [A]', fontsize = 14) 
     elif (char1 == 'Vled'):
         plt.xlabel('Led Voltage [V]', fontsize = 14)
+    elif (char1 == 'Iled'):
+        plt.xlabel('Led Current [A]', fontsize = 14)
     
     if (char2 == 'R'):
         plt.ylabel('Resistance [Ohm]', fontsize = 14)
