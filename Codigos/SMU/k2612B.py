@@ -1,6 +1,6 @@
-from functions import clear_all, gpib, gpib2, plot, save, save_led, P
+from functions import clear_all, gpib, gpib2, plot, save, save_led, save_led2, P
 from setup import setup
-from tests import ivr, led1
+from tests import ivr, led1, led2
 
 def run(n, mode, group_path, plotFlag, saveFlag, wait_time):
 
@@ -124,8 +124,9 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time):
         
         #polarization current for led on led2 test
         iPolarization_led = 100*P('m')
+        vPolarization_sipm = 30
         
-        [readingsV_led, readingsV_sipm, readingsI_sipm, 
+        [readingsI_sipm, readingsV_led,
          readingsR, readingsIR] = led1(smu_2612b,
                                       smu_2400,
                                       config[0],
@@ -138,10 +139,9 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time):
                                       config[7],
                                       config[8],
                                       config[9],
-                                      config[10],
-                                      config[11],
-                                      config[12],
                                       config[17],
+                                      config[20],
+                                      vPolarization_sipm,
                                       iPolarization_led,
                                       wait_time)
         
@@ -154,19 +154,19 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time):
             
         rm.close
         
-        Number = []
+        Time = []
         for i in range(0, len(readingsR)):
-            Number.append(i)
+            Time.append(i*wait_time)
         
         if plotFlag == 1:
-            graphR = plot(Number, readingsR, 'N', 'R', 1)
-            graphIV = plot(readingsV_led, readingsI_sipm, 'Vled', 'Isipm', 2)
+            graphR = plot(Time, readingsR, 't', 'R', 1)
+            graphI = plot(Time, readingsI_sipm, 't', 'Isipm', 2)
         else:
             graphR = 'NULL'
-            graphIV = 'NULL'
+            graphI = 'NULL'
             
         if saveFlag == 1:
-            save_led(readingsV_led, readingsV_sipm, readingsI_sipm, readingsR, 
-                     readingsIR, graphIV, graphR, n, group_path)
+            save_led(Time, readingsI_sipm, readingsV_led, readingsR, 
+                     readingsIR, graphI, graphR, n, group_path)
 
         return

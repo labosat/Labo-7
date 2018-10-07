@@ -39,12 +39,14 @@ def setup():
     iStep          = 2*P('m')
     
     # -------------------------------------------------------------------------
-    # for led only ------------------------------------------------------------
+    # for led2 test only ------------------------------------------------------
     
-    v_cc_led       = 3
+    v_cc_led       = 2.5
+    #remember wait_time functions as a "time step" here. Total time = measurements*wait_time
+    measurements   = 1000
     
     # -------------------------------------------------------------------------
-    # return sweep on led tests -----------------------------------------------
+    # return sweep on led1 test -----------------------------------------------
     
     return_sweep   = 1
     
@@ -77,4 +79,5 @@ def setup():
             source,
             v_cc_led,
             NPLC,
-            return_sweep]
+            return_sweep,
+            measurements]

@@ -7,7 +7,8 @@ def ivr(smu, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela, i_ccb, v_ccb,
     
     """
     
-    Function to control Keithley 2612B (IV and R measurement)
+    Function to control Keithley 2612B for IV measurement on sipm and R measurement
+    on rtd resistance.
     
     ---------
     
@@ -178,10 +179,11 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     
     """
     
-    Function to control Keithley 2612B (I_led and R measurement) and Keithley 2400 
+    Function to control Keithley 2612B (V_led and R measurement) and Keithley 2400 
     (I_Sipm measurement). This function performs a current sweep on the led while
-    measuring I on Sipm polarized with a fixed voltage. Format of (iv) data is
-    I_sipm, V_led, I_led
+    measuring I on Sipm polarized with a fixed voltage. Voltage can be set
+    on k2612B.py under 'led1' section. Format of iv data is I_sipm, V_led, I_led.
+    Data format of r data is R_rtd, I_rtd.
     
     ---------
     
@@ -299,9 +301,6 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
         if i != iEnd:
             i += iStep
         
-
-    #see about this waiting time...
-    #time.sleep(4.5)
     
     i -= iStep
     
@@ -318,19 +317,13 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
             readingsI_sipm.append(sipm_current)
         
             i -= iStep
-            
-        #time.sleep(4.5)
     
     
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
     smu_2612b.write('smub.source.output = smub.OUTPUT_OFF')
     smu_2400.write('OUTP OFF')
-    #endTime = time.time() - startTime
     
     print("End of measurement")
-    #print("Elapsed time: " + str(endTime))
-    #print("Press Enter to continue...")
-    #enter = raw_input()
     
     readingsI_led_temp = readBuffer(smu_2612b, 'b')[1]
     readingsV_led_temp = readBuffer(smu_2612b, 'b')[0]
@@ -348,22 +341,25 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
 
 
 def led2(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela, 
-        i_ccb, v_ccb, iRangb, vRangb, vStart, vEnd, vStep, v_cc_led, iPolarization_led, 
-        wait_time):
+        i_ccb, v_ccb, iRangb, vRangb, v_cc_led, measurements, vPolarization_sipm,
+        iPolarization_led, wait_time):
     
     """
     
     Function to control Keithley 2612B (I_sipm and R measurement) and Keithley 2400 
-    (I_led and V_led measurement). This function performs a voltage sweep on the sipm while
-    measuring I_sipm with a fixed current on the led. Data format in output is
-    V_led, V_sipm, I_sipm
+    (V_led measurement) for fixed current on led and fixed voltage on sipm. 
+    This function measures I_sipm as a function of time to check sipm stability. 
+    wait_time in this function serves the purpose of "time counter", not to wait 
+    between measurements, so total time = measurements*wait_time.led current and
+    sipm voltage can be set on k2612B.py under 'led2' section.
+    Data format of iv data in output is time, I_sipm, V_led.
+    Data format of r data is R_rtd, I_rtd.
     
     ---------
     
     """
     
     readingsV_led = []
-    readingsV_sipm = []
     readingsI_sipm = []
     readingsR = []
     
@@ -407,6 +403,8 @@ def led2(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     #compliance values for I and V
     smu_2612b.write('smub.source.limiti = ' + str(i_ccb))
     smu_2612b.write('smub.source.limitv = ' + str(v_ccb))
+    
+    smu_2612b.write('smub.source.levelv = ' + str(vPolarization_sipm))
 
     # -------------------------------------------------------------------------
     # smua (r) configuration
@@ -453,31 +451,30 @@ def led2(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     smu_2612b.write('smua.source.output = smua.OUTPUT_ON') 
     smu_2612b.write('smub.source.output = smub.OUTPUT_ON')
     
-    smu_2400.write('CHANNEL:OUTP ON')
+    smu_2400.write('OUTP ON')
     
     print("Start of measurement")
     
-    v = vStart
+    count = 0
     #startTime = time.time()
-    while (v <= vEnd):
-        smu_2612b.write('smub.source.levelv = ' + str(v))
-        time.sleep(wait_time)
+    while (count < measurements):
         smu_2612b.write('smub.measure.i(smub.nvbuffer1)')
         smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
 
         auxRead = smu_2400.query(':READ?')
-        led_voltage = float(auxRead)
-        
+        led_voltage = float(cast(auxRead)[1])
         readingsV_led.append(led_voltage)
         
-        v += vStep
+        count += 1
+                
+        #in this function, wait_time serves to measure time (not to wait 
+        #between measurements)
+        time.sleep(wait_time)
         
-
-    #see about this waiting time...
-    time.sleep(4.5)
+    #time.sleep(4.5)
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
     smu_2612b.write('smub.source.output = smub.OUTPUT_OFF')
-    smu_2400.write('CHANNEL:OUTP OFF')
+    smu_2400.write('OUTP OFF')
     #endTime = time.time() - startTime
     
     print("End of measurement")
@@ -485,16 +482,14 @@ def led2(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     #print("Press Enter to continue...")
     #enter = raw_input()
     
-    readingsI_sipm_temp = readBuffer(smu_2612b, 'b')[1]
-    readingsV_sipm_temp = readBuffer(smu_2612b, 'b')[0]
+    readingsI_sipm_temp = readBuffer(smu_2612b, 'b')[0]
     
     readingsR_temp = readBuffer(smu_2612b, 'a')[0]
     readingsIR_temp = readBuffer(smu_2612b, 'a')[1]
     
     readingsI_sipm = cast(readingsI_sipm_temp)
-    readingsV_sipm = cast(readingsV_sipm_temp)
     
     readingsR = cast(readingsR_temp)
     readingsIR = cast(readingsIR_temp)
 
-    return [readingsV_led, readingsV_sipm, readingsI_sipm, readingsR, readingsIR]
+    return [readingsI_sipm, readingsV_led, readingsR, readingsIR]

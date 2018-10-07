@@ -3,6 +3,9 @@ from functions import P
 
 #script for saving secuential measurements automatically for k2612B and k2400
 #optimal values for 'iv': N = 50, wait_time = 0.01
+#                   'led1': N = 50, wait_time < 0.01
+#                   'led2': N = 1, wait_time = 0.1, measurements = 10000
+#                    (total time of measurement would be 1000s measured in [ms])
 
 N = 1
 wait_time = 10*P('m')
