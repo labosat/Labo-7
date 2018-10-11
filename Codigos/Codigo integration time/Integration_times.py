@@ -95,3 +95,16 @@ plt.errorbar([1, 5, 10, 15, 20, 25], sigmas, yerr=error_sigmas, fmt = 'ok', caps
 plt.xlabel('Integration time', fontsize = 20)
 plt.ylabel('Dispersion', fontsize = 20)
 plt.grid(True)
+
+#%%
+import numpy as np
+import Funciones as f
+import matplotlib.pyplot as plt
+
+data = np.loadtxt('C:/Users/LINE/Desktop/k2612B/results led fino/0.001/iv/1 (iv).txt', skiprows= 1)
+I_led = data[:, 2]
+I_sipm = data[:, 0]
+
+I_err_sipm = f.error_I(I_sipm)
+plt.errorbar(I_led, I_sipm, yerr=I_err_sipm, fmt='ok', capsize = 5)
+plt.ylabel('Corriente SiPM  (A)')
