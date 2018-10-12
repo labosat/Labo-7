@@ -64,6 +64,9 @@ plt.legend([str(T[0]), str(T[1]), str(T[2]), str(T[3]), str(T[4]), str(T[5]), st
 plt.grid(True)
     
 #%% graphs all iv curves for a given T
+import numpy as np
+import matplotlib.pyplot as plt
+
 current_lib = [0.001, 0.005, 0.01, 0.015, 0.02, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.175]
 
 i = 1
@@ -76,8 +79,10 @@ for j in range(0, len(current_lib)):
         
     V = data_i[:, 1]
     I = data_i[:, 2]
+    V_err = V*0.0002 + 5E-3
+    I_err = I*0.0002 + 2.5E-6
     
-    plt.plot(V, I, '.')
+    plt.errorbar(V, I, xerr=V_err, yerr=I_err, fmt='.')
     
 plt.legend(["1 mA", "5 mA", "10 mA", "15 mA", "20 mA", "25 mA", "50 mA", "75 mA", "100 mA", "125 mA", "150 mA", "175 mA"])
 plt.xlabel('SiPM Voltage [V]')
