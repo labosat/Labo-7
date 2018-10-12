@@ -211,11 +211,11 @@ def save_led(readingsI_sipm, readingsV_led, readingsI_led,
         
 
 def save_led2(Time, readingsI_sipm, readingsV_led, readingsR, readingsIR, 
-              graphI, graphR, number, group_path, iPolarization_led):
+              graphI, graphR, number, group_path):
     #[unused,unused,dateString] = date_time_now()
     # For makin this cross platform, change the path name
-    path            = ".\\results led ruido\\" + str(iPolarization_led) + 'mA\\' + group_path + "\\"
-    path_fig        = ".\\results led ruido\\" + str(iPolarization_led) + 'mA\\' + group_path + "\\figures\\"
+    path            = ".\\results led ruido\\" + group_path + "\\"
+    path_fig        = ".\\results led ruido\\" + group_path + "\\figures\\"
     ext_fig         = ".png" 
     ext_txt         = ".txt" 
     figure_nameI   = path_fig + str(number) + " (iv)" + ext_fig

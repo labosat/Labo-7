@@ -168,7 +168,7 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time, NPLC, iPolarization_
             
         if saveFlag == 1:
             save_led2(Time, readingsI_sipm, readingsV_led, readingsR, 
-                     readingsIR, graphI, graphR, n, group_path, iPolarization_led)
+                     readingsIR, graphI, graphR, n, group_path)
 
         return
     
