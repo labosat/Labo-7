@@ -418,8 +418,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.75000002"
-     inkscape:cx="261.90535"
-     inkscape:cy="303.75886"
+     inkscape:cx="213.74094"
+     inkscape:cy="279.6805"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -456,7 +456,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -868,71 +868,71 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.19190216px;line-height:1.25;font-family:cmex10;-inkscape-font-specification:cmex10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.42979756"
-       x="143.01692"
-       y="186.58086"
+       x="130.20483"
+       y="184.88754"
        id="text1031"><tspan
          sodipodi:role="line"
          id="tspan1029"
-         x="143.01692"
-         y="186.58086"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.59595203px;font-family:'Tw Cen MT';-inkscape-font-specification:'Tw Cen MT';stroke-width:0.42979756">SiPM</tspan></text>
+         x="130.20483"
+         y="184.88754"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.59595203px;font-family:'Tw Cen MT';-inkscape-font-specification:'Tw Cen MT';stroke-width:0.42979756">Encapsulado</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:17.19190216px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.42979756"
        x="130.13979"
-       y="176.41313"
+       y="175.84869"
        id="text1035"><tspan
          sodipodi:role="line"
          id="tspan1033"
          x="130.13979"
-         y="176.41313"
+         y="175.84869"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.59595108px;font-family:'Tw Cen MT';-inkscape-font-specification:'Tw Cen MT';stroke-width:0.42979756">RTD PT1000</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:8.59595108px;line-height:5px;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.42979756"
        x="151.39561"
-       y="204.84129"
+       y="202.58354"
        id="text1039"><tspan
          sodipodi:role="line"
          x="151.39561"
-         y="204.84129"
+         y="202.58354"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.59595108px;line-height:8px;font-family:'Tw Cen MT';-inkscape-font-specification:'Tw Cen MT';text-align:center;text-anchor:middle;stroke-width:0.42979756"
          id="tspan1107">Celda Peltier</tspan><tspan
          sodipodi:role="line"
          x="151.39561"
-         y="212.84129"
+         y="210.58354"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05555534px;line-height:8px;font-family:'Tw Cen MT';-inkscape-font-specification:'Tw Cen MT';text-align:center;letter-spacing:0px;text-anchor:middle;stroke-width:0.42979756"
          id="tspan1004">TEC1-4905</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:8.59595203px;line-height:8px;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.42979756"
        x="151.39561"
-       y="237.5387"
+       y="236.97426"
        id="text1043"><tspan
          sodipodi:role="line"
          x="151.39561"
-         y="237.5387"
+         y="236.97426"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.59595203px;line-height:8px;font-family:'Tw Cen MT';-inkscape-font-specification:'Tw Cen MT';text-align:center;text-anchor:middle;stroke-width:0.42979756"
          id="tspan1111">Celda Peltier</tspan><tspan
          sodipodi:role="line"
          x="151.39561"
-         y="245.5387"
+         y="244.97426"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.05555534px;line-height:8px;font-family:'Tw Cen MT';-inkscape-font-specification:'Tw Cen MT';text-align:center;text-anchor:middle;stroke-width:0.42979756"
          id="tspan1012">TEC1-12706</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:6.35000038px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.42979756"
        x="151.62656"
-       y="220.96141"
+       y="218.70366"
        id="text1117"><tspan
          sodipodi:role="line"
          id="tspan1115"
          x="151.62656"
-         y="220.96141"
+         y="218.70366"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35000038px;line-height:8px;font-family:'Tw Cen MT';-inkscape-font-specification:'Tw Cen MT';text-align:center;text-anchor:middle;stroke-width:0.42979756">Conductor térmico</tspan><tspan
          sodipodi:role="line"
          x="151.62656"
-         y="228.96141"
+         y="226.70366"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.35000038px;line-height:8px;font-family:'Tw Cen MT';-inkscape-font-specification:'Tw Cen MT';text-align:center;text-anchor:middle;stroke-width:0.42979756"
          id="tspan1119">(aluminio)</tspan></text>
     <g
@@ -1029,10 +1029,10 @@
     </g>
     <g
        id="g1421"
-       transform="translate(-0.52916667,0.52916663)">
+       transform="translate(0.03527774,-0.03527774)">
       <g
          id="g1429"
-         transform="rotate(0.99747569,-384.60535,823.08117)">
+         transform="matrix(0.99984846,0.01740836,-0.01740836,0.99984846,14.270208,6.8200739)">
         <text
            xml:space="preserve"
            style="font-style:normal;font-weight:normal;font-size:3.43838072px;line-height:1;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.42979756"
@@ -1061,21 +1061,16 @@
     </g>
     <text
        id="text1404"
-       y="180.07376"
-       x="85.13002"
+       y="180.63586"
+       x="85.181389"
        style="font-style:normal;font-weight:normal;font-size:5.29166651px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        xml:space="preserve"
-       transform="rotate(5.2212834)"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.29166651px;font-family:'Tw Cen MT';-inkscape-font-specification:'Tw Cen MT';text-align:center;text-anchor:middle;stroke-width:0.26458332"
-         y="180.07376"
-         x="85.858658"
-         id="tspan1402"
-         sodipodi:role="line">Medición de corriente </tspan><tspan
+       transform="matrix(0.99585066,0.09100251,-0.09100251,0.99585066,0,0)"><tspan
          id="tspan1406"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.29166651px;font-family:'Tw Cen MT';-inkscape-font-specification:'Tw Cen MT';text-align:center;text-anchor:middle;stroke-width:0.26458332"
-         y="186.82187"
-         x="85.13002"
-         sodipodi:role="line">aplicando tensiones continuas</tspan></text>
+         y="180.63586"
+         x="85.181389"
+         sodipodi:role="line">Medición de curva IV</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:11.28888798px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
