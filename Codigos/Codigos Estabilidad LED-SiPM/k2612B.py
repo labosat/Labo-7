@@ -122,8 +122,6 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time, NPLC, iPolarization_
         
         [smu_2612b, smu_2400, rm]  = gpib2(address_2612b, address_2400)
         
-        #polarization current for led on led2 test
-        iPolarization_led = 100*P('m')
         vPolarization_sipm = 30
         
         [readingsI_sipm, readingsV_led,
@@ -194,6 +192,7 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time, NPLC, iPolarization_
                                       config[10],
                                       config[11],
                                       config[12],
+                                      config[17],
                                       config[19],
                                       iPolarization_led,
                                       wait_time)

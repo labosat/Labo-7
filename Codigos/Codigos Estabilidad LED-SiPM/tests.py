@@ -476,6 +476,8 @@ def led2(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
         #between measurements)
         time.sleep(wait_time)
         
+    time.sleep(4)
+        
     #time.sleep(4.5)
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
     smu_2612b.write('smub.source.output = smub.OUTPUT_OFF')
@@ -501,7 +503,7 @@ def led2(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
 
 
 def led3(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela, 
-        i_ccb, v_ccb, iRangb, vRangb, vStart, vEnd, vStep, return_sweep,
+        i_ccb, v_ccb, iRangb, vRangb, vStart, vEnd, vStep, v_cc_led, return_sweep,
         iPolarization_led, wait_time):
     
     """
@@ -518,7 +520,6 @@ def led3(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     readingsI_sipm = []
     readingsV_sipm = []
     readingsI_led = []
-    readingsV_led = []
     readingsR = []
     
     smu_2612b.write('smua.reset()')
@@ -546,7 +547,7 @@ def led3(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     # Smub (iv) configuration
     
     smu_2612b.write('smub.source.func = smub.OUTPUT_DCVOLTS')
-    #smu_2612b.write('display.smub.measure.func = display.MEASURE_DCVOLTS')
+    smu_2612b.write('display.smub.measure.func = display.MEASURE_DCAMPS')
     
     if (iRangb == 'AUTO'):
         smu_2612b.write('smub.source.autorangei = smub.AUTORANGE_ON')
@@ -598,7 +599,7 @@ def led3(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     #compliance current
     smu_2400.write(':SOUR:CURR:LEV ' + str(iPolarization_led))
     #protection for sipm is 18mA
-    smu_2400.write('SENS:VOLT:PROT ' + str(2))
+    smu_2400.write('SENS:VOLT:PROT ' + str(v_cc_led))
        
     
     # -------------------------------------------------------------------------
@@ -621,7 +622,7 @@ def led3(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
         smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
 
         auxRead = smu_2400.query(':READ?')
-        led_current = float(cast(auxRead)[0])
+        led_current = float(cast(auxRead)[1])
         
         readingsI_led.append(led_current)
         
@@ -639,7 +640,7 @@ def led3(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
             smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
 
             auxRead = smu_2400.query(':READ?')
-            led_current = float(cast(auxRead)[0])
+            led_current = float(cast(auxRead)[1])
         
             readingsI_led.append(led_current)
         
@@ -652,8 +653,8 @@ def led3(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     
     print("End of measurement")
     
-    readingsI_sipm_temp = readBuffer(smu_2612b, 'b')[1]
-    readingsV_sipm_temp = readBuffer(smu_2612b, 'b')[0]
+    readingsI_sipm_temp = readBuffer(smu_2612b, 'b')[0]
+    readingsV_sipm_temp = readBuffer(smu_2612b, 'b')[1]
     
     readingsR_temp = readBuffer(smu_2612b, 'a')[0]
     readingsIR_temp = readBuffer(smu_2612b, 'a')[1]

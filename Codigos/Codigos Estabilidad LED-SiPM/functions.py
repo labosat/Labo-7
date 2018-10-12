@@ -246,7 +246,7 @@ def save_led2(Time, readingsI_sipm, readingsV_led, readingsR, readingsIR,
     #format is I_sipm, V_led, I_led
     if len(readingsI_sipm) == len(Time): 
         for i in range(0,len(readingsI_sipm)):
-            line = str(Time[i]) + '|t' + str(readingsI_sipm[i]) + '\t' + str(readingsV_led[i]) + '\n' 
+            line = str(Time[i]) + '\t' + str(readingsI_sipm[i]) + '\t' + str(readingsV_led[i]) + '\n' 
             FileIV.write(line)
             
     FileR.write("time\tR\tI\n")

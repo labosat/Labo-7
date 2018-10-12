@@ -33,9 +33,9 @@ import time
 
 N = 1
 measurements = 100
-path_name = 'Estacionario 1'
+path_name = 'Estacionario 3'
 
-folders = ["0.01", "0.1", "1"]
+folders = ["0.01 NPLC", "0.1 NPLC", "1 NPLC"]
 mode = 'led2'
 plotFlag = 1
 saveFlag = 1
@@ -45,10 +45,10 @@ NPLC = [0.01, 0.1, 1]
 time_sleep = [(5+wait_time+((NPLC[i]/50.)*measurements)) for i in range(len(NPLC))]
 
 startTime = time.time()
-for iPolarization_led in [0, 1*P('m'), 5*P('m'), 10*P('m'), 15*P('m'), 20*P('m')]:
+for iPolarization_led in [1*P('m'), 5*P('m'), 10*P('m'), 15*P('m'), 20*P('m')]:
     
     for i in range(0, len(folders)):
-        run(1, mode, path_name + folders[i], plotFlag, saveFlag, wait_time, NPLC[i], iPolarization_led)
+        run(1, mode, path_name + '//' +  folders[i] + '//' + str(iPolarization_led) + "A", plotFlag, saveFlag, wait_time, NPLC[i], iPolarization_led)
         time.sleep(int(time_sleep[i]))
     
 elapsed = time.time() - startTime
@@ -60,7 +60,7 @@ from functions import P
 import time
 
 N = 1
-path_name = 'Estacionario 1'
+path_name = 'Estacionario 2'
     
 mode = 'led3'
 wait_time = 10*P('m')
@@ -69,9 +69,15 @@ plotFlag = 1
 saveFlag = 1
 
 startTime = time.time()
-for iPolarization_led in [0, 1*P('m'), 5*P('m'), 10*P('m'), 15*P('m'), 20*P('m')]:
+for iPolarization_led in [1*P('m'), 5*P('m'), 10*P('m'), 15*P('m'), 20*P('m'), 25*P('m'), 50*P('m'), 75*P('m'), 100*P('m'), 125*P('m'), 150*P('m'), 175*P('m')]:
     
-    run(1, mode, path_name + str(iPolarization_led), plotFlag, saveFlag, wait_time, NPLC, iPolarization_led)
+    run(1, mode, path_name + '//' + str(iPolarization_led) + "A" , plotFlag, saveFlag, wait_time, NPLC, iPolarization_led)
+    time.sleep(iPolarization_led*200)
+    
+    if iPolarization_led >= 0.020 and iPolarization_led != 0.175:
+        time.sleep(500*iPolarization_led)
+        
+    
     
 elapsed = time.time() - startTime
 print(elapsed)
