@@ -10,7 +10,7 @@ from functions import P
 
 N = 1
 wait_time = 10*P('m')
-group_path = 'asd'
+group_path = 'Estacionario'
 
 #modes available: 'iv', 'led1', 'led2' (refer to help for specifics)
 mode = 'led1'
@@ -33,7 +33,7 @@ import time
 
 N = 1
 measurements = 100
-path_name = 'Estacionario 3'
+path_name = 'Estacionario 7'
 
 folders = ["0.01 NPLC", "0.1 NPLC", "1 NPLC"]
 mode = 'led2'
@@ -59,8 +59,10 @@ from k2612B import run
 from functions import P
 import time
 
+#run this code to get iv curve on sipm for different fixed led currents
+
 N = 1
-path_name = 'Estacionario 2'
+path_name = 'Estacionario 7'
     
 mode = 'led3'
 wait_time = 10*P('m')
@@ -74,7 +76,10 @@ for iPolarization_led in [1*P('m'), 5*P('m'), 10*P('m'), 15*P('m'), 20*P('m'), 2
     run(1, mode, path_name + '//' + str(iPolarization_led) + "A" , plotFlag, saveFlag, wait_time, NPLC, iPolarization_led)
     time.sleep(iPolarization_led*200)
     
-    if iPolarization_led >= 0.020 and iPolarization_led != 0.175:
+    if iPolarization_led == 0.2:
+        break
+    
+    if iPolarization_led >= 0.020:
         time.sleep(500*iPolarization_led)
         
     
