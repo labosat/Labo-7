@@ -6,6 +6,7 @@ from functions import P
 #                   'led1': N = 50, wait_time < 0.01
 #                   'led2': N = 1, wait_time = 0.01, measurements = 10000
 #                    (total time of measurement would be 100s)
+#                   'led3': N = 50, wait_time = 0.01
 
 N = 1
 wait_time = 10*P('m')
@@ -13,17 +14,22 @@ group_path = 'asd'
 
 #modes available: 'iv', 'led1', 'led2' (refer to help for specifics)
 mode = 'led1'
-NPLC = [0.01, 0.1, 1, 5, 10, 15, 20, 25]
+NPLC = 1
+iPolarization_led = 0
+
 plotFlag = 1
 saveFlag = 1
 
 for j in range(1, N + 1):
-    run(j, mode, group_path, plotFlag, saveFlag, wait_time, NPLC)
+    run(j, mode, group_path, plotFlag, saveFlag, wait_time, NPLC, iPolarization_led)
     
 #%%
 from k2612B import run
 from functions import P
 import time   
+
+#run this code to get noise in sipm current as a function of time for
+#different led currents and integration times
 
 N = 1
 measurements   = 100
@@ -34,7 +40,7 @@ NPLC = [0.01, 0.1, 1] #, 5, 10, 15, 20, 25]
 time_sleep = [(5+wait_time+((NPLC[i]/50.)*measurements)) for i in range(len(NPLC)) ]
 
 asd = time.time()
-for iPolarization_led in [0, 1*P('u'), 5*P('u'), 10*P('u'), 15*P('u'), 20*P('u')]:
+for iPolarization_led in [0, 1*P('m'), 5*P('m'), 10*P('m'), 15*P('m'), 20*P('m')]:
     
     folders = ["0.01", "0.1", "1"] #, "5", "10", "15", "20", "25"]
     #modes available: 'iv', 'led1', 'led2' (refer to help for specifics)
@@ -48,6 +54,30 @@ for iPolarization_led in [0, 1*P('u'), 5*P('u'), 10*P('u'), 15*P('u'), 20*P('u')
     
 elapsed = time.time() - asd
 print(elapsed)
+
+#%%
+from k2612B import run
+from functions import P
+import time
+
+N = 1
+wait_time = 10*P('m')
+NPLC = 1
+
+startTime = time.time()
+for iPolarization_led in [0, 1*P('m'), 5*P('m'), 10*P('m'), 15*P('m'), 20*P('m')]:
+    
+    folders = ["0.01", "0.1", "1"]
+    mode = 'led3'
+    plotFlag = 1
+    saveFlag = 1
+    
+    run(1, mode, str(iPolarization_led), plotFlag, saveFlag, wait_time, NPLC, iPolarization_led)
+    
+elapsed = time.time() - startTime
+print(elapsed)
+
+
 #%% script for saving data with different wait times in 'iv' mode
 from k2612B import run
 from functions import P

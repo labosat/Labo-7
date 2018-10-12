@@ -498,3 +498,171 @@ def led2(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     readingsIR = cast(readingsIR_temp)
 
     return [readingsI_sipm, readingsV_led, readingsR, readingsIR]
+
+
+def led3(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela, 
+        i_ccb, v_ccb, iRangb, vRangb, vStart, vEnd, vStep, return_sweep,
+        iPolarization_led, wait_time):
+    
+    """
+    
+    Function to control Keithley 2612B (I_sipm and R measurement) and Keithley 2400 
+    (I_led measurement). This function performs a voltage sweep on the sipm while
+    measuring I, with led polarized with a fixed current. Format of iv data is 
+    I_led, V_sipm, I_sipm. Data format of r data is R_rtd, I_rtd.
+    
+    ---------
+    
+    """
+    
+    readingsI_sipm = []
+    readingsV_sipm = []
+    readingsI_led = []
+    readingsV_led = []
+    readingsR = []
+    
+    smu_2612b.write('smua.reset()')
+    smu_2612b.write('smub.reset()')
+    smu_2400.write("*RST")
+    
+    smu_2612b.write('format.data = format.ASCII')
+    
+    # Buffer operations -------------------------------------------------------
+    
+    smu_2612b.write('smua.nvbuffer1.clear()')
+    smu_2612b.write('smub.nvbuffer1.clear()')
+    
+    smu_2612b.write('smua.nvbuffer1.appendmode = 1')
+    smu_2612b.write('smub.nvbuffer1.appendmode = 1')
+    
+    smu_2612b.write('smua.nvbuffer1.collectsourcevalues = 1')
+    smu_2612b.write('smub.nvbuffer1.collectsourcevalues = 1')
+
+    smu_2612b.write('smua.measure.count = 1')
+    smu_2612b.write('smub.measure.count = 1')
+    
+
+    # -------------------------------------------------------------------------   
+    # Smub (iv) configuration
+    
+    smu_2612b.write('smub.source.func = smub.OUTPUT_DCVOLTS')
+    #smu_2612b.write('display.smub.measure.func = display.MEASURE_DCVOLTS')
+    
+    if (iRangb == 'AUTO'):
+        smu_2612b.write('smub.source.autorangei = smub.AUTORANGE_ON')
+    else:
+        smu_2612b.write('smub.source.rangei = ' + str(iRangb))
+    
+    if (vRangb == 'AUTO'):
+        smu_2612b.write('smub.measure.autorangev = smub.AUTORANGE_ON')
+    else:
+        smu_2612b.write('smub.measure.rangev = ' + str(vRangb))
+
+    #compliance values for I and V
+    smu_2612b.write('smub.source.limiti = ' + str(i_ccb))
+    smu_2612b.write('smub.source.limitv = ' + str(v_ccb))
+
+    # -------------------------------------------------------------------------
+    # smua (r) configuration
+    
+    smu_2612b.write('smua.source.func = smua.OUTPUT_DCAMPS')
+    
+    if (iRanga == 'AUTO'):
+        smu_2612b.write('smua.source.autorangei = smua.AUTORANGE_ON')
+    else:
+        smu_2612b.write('smua.source.rangei = ' + str(iRanga))
+        
+    if (vRanga == 'AUTO'):
+        smu_2612b.write('smua.source.autorangev = smua.AUTORANGE_ON')
+    else:
+        smu_2612b.write('smua.source.rangev = ' + str(vRanga))
+    
+    smu_2612b.write('smua.source.leveli = ' + str(iLevela))
+
+    #compliance values for I and V
+    smu_2612b.write('smua.source.limiti = ' + str(i_cca))
+    smu_2612b.write('smua.source.limitv = ' + str(v_cca))
+
+    if (fourWire == 1):
+        smu_2612b.write('smua.sense = smua.SENSE_REMOTE')
+        
+    # -------------------------------------------------------------------------
+    # k2400 configuration (Sipm measurement)
+
+    
+    smu_2400.write(':SENS:FUNC "VOLT"')
+    smu_2400.write(':SOUR:FUNC CURR')
+    smu_2400.write(':SENS:CURR:RANG:AUTO ON')
+    smu_2400.write(':SENS:VOLT:RANG:AUTO ON')
+    
+    #compliance current
+    smu_2400.write(':SOUR:CURR:LEV ' + str(iPolarization_led))
+    #protection for sipm is 18mA
+    smu_2400.write('SENS:VOLT:PROT ' + str(2))
+       
+    
+    # -------------------------------------------------------------------------
+    # Measurement -------------------------------------------------------------
+
+    
+    smu_2612b.write('smua.source.output = smua.OUTPUT_ON') 
+    smu_2612b.write('smub.source.output = smub.OUTPUT_ON')
+    
+    smu_2400.write('OUTP ON')
+    
+    print("Start of measurement")
+    
+    v = vStart
+    #startTime = time.time()
+    while (v <= vEnd):
+        smu_2612b.write('smub.source.levelv = ' + str(v))
+        time.sleep(wait_time)
+        smu_2612b.write('smub.measure.i(smub.nvbuffer1)')
+        smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
+
+        auxRead = smu_2400.query(':READ?')
+        led_current = float(cast(auxRead)[0])
+        
+        readingsI_led.append(led_current)
+        
+        if v != vEnd:
+            v += vStep
+        
+    
+    v -= vStep
+    
+    if return_sweep == 1:
+        while (v >= vStart):
+            smu_2612b.write('smub.source.levelv = ' + str(v))
+            time.sleep(wait_time)
+            smu_2612b.write('smub.measure.i(smub.nvbuffer1)')
+            smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
+
+            auxRead = smu_2400.query(':READ?')
+            led_current = float(cast(auxRead)[0])
+        
+            readingsI_led.append(led_current)
+        
+            v -= vStep
+    
+    
+    smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
+    smu_2612b.write('smub.source.output = smub.OUTPUT_OFF')
+    smu_2400.write('OUTP OFF')
+    
+    print("End of measurement")
+    
+    readingsI_sipm_temp = readBuffer(smu_2612b, 'b')[1]
+    readingsV_sipm_temp = readBuffer(smu_2612b, 'b')[0]
+    
+    readingsR_temp = readBuffer(smu_2612b, 'a')[0]
+    readingsIR_temp = readBuffer(smu_2612b, 'a')[1]
+    
+    readingsI_sipm = cast(readingsI_sipm_temp)
+    readingsV_sipm = cast(readingsV_sipm_temp)
+    
+    readingsR = cast(readingsR_temp)
+    readingsIR = cast(readingsIR_temp)
+
+    return [readingsI_led, readingsV_sipm, readingsI_sipm,
+            readingsR, readingsIR]

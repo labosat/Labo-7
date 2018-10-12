@@ -1,6 +1,6 @@
 from functions import clear_all, gpib, gpib2, plot, save, save_led, save_led2, P
 from setup import setup
-from tests import ivr, led1, led2
+from tests import ivr, led1, led2, led3
 
 def run(n, mode, group_path, plotFlag, saveFlag, wait_time, NPLC, iPolarization_led):
 
@@ -123,7 +123,7 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time, NPLC, iPolarization_
         [smu_2612b, smu_2400, rm]  = gpib2(address_2612b, address_2400)
         
         #polarization current for led on led2 test
-#        iPolarization_led = 100*P('m')
+        iPolarization_led = 100*P('m')
         vPolarization_sipm = 30
         
         [readingsI_sipm, readingsV_led,
@@ -169,5 +169,57 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time, NPLC, iPolarization_
         if saveFlag == 1:
             save_led2(Time, readingsI_sipm, readingsV_led, readingsR, 
                      readingsIR, graphI, graphR, n, group_path, iPolarization_led)
+
+        return
+    
+    
+    elif mode == 'led3':
+        
+        [smu_2612b, smu_2400, rm]  = gpib2(address_2612b, address_2400)
+        
+        
+        [readingsI_led, readingsV_sipm, readingsI_sipm, 
+         readingsR, readingsIR] = led3(smu_2612b,
+                                      smu_2400,
+                                      config[0],
+                                      config[1],
+                                      config[2],
+                                      config[3],
+                                      config[4],
+                                      config[5],
+                                      config[6],
+                                      config[7],
+                                      config[8],
+                                      config[9],
+                                      config[10],
+                                      config[11],
+                                      config[12],
+                                      config[19],
+                                      iPolarization_led,
+                                      wait_time)
+        
+       
+        smu_2612b.write('reset()')
+            
+        smu_2612b.write('smua.nvbuffer1.clear()')
+        smu_2612b.write('smub.nvbuffer1.clear()') 
+        smu_2400.write('*CLS')
+            
+        rm.close
+        
+        Number = []
+        for i in range(0, len(readingsR)):
+            Number.append(i)
+        
+        if plotFlag == 1:
+            graphR = plot(Number, readingsR, 'N', 'R', 1)
+            graphIV = plot(readingsV_sipm, readingsI_sipm, 'V', 'I', 2)
+        else:
+            graphR = 'NULL'
+            graphIV = 'NULL'
+            
+        if saveFlag == 1:
+            save_led(readingsI_led, readingsV_sipm, readingsI_sipm, readingsR, 
+                     readingsIR, graphIV, graphR, n, group_path)
 
         return
