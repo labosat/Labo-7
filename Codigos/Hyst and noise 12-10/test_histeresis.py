@@ -69,7 +69,7 @@ import matplotlib.pyplot as plt
 
 current_lib = [0.001, 0.005, 0.01, 0.015, 0.02, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.175]
 
-i = 1
+i = 7
 
 path = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led/Estacionario %s/' % i
     
@@ -99,10 +99,19 @@ current_lib = [0.001, 0.005, 0.01, 0.015, 0.02]
 NPLC_lib = [0.01, 0.1, 1]
 
 for i in range(0, len(NPLC_lib)):
+    
+    #this ensures NPLC = 1
+    i = 2
+    
     plt.figure(i)
     
     for j in range(1, folders + 1):
-        path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led ruido/Estacionario %s/' % j
+        #windows
+        #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led ruido/Estacionario %s/' % j
+        
+        #linux
+        path = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led ruido/Estacionario %s/' % j
+
         path += str(NPLC_lib[i]) + " NPLC/"
         
         I_led = []
@@ -121,7 +130,7 @@ for i in range(0, len(NPLC_lib)):
             noise_value = np.std(I_sipm)
             noise.append(noise_value)
             
-        plt.plot(I_led, noise)
-        plt.legend("%s NPLC" % NPLC_lib[i])
+        plt.plot(I_led, noise, '.')
+        #plt.legend("%s NPLC" % NPLC_lib[i])
             
-        
+    break
