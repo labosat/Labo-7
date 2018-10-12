@@ -1,0 +1,19 @@
+Conclusiones:
+
+- Medí la corriente del SiPM en el tiempo para distintas corrientes del LED y distintos integration times. Concluí que ni
+siquiera en el peor de los casos (corriente 1mA e NPLC=0.01) se puede estudiar la "intestabilidad" del LED ya que el error
+en la medición de la corriente del SiPM es órdenes de magnitud más grande que la dispersión de los datos.
+Ver Figura 2.
+
+- Medí fino de 0 a 20mA del LED, y observé que no hay histéresis. Por otro lado, a partir de los 1.5mA del LED se puede
+observar una relación lineal entre I_LED e I_SiPM, para la ida y la vuelta. En las mediciones la temperatura fluctuó menos 
+de un grado debido a la potencia del LED.
+Ver Figura 1.
+
+
+
+OBS: 
+
+- Cambié el código y lo guardé en la carpeta "Codigos Estabilidad LED/SiPM" del repo, adaptando la función led2() para que
+haga los barridos en corriente del led e integration times para voltajes fijos del SiPM. Ésto se corre con el segundo 
+bloque de la pestaña run.py.

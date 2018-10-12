@@ -127,7 +127,7 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time):
         vPolarization_sipm = 30
         
         [readingsI_sipm, readingsV_led,
-         readingsR, readingsIR] = led1(smu_2612b,
+         readingsR, readingsIR] = led2(smu_2612b,
                                       smu_2400,
                                       config[0],
                                       config[1],

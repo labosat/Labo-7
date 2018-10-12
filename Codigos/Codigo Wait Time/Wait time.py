@@ -7,7 +7,7 @@ import sys
 sys.path.append('./Labo-7/')
 from scipy.odr import Model, RealData, ODR
 
-path = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Wait Time/results led'
+path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Wait Time/results led'
 
 I = []
 V = []
@@ -36,3 +36,18 @@ plt.plot([1e-7, 1e-6, 1e-5,0.0001, 0.001, 0.01, 0.025, 0.05, 0.075, 0.1], d_max,
 
 for i in range(len(['1e-7', '1e-6', '1e-5','0.0001', '0.001', '0.01', '0.025', '0.05', '0.075', '0.1'])):
     plt.plot(I_led[i], I[i], '.')
+    
+    
+    
+
+data = np.loadtxt('C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Wait Time/results led/data_waittime_final.txt', skiprows=1)
+Rq = data[:, 0]
+Rq_err = data[:, 1]
+wait_time = data[:, 4]
+
+plt.plot(wait_time, Rq, 'o')
+plt.errorbar(wait_time, Rq, yerr=Rq_err, fmt='ok', capsize=5)
+plt.xscale('log')
+plt.grid(True)
+plt.xlabel('Wait Time (s)', fontsize = 20)
+plt.ylabel(r'$R_q$ ($\Omega$)', fontsize = 20)
