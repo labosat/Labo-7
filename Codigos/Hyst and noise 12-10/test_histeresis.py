@@ -253,7 +253,7 @@ NPLC_lib = [0.01, 0.1, 1]
 for i in range(0, len(NPLC_lib)):
     
     #this ensures NPLC = 1
-    #i = 2
+    i = 0
     
     plt.figure(i)
     
@@ -268,6 +268,8 @@ for i in range(0, len(NPLC_lib)):
         
         I_led = []
         noise = []
+        noise_err = []
+        N = []
         
         for k in range(0, len(current_lib)):
             path_i = path + str(current_lib[k]) + "A/iv/1 (iv).txt"
@@ -276,13 +278,38 @@ for i in range(0, len(NPLC_lib)):
             data_i = np.loadtxt(path_i, skiprows=1)
             data_r = np.loadtxt(path_r, skiprows=1)
         
+            N = []
             I_sipm = data_i[:, 1]
             I_led.append(current_lib[k])
             
-            noise_value = np.std(I_sipm)
-            noise.append(noise_value)
+            for l in range(0, len(I_sipm)):
+                N.append(l)
             
-        plt.plot(I_led, noise, '.')
+            noise_value = np.sum((np.polyval(np.polyfit(N, I_sipm, 8), N) - I_sipm)**2)
+
+            noise.append(noise_value)
+            noise_err.append(np.sqrt(2*pow(noise_value, 4)))
+            
+        plt.errorbar(I_led, noise, yerr=noise_err, fmt='.')
         #plt.legend("%s NPLC" % NPLC_lib[i])
             
-    #break
+    break
+
+#plt.plot(N, I_sipm,'.')
+#fit = np.polyfit(N, I_sipm, 8)
+#plt.plot(N, np.polyval(fit, N))
+    
+#%% codigo para graficar I_sipm(I_led)
+import numpy as np
+import matplotlib.pyplot as plt    
+
+path = '/home/lucas/Desktop/Labo-7/Mediciones/Experimento LED/hist_vs_wait_time(0-20)/0.01/iv/1 (iv).txt'
+
+data = np.loadtxt(path)
+I_led = data[:, 2]
+I_sipm = data[:, 0]
+
+plt.semilogx(I_led, I_sipm)
+plt.grid(True)
+plt.xlabel('Led Current [A]')
+plt.ylabel('SiPM Current [A]')
