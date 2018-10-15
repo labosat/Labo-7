@@ -134,8 +134,13 @@ for i in range(1, folders + 1):
         
         Int_up = integrate.quad(poly, 23, 30, args=(fit_up))
         Int_down = integrate.quad(poly, 23, 30, args=(fit_down))
+        
+        #Int_up = integrate_simpson(V_up, I_up)
+        #Int_down = integrate_simpson(V_down, I_down)
 
         area = Int_up[0] - Int_down[0]
+        #area = Int_up - Int_down
+        
         d_area = abs(Int_up[1]) + abs(Int_down[1])
         hyst.append(area)
         hyst_error.append(d_area)
@@ -143,8 +148,9 @@ for i in range(1, folders + 1):
         t += (np.mean(R) - 1000)/3.815
             
     T.append(round(t/len(current_lib), 1))
-    #plt.figure(i)        
+
     plt.errorbar(iled, hyst, yerr=hyst_error)
+    #plt.plot(iled, hyst)
   
 
 plt.xlabel('Led Current [A]')
@@ -223,7 +229,7 @@ current_lib = [0.001, 0.005, 0.01, 0.015, 0.02, 0.025, 0.05, 0.075, 0.1, 0.125, 
 i = 7
 
 path = '/home/lucas/Desktop/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led/Estacionario %s/' % i
-    
+        
 for j in range(0, len(current_lib)):
     path_file_i = str(current_lib[j]) + 'A/iv/1 (iv).txt'
     data_i = np.loadtxt(path + path_file_i)
