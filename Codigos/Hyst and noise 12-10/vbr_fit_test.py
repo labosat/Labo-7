@@ -335,7 +335,7 @@ def DiffData(x, y, y_err):
     diff_err = []
     for i in range(1, len(y) - 1):
         diff.append((y[i - 1] - y[i + 1])/(2*h))
-        diff_err.append((y_err[i - 1] - y_err[i + 1])/(2*h))
+        diff_err.append((abs(y_err[i - 1]) + abs(y_err[i + 1]))/(2*h))
         
     index = [0, len(x) - 1]    
         
@@ -434,32 +434,60 @@ def error_I(y, source = False):
         print('Boolean values True or False.')
     return temp
 
-def derive_poly(x, v):
-    numerator = 0
-    denominator = 0
-    for i in range(0, len(v) - 1):
-        numerator += (len(v) - 1 - i)*v[len(v) - 2 - i]*pow(x, len(v) - 1 - i)
-        
-    for i in range(0, len(v)):
-        denominator += v[len(v) - 1 - i]*pow(x, i)
-    
-    return numerator/denominator
+def fit_function(M, x):
+    a, b = M
+    return a/(x - b)
 
-i = 12
+i = 2
 j = 1
 
 path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
 
 path_group_i = '/iv/%s (iv).txt' % j
-data_i = np.loadtxt(path + path_group_i)
+data_i = np.loadtxt(path + path_group_i, skiprows=1)
 V = data_i[:, 0]
 I = data_i[:, 1]
 I_err = error_I(I)
 
 V, I, I_err = LogData(V, I, I_err)
 V, I, I_err = DiffData(V, I, I_err)
-plt.plot(V, I, '.')
+
+from scipy.odr import ODR, Model, RealData
+
+#flag to check if data needs to be inverted
+flag = False
+
+if abs(np.max(I)) > abs(np.min(I)):
+    maxim = np.max(I)
+    for i in range(0, len(I)):
+        if I[i] == maxim:
+            index = i
+elif abs(np.max(I)) < abs(np.min(I)):
+    minim = np.min(I)
+    for i in range(0, len(I)):
+        if I[i] == minim:
+            index = i
+    I = [-x for x in I]
+
+        
+#plt.errorbar(V, I, yerr=I_err, fmt='.')
+
+V_fit = []
+I_fit = []
+I_err_fit = []
+for i in range(index + 1, index + 15):
+    V_fit.append(V[i])
+    I_fit.append(I[i])
+    I_err_fit.append(I_err[i])
     
-from scipy.signal import savgol_filter
-Ihat = savgol_filter(I, 27, 3) # window size 51, polynomial order 3
-plt.plot(V, I, color='red')
+plt.errorbar(V_fit, I_fit, yerr=I_err_fit, fmt='.')
+
+model = Model(fit_function)
+data = RealData(V_fit, I_fit, sx=I_err_fit)
+odr = ODR(data, model, beta0=[2., 25.], maxit=10000)
+out = odr.run()
+
+p0 = out.beta[0]
+p1 = out.beta[1]
+
+plt.plot(V_fit,  fit_function(out.beta, V_fit))
