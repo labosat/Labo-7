@@ -288,10 +288,10 @@ T = []
 
 for i in range(1, folders + 1):
     j = 1
-    #path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
     
     #labo windows
-    path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
 
     breakdown = 0
     temp = 0
@@ -330,6 +330,8 @@ for i in range(1, folders + 1):
 T_err = [0.655 for x in T]
 #minimo step en la medicion - ver mejor este error
 Vbr_err = [0.002*x for x in Vbr]
+
+np.savetxt('/home/lucas/Desktop/data_vbr.txt', np.c_[T, Vbr])
 
 plt.errorbar(T, Vbr, xerr=T_err, yerr=Vbr_err, fmt='.')
 plt.grid(True)
