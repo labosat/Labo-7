@@ -301,6 +301,9 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
         
         if i != iEnd:
             i += iStep
+            
+        smu_2612b.write('smub.source.leveli = 0')
+        time.sleep(3)
         
     
     i -= iStep
@@ -318,6 +321,9 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
             readingsI_sipm.append(sipm_current)
         
             i -= iStep
+            
+            smu_2612b.write('smub.source.leveli = 0')
+            time.sleep(3)
     
     
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')

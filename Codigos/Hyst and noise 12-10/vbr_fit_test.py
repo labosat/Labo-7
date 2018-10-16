@@ -109,7 +109,12 @@ def derive_poly(x, v):
 #select which temperature to load
 i = 1
 
-path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s/iv/7 (iv).txt' % i
+#casa
+#path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s/iv/7 (iv).txt' % i
+
+#labo windows
+path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s/iv/7 (iv).txt' % i
+
 data = np.loadtxt(path)
 
 V = data[:, 0]
@@ -126,13 +131,14 @@ plt.plot(V, derive_poly(V, fit), "r--", lw = 2)
 
 T = []
 for i in range(1, 14):
-    path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s/res/7 (res).txt' % i
+    #path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s/res/7 (res).txt' % i
+    path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s/iv/7 (iv).txt' % i
+
     data = np.loadtxt(path, skiprows=1)
     t = 0
     R = data[:, 1]
     t = (np.mean(R) - 1000)/3.815
     T.append(t)
-    print(t)
     
   
 #grafico de lo conseguido    
@@ -255,17 +261,38 @@ def derive_poly(x, v):
     
     return numerator/denominator
 
+def Linear(M, x):
+    """
+    Funcion lineal para ajustar con el ODR:
+        
+    >>> linear_model = Model(Linear)
+    >>> data = RealData(X, Y, sx=X_err, sy=Y_err)
+    >>> odr = ODR(data, linear_model, beta0=[0., 1.])
+    >>> out = odr.run()
+    
+    >>> m = out.beta[0]
+    >>> b = out.beta[1]
+    >>> m_err = out.sd_beta[0]
+    >>> b_err = out.sd_beta[1]        
+    >>> chi2 = out.res_var
+    .
+    .
+    """
+    m, b = M
+    return m*x + b
+
 folders = 12
-
-path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
-
 Vbr = []
 T = []
 
 
 for i in range(1, folders + 1):
     j = 1
-    path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    #path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    
+    #labo windows
+    path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+
     breakdown = 0
     temp = 0
     
@@ -306,7 +333,7 @@ Vbr_err = [0.002*x for x in Vbr]
 
 plt.errorbar(T, Vbr, xerr=T_err, yerr=Vbr_err, fmt='.')
 plt.grid(True)
-plt.xlabel('Temperature [ºC]')
+plt.xlabel('Temperature [C]')
 plt.ylabel('Breakdown Voltage [V]')
 
 
@@ -441,7 +468,12 @@ def fit_function(M, x):
 i = 2
 j = 1
 
-path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+#casa
+#path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+
+#labo windows
+path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+
 
 path_group_i = '/iv/%s (iv).txt' % j
 data_i = np.loadtxt(path + path_group_i, skiprows=1)

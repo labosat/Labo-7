@@ -1,5 +1,6 @@
 from k2612B import run
 from functions import P
+import time
 
 #script for saving secuential measurements automatically for k2612B and k2400
 #optimal values for 'iv': N = 50, wait_time = 0.01
@@ -10,18 +11,19 @@ from functions import P
 
 N = 1
 wait_time = 10*P('m')
-group_path = 'Estacionario'
+group_path = 'Estacionario 10'
 
 #modes available: 'iv', 'led1', 'led2' (refer to help for specifics)
 mode = 'led1'
 NPLC = 1
-iPolarization_led = 0
+iPolarization_led = "none"
 
 plotFlag = 1
 saveFlag = 1
 
 for j in range(1, N + 1):
     run(j, mode, group_path, plotFlag, saveFlag, wait_time, NPLC, iPolarization_led)
+    #time.sleep(60)
     
 #%%
 from k2612B import run
@@ -33,7 +35,7 @@ import time
 
 N = 1
 measurements = 100
-path_name = 'Estacionario 7'
+path_name = 'Estacionario 8'
 
 folders = ["0.01 NPLC", "0.1 NPLC", "1 NPLC"]
 mode = 'led2'
