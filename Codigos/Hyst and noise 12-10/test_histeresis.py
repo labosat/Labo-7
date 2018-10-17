@@ -87,10 +87,10 @@ current_lib = [0.001, 0.005, 0.01, 0.015, 0.02, 0.025, 0.05, 0.075, 0.1, 0.125, 
 T = []
 for i in range(1, folders + 1):
     #windows
-    path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
+    #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
     
     #linux
-    #path = '/home/lucas/Desktop/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
+    path = '/home/lucas/Desktop/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
     hyst = []
     hyst_error = []
     iled = []
@@ -173,10 +173,10 @@ current = 0.15
 T = []
 for i in range(1, folders + 1):
     #windows
-    path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
+    #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
     
     #linux
-    #path = '/home/lucas/Desktop/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
+    path = '/home/lucas/Desktop/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
 
     hyst_dist = []
     path_file_i = str(current) + 'A/iv/1 (iv).txt'
@@ -230,11 +230,11 @@ current_lib = [0.001, 0.005, 0.01, 0.015, 0.02, 0.025, 0.05, 0.075, 0.1, 0.125, 
 i = 7
 
 #casa
-#path = '/home/lucas/Desktop/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
+path = '/home/lucas/Desktop/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
         
 #labo windows
 
-path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
+#path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
 
 
 
@@ -500,3 +500,131 @@ plt.errorbar(T, hyst, yerr=hyst_error)
 plt.xlabel('Temperature [C]')
 plt.ylabel('Hysteresis Area [W]')
 plt.grid(True)
+
+#%% graphs all iv curves for different T
+import numpy as np
+import matplotlib.pyplot as plt
+
+def error_I(y, source = False):
+    """
+    Esta funcion esta diseñada para crear un array con los errores de la corriente 
+    medida o sourceada por un Kiethley 2611B, 2612B, 2614B.
+    La funcion toma una lista que tiene la corriente, y un boolean que indica si la 
+    corriente fue medida o sourceada.
+    
+    Input: (I, source = False)
+    
+    Si no se especifica el source, entonces la corriente fue medida. Si source = True,
+    entonces se sourceo con corriente.
+    
+    Returns:  I_err  (list)
+    .
+    .
+    """
+    I_temp= y
+    temp = []
+    percentage = 0
+    offset = 0
+    if source == True:
+        for i in range(0, len(I_temp)):
+            if I_temp[i] < 100*pow(10, -9):
+                percentage = 0.0006
+                offset = 100*pow(10, -12)
+            elif 100*pow(10, -9) < I_temp[i] and I_temp[i] < 1*pow(10, -6):
+                percentage = 0.0003
+                offset = 800*pow(10, -12)    
+            elif 1*pow(10, -6)<I_temp[i] and I_temp[i]<10*pow(10, -6): 
+                percentage = 0.0003
+                offset = 5*pow(10, -9)
+            elif 10*pow(10, -6)<I_temp[i] and I_temp[i]<100*pow(10, -6): 
+                percentage = 0.0003
+                offset = 60*pow(10, -9)
+            elif 100*pow(10, -6)<I_temp[i] and I_temp[i]<1*pow(10, -3): 
+                percentage = 0.0003
+                offset = 300*pow(10, -9)
+            elif 1*pow(10, -3)<I_temp[i] and I_temp[i]<10*pow(10, -3): 
+                percentage = 0.0003
+                offset = 6*pow(10, -6)
+            elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<100*pow(10, -3): 
+                percentage = 0.0003
+                offset = 30*pow(10, -6)                
+            elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<1: 
+                percentage = 0.0005
+                offset = 1.8*pow(10, -3)
+            elif 1<I_temp[i] and I_temp[i] < 1.5: 
+                percentage = 0.0006
+                offset = 4*pow(10, -3)
+            else:
+                percentage = 0.005
+                offset = 40*pow(10, -3)
+            temp.append(I_temp[i]*percentage + offset)
+            
+    elif source==False:
+        for i in range(0, len(I_temp)):
+            if I_temp[i] < 100*pow(10, -9):
+                percentage = 0.0006
+                offset = 100*pow(10, -12)
+            elif 100*pow(10, -9) < I_temp[i] and I_temp[i] < 1*pow(10, -6):
+                percentage = 0.00025
+                offset = 500*pow(10, -12)    
+            elif 1*pow(10, -6)<I_temp[i] and I_temp[i]<10*pow(10, -6): 
+                percentage = 0.00025
+                offset = 1.5*pow(10, -9)
+            elif 10*pow(10, -6)<I_temp[i] and I_temp[i]<100*pow(10, -6): 
+                percentage = 0.0002
+                offset = 25*pow(10, -9)
+            elif 100*pow(10, -6)<I_temp[i] and I_temp[i]<1*pow(10, -3): 
+                percentage = 0.0002
+                offset = 200*pow(10, -9)
+            elif 1*pow(10, -3)<I_temp[i] and I_temp[i]<10*pow(10, -3): 
+                percentage = 0.0002
+                offset = 2.5*pow(10, -6)
+            elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<100*pow(10, -3): 
+                percentage = 0.0002
+                offset = 20*pow(10, -6)                
+            elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<1: 
+                percentage = 0.0003
+                offset = 1.5*pow(10, -3)
+            elif 1<I_temp[i] and I_temp[i] < 1.5: 
+                percentage = 0.0005
+                offset = 3.5*pow(10, -3)
+            else:
+                percentage = 0.004
+                offset = 25*pow(10, -3)
+            temp.append(I_temp[i]*percentage + offset)
+    else:
+        print('Boolean values True or False.')
+    return temp
+
+path_lib = [1, 10, 15, 17, 19]
+#casa
+
+T = []
+i = 0
+for x in path_lib:
+    path = '/home/lucas/Desktop/Labo-7/Mediciones_temporarias/Vbr/Estacionario %s/iv/7 (iv).txt' % x
+    path_r = '/home/lucas/Desktop/Labo-7/Mediciones_temporarias/Vbr/Estacionario %s/res/7 (res).txt' % x
+
+    data_i = np.loadtxt(path)
+    data_r = np.loadtxt(path_r, skiprows=1)
+        
+    V = data_i[:, 0]
+    I = data_i[:, 1]
+    V_err = V*0.0002 + 5E-3
+    I_err = error_I(I)
+    R = data_r[:, 1]
+    
+    t = (np.mean(R) - 1000)/3.815
+    T.append(round(t, 2))
+    
+    plt.errorbar(V, I, xerr=V_err, yerr=I_err, fmt='.')
+    
+    np.savetxt('/home/lucas/Desktop/%s (iv).txt' % i, np.c_[V, I])
+    i += 1
+    
+plt.legend([str(T[0]), str(T[1]), str(T[2]), str(T[3]), str(T[4])])
+plt.xlabel('SiPM Voltage [V]')
+plt.ylabel('SiPM Current [A]')
+plt.grid(True)
+
+np.savetxt('/home/lucas/Desktop/temps.txt', T)
