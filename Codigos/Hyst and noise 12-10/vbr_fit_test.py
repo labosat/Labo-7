@@ -281,6 +281,12 @@ def Linear(M, x):
     m, b = M
     return m*x + b
 
+def Find(v, x, tolerance = 0.01):
+    for i in range(0, len(v)):
+        if abs(v[i] - x) < tolerance:
+            return i
+    return 0
+
 folders = 12
 Vbr = []
 T = []
@@ -344,7 +350,74 @@ plt.plot(T, np.polyval(fit, T))
     
 fit
     
+
+vbr_lib = [0.0204502821*x + 24.2680092 for x in T]
     
+
+folders = 12
+Vbr = []
+T = []
+
+
+for i in range(1, folders + 1):
+    j = 1
+    path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    
+    #labo windows
+    #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+
+    breakdown = 0
+    temp = 0
+    
+    while True:
+        try:
+            path_group_i = '/iv/%s (iv).txt' % j
+            path_group_r = '/res/%s (res).txt' % j
+    
+            data_i = np.loadtxt(path + path_group_i)
+            data_r = np.loadtxt(path + path_group_r, skiprows=1)
+            
+            V = data_i[Find(data_i[:, 0], vbr_lib[i - 1], 0.01) - 25:, 0]
+            I = data_i[Find(data_i[:, 0], vbr_lib[i - 1], 0.01) - 25:, 1]
+            I_err = error_I(I)
+            R = data_r[:, 1]
+            
+            fit = np.polyfit(V, I, 6, w=I_err)
+            
+            if (abs(np.max(derive_poly(V, fit))) > abs(np.min(derive_poly(V, fit)))):
+                max_index = np.where(derive_poly(V, fit) == np.max(derive_poly(V, fit)))[0][0]
+            else:
+                max_index = np.where(derive_poly(V, fit) == np.min(derive_poly(V, fit)))[0][0]
+    
+            breakdown += V[max_index]
+            temp += (np.mean(R) - 1000)/3.815
+        
+            j += 1
+        except IOError:
+            break
+    
+    
+    breakdown = breakdown/(j - 1)
+    temp = temp/(j - 1)
+    Vbr.append(breakdown)
+    T.append(temp)
+
+T_err = [0.655 for x in T]
+#minimo step en la medicion - ver mejor este error
+Vbr_err = [0.002*x for x in Vbr]
+
+np.savetxt('/home/lucas/Desktop/data_vbr.txt', np.c_[T, Vbr])
+
+plt.errorbar(T, Vbr, xerr=T_err, yerr=Vbr_err, fmt='.')
+plt.grid(True)
+plt.xlabel('Temperature [C]')
+plt.ylabel('Breakdown Voltage [V]')
+
+
+fit = np.polyfit(T, Vbr, 1, w=Vbr_err)
+plt.plot(T, np.polyval(fit, T))
+    
+fit
 
 #%% test to check labo6 method (without xerr for now)
 import numpy as np
