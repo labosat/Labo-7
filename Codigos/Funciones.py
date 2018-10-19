@@ -356,7 +356,8 @@ def Smooth(V, V_err, I, I_err, degree):
 def Linear(M, x):
     """
     Funcion lineal para ajustar con el ODR:
-        
+    
+    >>> from scipy.odr import Model, RealData, ODR
     >>> linear_model = Model(Linear)
     >>> data = RealData(X, Y, sx=X_err, sy=Y_err)
     >>> odr = ODR(data, linear_model, beta0=[0., 1.])
