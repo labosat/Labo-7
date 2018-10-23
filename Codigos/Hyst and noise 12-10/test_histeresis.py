@@ -68,7 +68,7 @@ for i in range(1, folders + 1):
 
 plt.xlabel('Led Current [A]')
 plt.ylabel('Hysteresis Area [W]')
-plt.legend([str(T[0]) + " ºC", str(T[1]) + " ºC", str(T[2]) + " ºC", str(T[3]) + " ºC", str(T[4]) + " ºC", str(T[5]) + " ºC", str(T[6]) + " ºC"])
+plt.legend([str(T[0]) + " C", str(T[1]) + " C", str(T[2]) + " C", str(T[3]) + " C", str(T[4]) + " C", str(T[5]) + " C", str(T[6]) + " C"])
 plt.grid(True)
 
 #%% code to check hysteresis area integrating 7th deg polynomial fit
@@ -87,10 +87,10 @@ current_lib = [0.001, 0.005, 0.01, 0.015, 0.02, 0.025, 0.05, 0.075, 0.1, 0.125, 
 T = []
 for i in range(1, folders + 1):
     #windows
-    #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
+    path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
     
     #linux
-    path = '/home/lucas/Desktop/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
+    #path = '/home/lucas/Desktop/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
     hyst = []
     hyst_error = []
     iled = []
@@ -173,10 +173,10 @@ current = 0.15
 T = []
 for i in range(1, folders + 1):
     #windows
-    #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
+    path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
     
     #linux
-    path = '/home/lucas/Desktop/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
+    #path = '/home/lucas/Desktop/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led histeresis/Estacionario %s/' % i
 
     hyst_dist = []
     path_file_i = str(current) + 'A/iv/1 (iv).txt'
@@ -218,8 +218,12 @@ for i in range(1, folders + 1):
 
 plt.xlabel('Led Current [A]')
 plt.ylabel('Hysteresis Area [W]')
-plt.legend([str(T[0]) + " ºC", str(T[1]) + " ºC", str(T[2]) + " ºC", str(T[3]) + " ºC", str(T[4]) + " ºC", str(T[5]) + " ºC", str(T[6]) + " ºC"])
+plt.legend([str(T[0]) + " C", str(T[1]) + " C", str(T[2]) + " C", str(T[3]) + " C", str(T[4]) + " C", str(T[5]) + " C", str(T[6]) + " C"])
 plt.grid(True)
+
+#%%
+
+
 
 #%% graphs all iv curves for a given T
 import numpy as np
