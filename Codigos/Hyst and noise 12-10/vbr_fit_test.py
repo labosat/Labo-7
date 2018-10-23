@@ -294,10 +294,10 @@ T = []
 
 for i in range(1, folders + 1):
     j = 1
-    #path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
     
     #labo windows
-    path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
 
     breakdown = 0
     temp = 0
@@ -546,19 +546,30 @@ def fit_function(M, x):
     return a/(x - b)
 
 
-def dispersion(x, y, y_err, beta):
-    """
-    Esta funcion calcula la standard deviation de una muestra 'x'.
-    
-    Input: x  (list or array)
-    
-    Returns: int
-    .
-    .
-    """
-    lista = [((y[i] - fit_function(beta, x[i]))**2)/(y_err[i])**2 for i in range(len(y))]
+def fit_calc(beta, sd_beta, value, perfect = False):
+    temp = []
+    temp2 = []
+    temp3 = []
+    for i in range(0, len(beta)):
+        if perfect:
+            temp.append(beta[i][0])
+            temp2.append(beta[i][1])
+            temp3.append(sd_beta[i][1])
+        else:
+            if beta[i][0] != value:
+                temp.append(beta[i][0])
+                temp2.append(beta[i][1])
+                temp3.append(sd_beta[i][1])
+    for i in range(0, len(temp)):
+        if perfect:
+            if temp[i] == value:
+                return value
+            
+        else:
+            temp = [x/value for x in temp]
+            i = ClosestToOne(temp)
+            return i, temp2[i], temp3[i]
 
-    return np.sum(lista)/(len(lista) - 2)
 
 m = 3.815
 R0 = 1000
@@ -570,11 +581,14 @@ T = []
 T_err = []
 Vbr = []
 Vbr_err = []
+p0 = []
+p0_err = []
 for i in range(1, folders + 1):
-    #casa
-    #path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
     
-    path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    #casa
+    path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    
+    #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
 
     path_group_i = '/iv/%s (iv).txt' % j
     path_group_r = '/res/%s (res).txt' % j
@@ -605,37 +619,50 @@ for i in range(1, folders + 1):
     t = (np.mean(R) - R0)/m
     t_err = np.std(R)/m
     
-#    for l in range(0, 5):
-    l = 0
-    for h in range(l + 1, len(V[index:]) - max_limit):
-        V_fit = V[index + l:index + h]
-        I_fit = I[index + l:index + h]
-        I_err_fit = I_err[index + l:index + h]
-        V_err_fit = V_err[index + l:index + h]
-        model = Model(fit_function)
-        data = RealData(V_fit, I_fit, sy=I_err_fit)
-        odr = ODR(data, model, beta0=[2., 24.], maxit=100000)
-        out = odr.run()
-        
-        chi_2.append(dispersion(V_fit, I_fit, I_err_fit, out.beta))
-        beta.append(out.beta)
-        sd_beta.append(out.sd_beta)
-        print(h)
-        
-    
-    for l in range(len(chi_2)):
-        if np.isfinite(chi_2[l]):
-            chi_2.append(chi_2[l])
-    
+    for l in range(0, 5):
+        for h in range(l + 1, len(V[index:]) - max_limit):
+            V_fit = V[index + l:index + h]
+            I_fit = I[index + l:index + h]
+            I_err_fit = I_err[index + l:index + h]
+            V_err_fit = V_err[index + l:index + h]
+            model = Model(fit_function)
+            data = RealData(V_fit, I_fit, sx=V_err_fit, sy=I_err_fit)
+            odr = ODR(data, model, beta0=[2., 24.], maxit=100000)
+            out = odr.run()
+            
+            #chi_2.append(dispersion(V_fit, I_fit, I_err_fit, out.beta))
+            beta.append(out.beta)
+            sd_beta.append(out.sd_beta)
+            print(h)
 
-    index_chi = ClosestToOne(chi_2)
+#        for l in range(len(chi_2)):
+#            if np.isfinite(chi_2[l]):
+#                chi_2.append(chi_2[l])
+      
+    index_chi, vbr, vbr_err = fit_calc(beta, sd_beta, 2)
     T.append(t)
     T_err.append(t_err)
-    Vbr.append(beta[index_chi][1])
-    Vbr_err.append(sd_beta[index_chi][1])
+    Vbr.append(vbr)
+    Vbr_err.append(vbr_err)
+    #p0.append(beta[])
     print("success!: "+ str(i))
+    
+#%% fitting section
+    
+plt.errorbar(T, Vbr, xerr=T_err, yerr=Vbr_err, fmt='.')
+plt.plot(T, np.polyval(np.polyfit(T, Vbr, w=Vbr_err2, deg=1), T))   
+np.polyfit(T, Vbr, w=Vbr_err2, deg=1)
 
-#plt.errorbar(T, Vbr, xerr=T_err, yerr=Vbr_err, fmt='.')
+np.savetxt('/home/lucas/Desktop/vbr_final.txt', np.c_[T, Vbr, T_err, Vbr_err])
+ 
+#%%
+
+index = 0
+folder = 1
+
+print(str(folder) + "\t" + str(T[index]) + "\t" + str(beta[index][0]) + "\t" + str(p0[index]) + "\t" 0 str())
+    
+#%%
 
 plt.plot(V, I, '.')
 plt.plot(V,  fit_function(beta[index_chi], V))
