@@ -296,6 +296,10 @@ Vbr = []
 Vbr_err = []
 p0 = []
 p0_err = []
+T_lista = []
+T_err_lista = []
+Vbr_lista = []
+Vbr_err_lista = []
 for i in range(1, folders + 1):
     
     path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
@@ -361,6 +365,12 @@ for i in range(1, folders + 1):
         Vbr_err_temp.append(vbr_err)
         T_temp.append(t)
         T_err_temp.append(t_err)
+        
+    #aca estan los datos antes de promediar como lista de listas
+    T_lista.append(T_temp)
+    T_err_lista.append(T_err_temp)
+    Vbr_lista.append(Vbr_temp)
+    Vbr_err_lista.append(Vbr_err_temp)
     
     T.append(np.mean(T_temp))
     T_err.append(np.mean(T_err_temp))
@@ -373,17 +383,7 @@ for i in range(1, folders + 1):
     print("success!: "+ str(i))
 
 
-
-
-
-
-
-
-
-
-
-
-
+plt.figure(1)
 plt.errorbar(T, Vbr, xerr= T_err, yerr= Vbr_err, fmt='.', capsize= 3)
 linear_model = Model(Linear)
 data = RealData(T, Vbr, sx=T_err, sy=Vbr_err)
