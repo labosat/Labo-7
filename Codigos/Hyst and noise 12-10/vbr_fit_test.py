@@ -649,11 +649,16 @@ for i in range(1, folders + 1):
     
 #%% fitting section
     
+Vbr_err2 = [1/x for x in Vbr_err]    
+    
 plt.errorbar(T, Vbr, xerr=T_err, yerr=Vbr_err, fmt='.')
-plt.plot(T, np.polyval(np.polyfit(T, Vbr, w=Vbr_err2, deg=1), T))   
-np.polyfit(T, Vbr, w=Vbr_err2, deg=1)
+plt.plot(T, np.polyval(np.polyfit(T, Vbr, w=Vbr_err2, deg=1), T)) 
+plt.grid(True)  
 
 np.savetxt('/home/lucas/Desktop/vbr_final.txt', np.c_[T, Vbr, T_err, Vbr_err])
+
+slope, slope_err, _, _, _ = np.polyfit(T, Vbr, w=Vbr_err2, deg=1, full=True)
+print("Vbr = " + str(slope[0]) + " \pm " + str(slope_err[0]))
  
 #%%
 
