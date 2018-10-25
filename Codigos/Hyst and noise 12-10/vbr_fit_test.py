@@ -294,7 +294,7 @@ T = []
 
 for i in range(1, folders + 1):
     j = 1
-    path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
     
     #labo windows
     #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
