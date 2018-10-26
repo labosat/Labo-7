@@ -1,0 +1,2 @@
+- Hacer paso fino en curva Isipm vs Iled en un intervalo de 0A a 0.02A para ver bien el comportamiento que vamos a medir 
+en orbita. 
