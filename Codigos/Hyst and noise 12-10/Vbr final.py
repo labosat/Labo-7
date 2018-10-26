@@ -301,8 +301,8 @@ T_err_lista = []
 Vbr_lista = []
 Vbr_err_lista = []
 for i in range(1, folders + 1):
-    
-    path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    i = 2
+    path = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
     Vbr_temp = []
     T_temp = []
     Vbr_err_temp = []
@@ -313,6 +313,34 @@ for i in range(1, folders + 1):
     for j in array:
     #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
     
+        path_group_i = '/iv/%s (iv).txt' % j
+        path_group_r = '/res/%s (res).txt' % j
+        data_i = np.loadtxt(path + path_group_i, skiprows=1)
+        data_r = np.loadtxt(path + path_group_r, skiprows=1)
+        V = data_i[:, 0]
+        I = data_i[:, 1]
+        R = data_r[:, 1]
+        V_err = error_V(V)
+        I_err = error_I(I)
+    
+        V, I, I_err = LogData(V, I, I_err)
+        V, I, V_err, I_err = DiffData(V, I, V_err, I_err)
+            
+        #flag to check if data needs to be inverted
+        flag = False
+        
+        if abs(np.max(I)) > abs(np.min(I)):
+            index = I.index(np.max(I))
+        elif abs(np.max(I)) < abs(np.min(I)):
+            index = I.index(np.min(I))
+            I = [-x for x in I]
+            
+        chi_2 = []
+        beta = []
+        beta2 = []
+        sd_beta = []
+        t = (np.mean(R) - R0)/m
+        t_err = np.std(R)/m
         path_group_i = '/iv/%s (iv).txt' % j
         path_group_r = '/res/%s (res).txt' % j
         data_i = np.loadtxt(path + path_group_i, skiprows=1)
@@ -359,7 +387,7 @@ for i in range(1, folders + 1):
 #                print(h)
 
 
-      
+        print(str(j) + "/" + str(len(array)))
         index_chi, vbr, vbr_err = fit_calc(beta, sd_beta, 2)
         Vbr_temp.append(vbr)
         Vbr_err_temp.append(vbr_err)
@@ -376,12 +404,13 @@ for i in range(1, folders + 1):
     T_err.append(np.mean(T_err_temp))
     Vbr.append(np.mean(Vbr_temp))
     Vbr_err.append(np.mean(Vbr_err_temp))
+    np.savetxt('/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Mediciones_temporarias/%s.txt' % i, np.c_[T_temp, Vbr_temp, T_err_temp, Vbr_err_temp])
     
 #    plt.plot(V, I, '.')
 #    plt.plot(V, fit_function(beta[index_chi], V))
     #p0.append(beta[])
     print("success!: "+ str(i))
-
+    break
 
 plt.figure(1)
 plt.errorbar(T, Vbr, xerr= T_err, yerr= Vbr_err, fmt='.', capsize= 3)
