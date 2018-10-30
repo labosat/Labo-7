@@ -10,7 +10,7 @@ import time
 #                   'led3': N = 50, wait_time = 0.01
 
 N = 1
-wait_time = 10*P('m')
+wait_time = 25*P('m')
 group_path = 'Estacionario 10'
 
 #modes available: 'iv', 'led1', 'led2' (refer to help for specifics)

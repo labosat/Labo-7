@@ -7,7 +7,7 @@ import sys
 sys.path.append('./Labo-7/')
 from scipy.odr import Model, RealData, ODR
 
-path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Wait Time/results led'
+path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Experimento LED/hist_vs_wait_time(0-200)'
 
 I = []
 V = []
@@ -33,6 +33,9 @@ for i in range(len(distancias)):
     d_max.append(np.max(distancias[i]))
     
 plt.plot([1e-7, 1e-6, 1e-5,0.0001, 0.001, 0.01, 0.025, 0.05, 0.075, 0.1], d_max, 'o')
+plt.xlabel('Wait Time (s)')
+plt.ylabel('Histeresis area')
+
 
 for i in range(len(['1e-7', '1e-6', '1e-5','0.0001', '0.001', '0.01', '0.025', '0.05', '0.075', '0.1'])):
     plt.plot(I_led[i], I[i], '.')

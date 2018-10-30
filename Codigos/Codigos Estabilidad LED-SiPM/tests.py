@@ -1,5 +1,5 @@
 import time
-from functions import cast, readBuffer
+from functions import cast, readBuffer, P
 
 
 def ivr(smu, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela, i_ccb, v_ccb,
@@ -287,6 +287,8 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     print("Start of measurement")
     
     i = iStart
+    iEnd = 9.9*P('m')
+    iStep = 500*P('n')
     #startTime = time.time()
     while (i <= iEnd):
         smu_2612b.write('smub.source.leveli = ' + str(i))
@@ -303,12 +305,38 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
             i += iStep
             
         smu_2612b.write('smub.source.leveli = 0')
-        time.sleep(3)
+        #time.sleep(3)
+        
+    #--------------------------------------------------------------------------
+    
+    iEnd = 20*P('m')
+    iStep = 3*P('u')
+    #startTime = time.time()
+    while (i <= iEnd):
+        smu_2612b.write('smub.source.leveli = ' + str(i))
+        time.sleep(wait_time)
+        smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
+        smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
+
+        auxRead = smu_2400.query(':READ?')
+        sipm_current = float(cast(auxRead)[1])
+        
+        readingsI_sipm.append(sipm_current)
+        
+        if i != iEnd:
+            i += iStep
+            
+        smu_2612b.write('smub.source.leveli = 0')
+        #time.sleep(3)
+    
+    #--------------------------------------------------------------------------
         
     
     i -= iStep
     
     if return_sweep == 1:
+        iStart = 10*P('m')
+        
         while (i >= iStart):
             smu_2612b.write('smub.source.leveli = ' + str(i))
             time.sleep(wait_time)
@@ -323,7 +351,25 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
             i -= iStep
             
             smu_2612b.write('smub.source.leveli = 0')
-            time.sleep(3)
+            #time.sleep(3)
+            
+        iStart = 0
+        iStep = 500*P('n') 
+        while (i >= iStart):
+            smu_2612b.write('smub.source.leveli = ' + str(i))
+            time.sleep(wait_time)
+            smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
+            smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
+
+            auxRead = smu_2400.query(':READ?')
+            sipm_current = float(cast(auxRead)[1])
+        
+            readingsI_sipm.append(sipm_current)
+        
+            i -= iStep
+            
+            smu_2612b.write('smub.source.leveli = 0')
+            #time.sleep(3)
     
     
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
