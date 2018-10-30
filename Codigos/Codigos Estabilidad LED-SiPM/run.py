@@ -11,7 +11,7 @@ import time
 
 N = 1
 wait_time = 25*P('m')
-group_path = 'Estacionario 10'
+group_path = 'Medicion i vs i 0-20mA fina'
 
 #modes available: 'iv', 'led1', 'led2' (refer to help for specifics)
 mode = 'led1'
