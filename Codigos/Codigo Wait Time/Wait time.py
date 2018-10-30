@@ -7,7 +7,7 @@ import sys
 sys.path.append('./Labo-7/')
 from scipy.odr import Model, RealData, ODR
 
-path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Wait Time/results led'
+path = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Experimento LED/hist_vs_wait_time(0-200)'
 
 I = []
 V = []

@@ -81,7 +81,7 @@ def R_Rq(path, tolerancia):
     return R, R_err, Rq, Rq_err, chi2_out, array
 
 
-def error_I(y, source = False):
+def error_I(y, source = False, SMU):
     """
     Esta funcion esta diseniada para crear un array con los errores de la corriente 
     medida o sourceada por un Kiethley 2611B, 2612B, 2614B.
@@ -97,83 +97,142 @@ def error_I(y, source = False):
     .
     .
     """
-    I_temp= y
-    temp = []
-    percentage = 0
-    offset = 0
-    if source == True:
-        for i in range(0, len(I_temp)):
-            if I_temp[i] < 100*pow(10, -9):
-                percentage = 0.0006
-                offset = 100*pow(10, -12)
-            elif 100*pow(10, -9) < I_temp[i] and I_temp[i] < 1*pow(10, -6):
-                percentage = 0.0003
-                offset = 800*pow(10, -12)    
-            elif 1*pow(10, -6)<I_temp[i] and I_temp[i]<10*pow(10, -6): 
-                percentage = 0.0003
-                offset = 5*pow(10, -9)
-            elif 10*pow(10, -6)<I_temp[i] and I_temp[i]<100*pow(10, -6): 
-                percentage = 0.0003
-                offset = 60*pow(10, -9)
-            elif 100*pow(10, -6)<I_temp[i] and I_temp[i]<1*pow(10, -3): 
-                percentage = 0.0003
-                offset = 300*pow(10, -9)
-            elif 1*pow(10, -3)<I_temp[i] and I_temp[i]<10*pow(10, -3): 
-                percentage = 0.0003
-                offset = 6*pow(10, -6)
-            elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<100*pow(10, -3): 
-                percentage = 0.0003
-                offset = 30*pow(10, -6)                
-            elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<1: 
-                percentage = 0.0005
-                offset = 1.8*pow(10, -3)
-            elif 1<I_temp[i] and I_temp[i] < 1.5: 
-                percentage = 0.0006
-                offset = 4*pow(10, -3)
-            else:
-                percentage = 0.005
-                offset = 40*pow(10, -3)
-            temp.append(I_temp[i]*percentage + offset)
-            
-    elif source==False:
-        for i in range(0, len(I_temp)):
-            if I_temp[i] < 100*pow(10, -9):
-                percentage = 0.0006
-                offset = 100*pow(10, -12)
-            elif 100*pow(10, -9) < I_temp[i] and I_temp[i] < 1*pow(10, -6):
-                percentage = 0.00025
-                offset = 500*pow(10, -12)    
-            elif 1*pow(10, -6)<I_temp[i] and I_temp[i]<10*pow(10, -6): 
-                percentage = 0.00025
-                offset = 1.5*pow(10, -9)
-            elif 10*pow(10, -6)<I_temp[i] and I_temp[i]<100*pow(10, -6): 
-                percentage = 0.0002
-                offset = 25*pow(10, -9)
-            elif 100*pow(10, -6)<I_temp[i] and I_temp[i]<1*pow(10, -3): 
-                percentage = 0.0002
-                offset = 200*pow(10, -9)
-            elif 1*pow(10, -3)<I_temp[i] and I_temp[i]<10*pow(10, -3): 
-                percentage = 0.0002
-                offset = 2.5*pow(10, -6)
-            elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<100*pow(10, -3): 
-                percentage = 0.0002
-                offset = 20*pow(10, -6)                
-            elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<1: 
-                percentage = 0.0003
-                offset = 1.5*pow(10, -3)
-            elif 1<I_temp[i] and I_temp[i] < 1.5: 
-                percentage = 0.0005
-                offset = 3.5*pow(10, -3)
-            else:
-                percentage = 0.004
-                offset = 25*pow(10, -3)
-            temp.append(I_temp[i]*percentage + offset)
-    else:
-        print('Boolean values True or False.')
+    if SMU == '2612':
+        I_temp= y
+        temp = []
+        percentage = 0
+        offset = 0
+        if source == True:
+            for i in range(0, len(I_temp)):
+                if I_temp[i] < 100*pow(10, -9):
+                    percentage = 0.0006
+                    offset = 100*pow(10, -12)
+                elif 100*pow(10, -9) < I_temp[i] and I_temp[i] < 1*pow(10, -6):
+                    percentage = 0.0003
+                    offset = 800*pow(10, -12)    
+                elif 1*pow(10, -6)<I_temp[i] and I_temp[i]<10*pow(10, -6): 
+                    percentage = 0.0003
+                    offset = 5*pow(10, -9)
+                elif 10*pow(10, -6)<I_temp[i] and I_temp[i]<100*pow(10, -6): 
+                    percentage = 0.0003
+                    offset = 60*pow(10, -9)
+                elif 100*pow(10, -6)<I_temp[i] and I_temp[i]<1*pow(10, -3): 
+                    percentage = 0.0003
+                    offset = 300*pow(10, -9)
+                elif 1*pow(10, -3)<I_temp[i] and I_temp[i]<10*pow(10, -3): 
+                    percentage = 0.0003
+                    offset = 6*pow(10, -6)
+                elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<100*pow(10, -3): 
+                    percentage = 0.0003
+                    offset = 30*pow(10, -6)                
+                elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<1: 
+                    percentage = 0.0005
+                    offset = 1.8*pow(10, -3)
+                elif 1<I_temp[i] and I_temp[i] < 1.5: 
+                    percentage = 0.0006
+                    offset = 4*pow(10, -3)
+                else:
+                    percentage = 0.005
+                    offset = 40*pow(10, -3)
+                temp.append(I_temp[i]*percentage + offset)
+                
+        elif source==False:
+            for i in range(0, len(I_temp)):
+                if I_temp[i] < 100*pow(10, -9):
+                    percentage = 0.0006
+                    offset = 100*pow(10, -12)
+                elif 100*pow(10, -9) < I_temp[i] and I_temp[i] < 1*pow(10, -6):
+                    percentage = 0.00025
+                    offset = 500*pow(10, -12)    
+                elif 1*pow(10, -6)<I_temp[i] and I_temp[i]<10*pow(10, -6): 
+                    percentage = 0.00025
+                    offset = 1.5*pow(10, -9)
+                elif 10*pow(10, -6)<I_temp[i] and I_temp[i]<100*pow(10, -6): 
+                    percentage = 0.0002
+                    offset = 25*pow(10, -9)
+                elif 100*pow(10, -6)<I_temp[i] and I_temp[i]<1*pow(10, -3): 
+                    percentage = 0.0002
+                    offset = 200*pow(10, -9)
+                elif 1*pow(10, -3)<I_temp[i] and I_temp[i]<10*pow(10, -3): 
+                    percentage = 0.0002
+                    offset = 2.5*pow(10, -6)
+                elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<100*pow(10, -3): 
+                    percentage = 0.0002
+                    offset = 20*pow(10, -6)                
+                elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<1: 
+                    percentage = 0.0003
+                    offset = 1.5*pow(10, -3)
+                elif 1<I_temp[i] and I_temp[i] < 1.5: 
+                    percentage = 0.0005
+                    offset = 3.5*pow(10, -3)
+                else:
+                    percentage = 0.004
+                    offset = 25*pow(10, -3)
+                temp.append(I_temp[i]*percentage + offset)
+        else:
+            print('Boolean values True or False.')
+    
+    elif SMU == '2400':
+        I_temp= y
+        temp = []
+        percentage = 0
+        offset = 0
+        if source == False:
+            for i in range(0, len(I_temp)):
+                if I_temp[i] < 1*pow(10, -6):
+                    percentage = 0.00029
+                    offset = 300*pow(10, -12)
+                elif 1*pow(10, -6) < I_temp[i] and I_temp[i] < 10*pow(10, -6):
+                    percentage = 0.00027
+                    offset = 700*pow(10, -12)    
+                elif 10*pow(10, -6)<I_temp[i] and I_temp[i]<100*pow(10, -6): 
+                    percentage = 0.00025
+                    offset = 6*pow(10, -9)
+                elif 100*pow(10, -6)<I_temp[i] and I_temp[i]<1*pow(10, -3): 
+                    percentage = 0.00027
+                    offset = 60*pow(10, -9)
+                elif 1*pow(10, -3)<I_temp[i] and I_temp[i]<10*pow(10, -3): 
+                    percentage = 0.00035
+                    offset = 600*pow(10, -9)
+                elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<100*pow(10, -3): 
+                    percentage = 0.00055
+                    offset = 6*pow(10, -6)
+                elif 100*pow(10, -3)<I_temp[i] and I_temp[i]<1: 
+                    percentage = 0.0022
+                    offset = 570*pow(10, -6)                
+                temp.append(I_temp[i]*percentage + offset)
+                
+        elif source==True:
+            for i in range(0, len(I_temp)):
+                if I_temp[i] < 1*pow(10, -6):
+                    percentage = 0.00035
+                    offset = 600*pow(10, -12)
+                elif 1*pow(10, -6) < I_temp[i] and I_temp[i] < 10*pow(10, -6):
+                    percentage = 0.00033
+                    offset = 2*pow(10, -9)    
+                elif 10*pow(10, -6)<I_temp[i] and I_temp[i]<100*pow(10, -6): 
+                    percentage = 0.00031
+                    offset = 20*pow(10, -9)
+                elif 100*pow(10, -6)<I_temp[i] and I_temp[i]<1*pow(10, -3): 
+                    percentage = 0.00034
+                    offset = 200*pow(10, -9)
+                elif 1*pow(10, -3)<I_temp[i] and I_temp[i]<10*pow(10, -3): 
+                    percentage = 0.00045
+                    offset = 2*pow(10, -6)
+                elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<100*pow(10, -3): 
+                    percentage = 0.00066
+                    offset = 20*pow(10, -6)
+                elif 100*pow(10, -3)<I_temp[i] and I_temp[i]<1: 
+                    percentage = 0.0027
+                    offset = 900*pow(10, -6)                
+                temp.append(I_temp[i]*percentage + offset)
+        else:
+            print('Boolean values True or False.')        
+    
     return temp
 
 
-def error_V(x, source = True):
+def error_V(x, source = True, SMU):
     """
     Esta funcion esta diseniada para crear un array con los errores del voltaje 
     medido o sourceado por un Kiethley 2611B, 2612B, 2614B.
@@ -189,43 +248,84 @@ def error_V(x, source = True):
     .
     .
     """
-    V_temp = x
-    temp = []
-    percentage = 0
-    offset = 0
-    if source == True:
-        for i in range(0, len(V_temp)):
-            if V_temp[i] < 200*pow(10, -3):
-                percentage = 0.0002
-                offset = 375*pow(10, -6)
-            elif 200*pow(10, -3) < V_temp[i] and V_temp[i] < 2:
-                percentage = 0.0002
-                offset = 600*pow(10, -6)    
-            elif 2<V_temp[i] and V_temp[i]<20: 
-                percentage = 0.0002
-                offset = 5*pow(10, -3)
-            else:
-                percentage = 0.0002
-                offset = 50*pow(10, -3)
-            temp.append(V_temp[i]*percentage + offset)
-            
-    elif source==False:
-        for i in range(0, len(V_temp)):
-            if V_temp[i] < 200*pow(10, -3):
-                percentage = 0.00015
-                offset = 225*pow(10, -6)
-            elif 200*pow(10, -3) < V_temp[i] and V_temp[i] < 2:
-                percentage = 0.0002
-                offset = 350*pow(10, -6)    
-            elif 2<V_temp[i] and V_temp[i]<20: 
-                percentage = 0.00015
-                offset = 5*pow(10, -3)
-            else:
-                percentage = 0.00015
-                offset = 50*pow(10, -3)
-            temp.append(V_temp[i]*percentage + offset)
-    else:
-        print('Boolean values True or False.')
+    if SMU == '2612':
+        V_temp = x
+        temp = []
+        percentage = 0
+        offset = 0
+        if source == True:
+            for i in range(0, len(V_temp)):
+                if V_temp[i] < 200*pow(10, -3):
+                    percentage = 0.0002
+                    offset = 375*pow(10, -6)
+                elif 200*pow(10, -3) < V_temp[i] and V_temp[i] < 2:
+                    percentage = 0.0002
+                    offset = 600*pow(10, -6)    
+                elif 2<V_temp[i] and V_temp[i]<20: 
+                    percentage = 0.0002
+                    offset = 5*pow(10, -3)
+                else:
+                    percentage = 0.0002
+                    offset = 50*pow(10, -3)
+                temp.append(V_temp[i]*percentage + offset)
+                
+        elif source==False:
+            for i in range(0, len(V_temp)):
+                if V_temp[i] < 200*pow(10, -3):
+                    percentage = 0.00015
+                    offset = 225*pow(10, -6)
+                elif 200*pow(10, -3) < V_temp[i] and V_temp[i] < 2:
+                    percentage = 0.0002
+                    offset = 350*pow(10, -6)    
+                elif 2<V_temp[i] and V_temp[i]<20: 
+                    percentage = 0.00015
+                    offset = 5*pow(10, -3)
+                else:
+                    percentage = 0.00015
+                    offset = 50*pow(10, -3)
+                temp.append(V_temp[i]*percentage + offset)
+        else:
+            print('Boolean values True or False.')
+    
+    elif SMU == '2400':
+        V_temp = x
+        temp = []
+        percentage = 0
+        offset = 0
+        if source == True:
+            for i in range(0, len(V_temp)):
+                if V_temp[i] < 200*pow(10, -3):
+                    percentage = 0.0002
+                    offset = 600*pow(10, -6)
+                elif 200*pow(10, -3) < V_temp[i] and V_temp[i] < 2:
+                    percentage = 0.0002
+                    offset = 600*pow(10, -6)    
+                elif 2<V_temp[i] and V_temp[i]<20: 
+                    percentage = 0.0002
+                    offset = 2.4*pow(10, -3)
+                else:
+                    percentage = 0.0002
+                    offset = 24*pow(10, -3)
+                temp.append(V_temp[i]*percentage + offset)
+                
+        elif source==False:
+            for i in range(0, len(V_temp)):
+                if V_temp[i] < 200*pow(10, -3):
+                    percentage = 0.00012
+                    offset = 300*pow(10, -6)
+                elif 200*pow(10, -3) < V_temp[i] and V_temp[i] < 2:
+                    percentage = 0.00012
+                    offset = 300*pow(10, -6)    
+                elif 2<V_temp[i] and V_temp[i]<20: 
+                    percentage = 0.00015
+                    offset = 1.5*pow(10, -3)
+                else:
+                    percentage = 0.00015
+                    offset = 10*pow(10, -3)
+                temp.append(V_temp[i]*percentage + offset)
+        else:
+            print('Boolean values True or False.')
+        
     return temp    
 
 
