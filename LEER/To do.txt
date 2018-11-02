@@ -1,2 +1,3 @@
 - Hacer paso fino en curva Isipm vs Iled en un intervalo de 0A a 0.02A para ver bien el comportamiento que vamos a medir 
-en orbita. 
+en orbita. Para esto, tomar una primera medición de temperaturas, y calcular una dispersión donde queremos que ocurra todo el experimento.
+Luego, levantamos la curva IvsI ida y vuelta, poniendo como condición que todas las mediciones ocurran dentro de la banda T-dt < T < T+dT.
