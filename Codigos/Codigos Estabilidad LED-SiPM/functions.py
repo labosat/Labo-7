@@ -302,3 +302,8 @@ def cast(string):
        out.append(float(aux))
    return out
 
+def thermostat(R, tolerance):
+    if np.std(R) <= tolerance:
+        return np.mean(R) + tolerance
+    
+

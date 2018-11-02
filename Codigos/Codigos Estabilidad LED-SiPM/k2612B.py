@@ -213,6 +213,50 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time, NPLC, iPolarization_
         if plotFlag == 1:
             graphR = plot(Number, readingsR, 'N', 'R', 1)
             graphIV = plot(readingsV_sipm, readingsI_sipm, 'V', 'I', 2)
+            
+    elif mode == 'led4':
+        
+        [smu_2612b, smu_2400, rm]  = gpib2(address_2612b, address_2400)
+        
+        
+        [readingsI_led, readingsV_sipm, readingsI_sipm, 
+         readingsR, readingsIR] = led4(smu_2612b,
+                                      smu_2400,
+                                      config[0],
+                                      config[1],
+                                      config[2],
+                                      config[3],
+                                      config[4],
+                                      config[5],
+                                      config[6],
+                                      config[7],
+                                      config[8],
+                                      config[9],
+                                      config[10],
+                                      config[11],
+                                      config[12],
+                                      config[17],
+                                      config[19],
+                                      iPolarization_led,
+                                      wait_time)
+        
+       
+        smu_2612b.write('reset()')
+            
+        smu_2612b.write('smua.nvbuffer1.clear()')
+        smu_2612b.write('smub.nvbuffer1.clear()') 
+        smu_2400.write('*CLS')
+            
+        rm.close
+        
+        Number = []
+        for i in range(0, len(readingsR)):
+            Number.append(i)
+        
+        if plotFlag == 1:
+            graphR = plot(Number, readingsR, 'N', 'R', 1)
+            graphIV = plot(readingsV_sipm, readingsI_sipm, 'V', 'I', 2)
+            
         else:
             graphR = 'NULL'
             graphIV = 'NULL'
