@@ -53,8 +53,30 @@ plt.figure(2)
 plt.loglog([1e-7, 1e-6, 1e-5, 0.0001, 0.001, 0.01, 0.025, 0.05, 0.075, 0.1], areas, 'o')
 plt.xlabel('Wait Time (s)')
 plt.ylabel('Histeresis area')    
-    
 
+
+
+
+#%%
+
+x = np.arange(0.002, 0.190, 0.002)
+
+y = [i**2 for i in x]
+
+plt.plot(x, y, '.')
+
+integrate.simps( y,  x)  
+
+
+
+
+
+
+
+
+
+    
+#%%
 data = np.loadtxt('/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Wait Time/medicion rq/wait_time_vs_rq.txt', skiprows=1)
 Rq = data[:, 0]
 Rq_err = data[:, 1]

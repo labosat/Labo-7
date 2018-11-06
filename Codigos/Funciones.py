@@ -27,7 +27,7 @@ def R_Rq(path, tolerancia):
     .
     .
     """
-    array = f.pulidor(tolerancia, path)
+    array = pulidor(tolerancia, path)
     celdas = 18980
     parameters = 2
     R = []
@@ -45,8 +45,8 @@ def R_Rq(path, tolerancia):
         Res_err_estadistico = f.dispersion(Res) 
         Res_err_sistematico = [np.sqrt((1/I[i]**2) * V_err[i]**2 + ((V[i]/(I[i]**2))**2)*I_err[i]**2) for i in range(len(I))]
         Res_err = [np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico[i]**2) for i in range(len(Res_err_sistematico))]
-        R.append(f.weightedMean(Res, Res_err))
-        R_err.append(f.weightedError(Res, Res_err))
+        R.append(weightedMean(Res, Res_err))
+        R_err.append(weightedError(Res, Res_err))
         data2 = np.loadtxt(path+'/iv/%s (iv).txt' % i)
         V = data2[:, 0]
         I = data2[:, 1]
@@ -74,7 +74,7 @@ def R_Rq(path, tolerancia):
             m.append(m_temp)
             chi2.append(out.res_var)
             Rq_err_temp.append((celdas/m_temp**2) * m_err_temp)
-        index = f.ClosestToOne(chi2)
+        index = ClosestToOne(chi2)
         Rq.append(celdas/m[index])
         chi2_out.append(chi2[index])
         Rq_err.append(Rq_err_temp[index])
@@ -90,7 +90,8 @@ def error_I(y, SMU, source = False):
     
     Input: (I, source = False)
     
-    Si no se especifica el source, entonces la corriente fue medida. Si source = True,
+    Si no se especifica el source, entonc
+    I_led_temp_1 = I_led[1:int(len(I_led)/2)]es la corriente fue medida. Si source = True,
     entonces se sourceo con corriente.
     
     Returns:  I_err  (list)
@@ -125,7 +126,7 @@ def error_I(y, SMU, source = False):
                 elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<=100*pow(10, -3): 
                     percentage = 0.0003
                     offset = 30*pow(10, -6)                
-                elif 10*pow(10, -3)<I_temp[i] and I_temp[i]<=1: 
+                elif 100*pow(10, -3)<I_temp[i] and I_temp[i]<=1: 
                     percentage = 0.0005
                     offset = 1.8*pow(10, -3)
                 elif 1<I_temp[i] and I_temp[i] <= 1.5: 
