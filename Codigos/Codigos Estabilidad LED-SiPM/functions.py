@@ -261,6 +261,59 @@ def save_led2(Time, readingsI_sipm, readingsV_led, readingsR, readingsIR,
         graphI.savefig(figure_nameI, dpi=250, bbox_inches='tight')
     if graphR != 'NULL':
         graphR.savefig(figure_nameR, dpi=250, bbox_inches='tight')
+        
+
+def save_led4(Number, readingsI_sipm, readingsV_led, readingsI_led, readingsR, 
+              graphI, graphR, number, group_path):
+    #[unused,unused,dateString] = date_time_now()
+    # For makin this cross platform, change the path name
+    path            = ".\\results led PID\\" + group_path + "\\"
+    path_fig        = ".\\results led PID\\" + group_path + "\\figures\\"
+    ext_fig         = ".png" 
+    ext_txt         = ".txt" 
+    figure_nameI   = path_fig + str(number) + " (iv)" + ext_fig
+    figure_nameR    = path_fig + str(number) + " (res)" + ext_fig
+    text_nameI     = path + "iv\\" + str(number) + " (iv)" + ext_txt
+    text_nameR      = path + "res\\" + str(number) + " (res)" + ext_txt
+    
+    """
+    Check if the folder exists. This is only Windows compatible (because of VISA)
+    """
+        
+    if not(os.path.exists(path)):
+        os.makedirs(path)
+        
+    if not(os.path.exists(path_fig)):
+        os.makedirs(path_fig)
+        
+    if not(os.path.exists(path + "iv\\")):
+        os.makedirs(path + "iv\\")
+        
+    if not(os.path.exists(path + "res\\")):
+        os.makedirs(path + "res\\")
+    
+    FileIV = open(text_nameI, 'w')
+    FileR = open(text_nameR, 'w')
+    
+    #FileIV.write("I_sipm\tV_led\tI_led\n")
+    #format is I_sipm, V_led, I_led
+    if len(readingsI_sipm) == len(readingsI_led): 
+        for i in range(0,len(readingsI_sipm)):
+            line = str(readingsI_sipm[i]) + '\t' + str(readingsV_led[i]) + '\t' + str(readingsI_led[i]) + '\n' 
+            FileIV.write(line)
+            
+    FileR.write("N\tR\tI\n")
+    if len(Number) == len(readingsR): 
+        for i in range(0,len(readingsR)):
+            line = str(Number[i]) + '\t' + str(readingsR[i]) + '\n' 
+            FileR.write(line)
+
+    FileIV.close()
+    FileR.close()
+    if graphI != 'NULL':
+        graphI.savefig(figure_nameI, dpi=250, bbox_inches='tight')
+    if graphR != 'NULL':
+        graphR.savefig(figure_nameR, dpi=250, bbox_inches='tight')
 
 
 def P(prefix):
@@ -303,7 +356,38 @@ def cast(string):
    return out
 
 def thermostat(R, tolerance):
+    import numpy as np
     if np.std(R) <= tolerance:
         return np.mean(R) + tolerance
+    
+def thermostatInitial(smu, tolerance):
+    import numpy as np
+    import time
+    readingsRLimit_temp = []
+    readingsRLimit = []
+    step = 0    
+    condition = True
+    
+    smu.write('smua.source.output = smua.OUTPUT_ON')
+    while condition:
+    
+        while (step <= 150):
+            smu.write('smua.measure.r(smua.nvbuffer1)')
+            step += 1 
+        time.sleep(5)
+            
+        readingsRLimit_temp = readBuffer(smu, 'a')[0]
+        
+        readingsRLimit = cast(readingsRLimit_temp)
+        
+        if np.std(readingsRLimit) <= tolerance:
+            condition = False
+            time.sleep(2)
+    
+
+    smu.write('smua.source.output = smua.OUTPUT_OFF')
+    smu.write('smua.nvbuffer1.clear()')    
+    return np.mean(readingsRLimit) + tolerance
+    
     
 

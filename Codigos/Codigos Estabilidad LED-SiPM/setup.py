@@ -19,7 +19,7 @@ def setup():
     # -------------------------------------------------------------------------
     #for smub only (iv curve measurement) -------------------------------------
     
-    i_ccb          = 20.5*P('m')
+    i_ccb          = 200*P('m')
     v_ccb          = 2
     
     iRangb         = 'AUTO'
@@ -40,8 +40,8 @@ def setup():
     #I sweep used for led in 'led' mode and for sipm in 'iv' mode -------------
     
     iStart         = 0*P('m')
-    iEnd           = 20*P('m')
-    iStep          = 500*P('n')
+    iEnd           = 188*P('m')
+    iStep          = 1*P('m')
     
     # -------------------------------------------------------------------------
     # for led2 test only ------------------------------------------------------

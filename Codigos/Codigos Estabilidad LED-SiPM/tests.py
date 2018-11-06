@@ -1,5 +1,5 @@
 import time
-from functions import cast, readBuffer, P
+from functions import cast, readBuffer, P, thermostatInitial, thermostat
 
 
 def ivr(smu, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela, i_ccb, v_ccb,
@@ -717,8 +717,8 @@ def led3(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
             readingsR, readingsIR]
 
 def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela, 
-        i_ccb, v_ccb, iRangb, vRangb, vStart, vEnd, vStep, v_cc_led, return_sweep,
-        iPolarization_led, wait_time, tolerance):
+        i_ccb, v_ccb, iRangb, vRangb, iStart, iEnd, iStep, return_sweep,
+        vPolarization_sipm, wait_time, tolerance):
     
     """
     
@@ -732,10 +732,11 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     """
     ######---------- Set R gap for measurment -----------------######
     
-    readingsI_sipm = []
-    readingsV_sipm = []
     readingsI_led = []
+    readingsV_led = []
+    readingsI_sipm = []
     readingsR = []
+    
     
     smu_2612b.write('smua.reset()')
     smu_2612b.write('smub.reset()')
@@ -777,32 +778,7 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
 
     if (fourWire == 1):
         smu_2612b.write('smua.sense = smua.SENSE_REMOTE')
-        
-        
-    smu_2612b.write('smua.source.output = smua.OUTPUT_ON')     
-        
-    print("Measuring temperature gap ")        
-        
-    step = 0    
-    while (step <= 20):
-        smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
-        if step != step_end:
-            step += 1        
-        
-    
-    
-    readingsR_temp = readBuffer(smu_2612b, 'a')[0]
-    
-    readingsR = cast(readingsR_temp)
-    
-    condition = thermostat(readingsR, tolerance)
-
-    smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
-        
-    smu_2612b.write('smua.nvbuffer1.clear()')    
-        
-    smu_2612b.write('smua.source.output = smua.reset()')
-        
+         
     
     #---------------------------------------------------------------------------
     
@@ -830,8 +806,8 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     # -------------------------------------------------------------------------   
     # Smub (iv) configuration
     
-    smu_2612b.write('smub.source.func = smub.OUTPUT_DCVOLTS')
-    smu_2612b.write('display.smub.measure.func = display.MEASURE_DCAMPS')
+    smu_2612b.write('smub.source.func = smub.OUTPUT_DCAMPS')
+    smu_2612b.write('display.smub.measure.func = display.MEASURE_DCVOLTS')
     
     if (iRangb == 'AUTO'):
         smu_2612b.write('smub.source.autorangei = smub.AUTORANGE_ON')
@@ -875,21 +851,26 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     # k2400 configuration (Sipm measurement)
 
     
-    smu_2400.write(':SENS:FUNC "VOLT"')
-    smu_2400.write(':SOUR:FUNC CURR')
+    smu_2400.write(':SENS:FUNC "CURR"')
+    smu_2400.write(':SOUR:FUNC VOLT')
     smu_2400.write(':SENS:CURR:RANG:AUTO ON')
     smu_2400.write(':SENS:VOLT:RANG:AUTO ON')
     
     #compliance current
-    smu_2400.write(':SOUR:CURR:LEV ' + str(iPolarization_led))
+    smu_2400.write(':SOUR:VOLT:LEV ' + str(vPolarization_sipm))
     #protection for sipm is 18mA
-    smu_2400.write('SENS:VOLT:PROT ' + str(v_cc_led))
+    smu_2400.write('SENS:CURR:PROT ' + str(0.018))
 
 
+    print("Measuring temperature")        
+        
+    condition = thermostatInitial(smu_2612b, tolerance)
 
-
+    print("Temperature: " + str(condition - tolerance) + " \pm " + str(tolerance))
 
     print("Start of measurement")
+    if return_sweep == 1:
+        print("Return active")
     smu_2612b.write('smub.source.output = smub.OUTPUT_ON')
     smu_2612b.write('smua.source.output = smua.OUTPUT_ON')
     smu_2400.write('OUTP ON')
@@ -900,57 +881,72 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     while (i <= iEnd):
         
         smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
-        R_condition = readBuffer(smu_2612b, 'a')[0]
+        R_condition = cast(readBuffer(smu_2612b, 'a')[0])
         
-        if R_condition < condition:
-
-            #startTime = time.time()
+        temp = []
+        
+        if R_condition[-1] < condition:
+            print(i)
 
             smu_2612b.write('smub.source.leveli = ' + str(i))
             time.sleep(wait_time)
-            smu_2612b.write('smub.measure.i(smub.nvbuffer1)')
+            smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
             smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
-
+            
             auxRead = smu_2400.query(':READ?')
-            led_current = float(cast(auxRead)[1])
-            
-            readingsI_led.append(led_current)
-            
-            if i != iEnd:
-                i += iStep
+            sipm_current = float(cast(auxRead)[1])
             
             smu_2612b.write('smub.source.leveli = ' + '0')
             
-        i -= iStep
+            readingsR_temp = readBuffer(smu_2612b, 'a')[0]
+            temp = cast(readingsR_temp)
+            readingsR.append(temp[-1])
+            
+            
+            readingsI_sipm.append(sipm_current)
+            
+            i += iStep
+                
+            #smu_2612b.write('smua.nvbuffer1.clear()')
+            
+        else:
+            time.sleep(3)
+            
+            
+    i -= iStep
     
     
     if return_sweep == 1:
-        while (i >= iEnd):
-            
+        while (i >= iStart):
             smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
-            R_condition = readBuffer(smu_2612b, 'a')[0]
-            smu_2612b.write('smub.source.leveli = ' + '0')
-                    
+            R_condition = cast(readBuffer(smu_2612b, 'a')[0])
+              
+            temp = []
             
-            if R_condition < condition:
+            if R_condition[-1] < condition:
+                print(i)
                     
                 smu_2612b.write('smub.source.leveli = ' + str(i))
                 time.sleep(wait_time)
-                smu_2612b.write('smub.measure.i(smub.nvbuffer1)')
+                smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
                 smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
-
+                
                 auxRead = smu_2400.query(':READ?')
-                led_current = float(cast(auxRead)[1])
-            
-                readingsI_led.append(led_current)
-            
-                i -= iStep
+                sipm_current = float(cast(auxRead)[1])
                 
                 smu_2612b.write('smub.source.leveli = ' + '0')
+                
+                readingsR_temp = readBuffer(smu_2612b, 'a')[0]
+                temp = cast(readingsR_temp)
+                readingsR.append(temp[-1])
+            
+                readingsI_sipm.append(sipm_current)
+            
+                i -= iStep
             
                 
             else:
-                time.sleep(0.5)
+                time.sleep(3)
             
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
     smu_2612b.write('smub.source.output = smub.OUTPUT_OFF')
@@ -958,17 +954,10 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     
     print("End of measurement")
     
-    readingsI_sipm_temp = readBuffer(smu_2612b, 'b')[0]
-    readingsV_sipm_temp = readBuffer(smu_2612b, 'b')[1]
+    readingsI_led_temp = readBuffer(smu_2612b, 'b')[1]
+    readingsV_led_temp = readBuffer(smu_2612b, 'b')[0]
     
-    readingsR_temp = readBuffer(smu_2612b, 'a')[0]
-    readingsIR_temp = readBuffer(smu_2612b, 'a')[1]
-    
-    readingsI_sipm = cast(readingsI_sipm_temp)
-    readingsV_sipm = cast(readingsV_sipm_temp)
-    
-    readingsR = cast(readingsR_temp)
-    readingsIR = cast(readingsIR_temp)
+    readingsI_led = cast(readingsI_led_temp)
+    readingsV_led = cast(readingsV_led_temp)
 
-    return [readingsI_led, readingsV_sipm, readingsI_sipm,
-            readingsR, readingsIR]
+    return [readingsI_sipm, readingsV_led, readingsI_led, readingsR]

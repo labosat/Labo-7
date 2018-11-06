@@ -10,11 +10,11 @@ import time
 #                   'led3': N = 50, wait_time = 0.01
 
 N = 1
-wait_time = 25*P('m')
-group_path = 'Medicion i vs i 0-20mA fina'
+wait_time = 10*P('m')
+group_path = '0-188mA, step 1mA, wait 10ms'
 
 #modes available: 'iv', 'led1', 'led2' (refer to help for specifics)
-mode = 'led1'
+mode = 'led4'
 NPLC = 1
 iPolarization_led = "none"
 
