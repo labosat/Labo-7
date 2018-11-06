@@ -736,7 +736,7 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     readingsV_led = []
     readingsI_sipm = []
     readingsR = []
-    
+    tiempo = []
     
     smu_2612b.write('smua.reset()')
     smu_2612b.write('smub.reset()')
@@ -877,7 +877,6 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     smu_2612b.write('smub.source.leveli = ' + '0')
     
     i = iStart
-    
     while (i <= iEnd):
         
         smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
@@ -901,6 +900,7 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
             readingsR_temp = readBuffer(smu_2612b, 'a')[0]
             temp = cast(readingsR_temp)
             readingsR.append(temp[-1])
+            tiempo.append(time.time())
             
             
             readingsI_sipm.append(sipm_current)
@@ -917,6 +917,7 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     
     
     if return_sweep == 1:
+        
         while (i >= iStart):
             smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
             R_condition = cast(readBuffer(smu_2612b, 'a')[0])
@@ -939,6 +940,7 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
                 readingsR_temp = readBuffer(smu_2612b, 'a')[0]
                 temp = cast(readingsR_temp)
                 readingsR.append(temp[-1])
+                tiempo.append(time.time())
             
                 readingsI_sipm.append(sipm_current)
             
@@ -947,6 +949,7 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
                 
             else:
                 time.sleep(3)
+                
             
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
     smu_2612b.write('smub.source.output = smub.OUTPUT_OFF')

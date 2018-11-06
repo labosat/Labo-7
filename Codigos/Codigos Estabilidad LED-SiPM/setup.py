@@ -40,8 +40,8 @@ def setup():
     #I sweep used for led in 'led' mode and for sipm in 'iv' mode -------------
     
     iStart         = 0*P('m')
-    iEnd           = 188*P('m')
-    iStep          = 1*P('m')
+    iEnd           = 20*P('m')
+    iStep          = 2*P('u')
     
     # -------------------------------------------------------------------------
     # for led2 test only ------------------------------------------------------
