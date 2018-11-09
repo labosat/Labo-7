@@ -29,7 +29,6 @@ def R_Rq(path, tolerancia):
     """
     array = pulidor(tolerancia, path)
     celdas = 18980
-    parameters = 2
     R = []
     R_err = []
     Rq = []
@@ -42,7 +41,7 @@ def R_Rq(path, tolerancia):
         V = I*Res
         V_err = error_V(V, source = False)
         I_err = error_I(I, source = True)
-        Res_err_estadistico = f.dispersion(Res) 
+        Res_err_estadistico = dispersion(Res) 
         Res_err_sistematico = [np.sqrt((1/I[i]**2) * V_err[i]**2 + ((V[i]/(I[i]**2))**2)*I_err[i]**2) for i in range(len(I))]
         Res_err = [np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico[i]**2) for i in range(len(Res_err_sistematico))]
         R.append(weightedMean(Res, Res_err))
@@ -68,7 +67,7 @@ def R_Rq(path, tolerancia):
             out = odr.run()
             
             m_temp = out.beta[0]
-            b_temp = out.beta[1]
+            #b_temp = out.beta[1]
             m_err_temp = out.sd_beta[0]
             
             m.append(m_temp)
@@ -609,7 +608,7 @@ def promediador_grupos(path, tolerancia, punto_a_punto = True):
     .
     .
     """
-    array = f.pulidor(tolerancia, path)
+    array = pulidor(tolerancia, path)
     R = []
     R_err = []
     I = []
@@ -620,9 +619,9 @@ def promediador_grupos(path, tolerancia, punto_a_punto = True):
             Res = data[:, 1]   
             I = data[:, 2]
             V = I*Res
-            V_err = f.error_V(V, source = False)
-            I_err = f.error_I(I, source = True)
-            Res_err_estadistico = f.dispersion(Res) 
+            V_err = error_V(V, source = False)
+            I_err = error_I(I, source = True)
+            Res_err_estadistico = dispersion(Res) 
             Res_err_sistematico = np.sqrt((1/I**2) * V_err**2 + ((V/(I**2))**2)*I_err**2)
             Res_err = np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico**2)   
             R.append(list(Res))
@@ -645,18 +644,18 @@ def promediador_grupos(path, tolerancia, punto_a_punto = True):
             Res = data[:, 1]   
             I = data[:, 2]
             V = I*Res
-            V_err = f.error_V(V, source = False)
-            I_err = f.error_I(I, source = True)
-            Res_err_estadistico = f.dispersion(Res) 
+            V_err = error_V(V, source = False)
+            I_err = error_I(I, source = True)
+            Res_err_estadistico = dispersion(Res) 
             Res_err_sistematico = np.sqrt((1/I**2) * V_err**2 + ((V/(I**2))**2)*I_err**2)
             Res_err = np.sqrt(Res_err_estadistico**2 +  Res_err_sistematico**2)
-            R.append(f.weightedMean(Res, Res_err))
-            R_err.append(f.weightedError(Res, Res_err))
+            R.append(weightedMean(Res, Res_err))
+            R_err.append(weightedError(Res, Res_err))
             data2 = np.loadtxt(path+'/iv/%s (iv).txt' % h, skiprows=1)
             V.append(list(data2[:, 0]))
             I.append(list(data2[:, 1]))
-        R_promedio = f.weightedMean(R, R_err)
-        R_err_promedio = f.weightedError(R, R_err)
+        R_promedio = weightedMean(R, R_err)
+        R_err_promedio = weightedError(R, R_err)
         
     I_promedio = []
     for i in range(len(I[1])):
@@ -673,3 +672,13 @@ def promediador_grupos(path, tolerancia, punto_a_punto = True):
         V_promedio.append(c/len(V))
         
     return V_promedio, I_promedio, R_promedio, R_err_promedio
+
+
+def error_R(R, I_source):
+    V = [i*I_source for i in R]
+    V_err = error_V(V, '2612', source = False)
+    I_err =  I_source * 0.0003 + 60*pow(10, -9)
+    dr = [np.sqrt((1 / I_source)**2 * V_err[i]**2 + 
+         (V[i] / I_source**2)**2 * I_err**2) 
+         for i in range(len(R))]
+    return dr
