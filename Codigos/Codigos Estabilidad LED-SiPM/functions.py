@@ -365,12 +365,12 @@ def thermostatInitial(smu, tolerance):
     import time
     readingsRLimit_temp = []
     readingsRLimit = []
-    step = 0    
+       
     condition = True
     
     smu.write('smua.source.output = smua.OUTPUT_ON')
     while condition:
-    
+        step = 0 
         while (step <= 150):
             smu.write('smua.measure.r(smua.nvbuffer1)')
             step += 1 
