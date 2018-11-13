@@ -11,7 +11,7 @@ import time
 
 N = 1
 wait_time = 10*P('m')
-group_path = '0-20mA, step 2uA, wait 10ms'
+group_path = '0-20mA, step 100 uA, wait 10ms, Peltier 0V'
 
 #modes available: 'iv', 'led1', 'led2' (refer to help for specifics)
 mode = 'led4'

@@ -287,8 +287,8 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     print("Start of measurement")
     
     i = iStart
-    iEnd = 9.9*P('m')
-    iStep = 500*P('n')
+    iEnd = 50*P('u')
+    iStep = 10*P('u')
     #startTime = time.time()
     while (i <= iEnd):
         smu_2612b.write('smub.source.leveli = ' + str(i))
