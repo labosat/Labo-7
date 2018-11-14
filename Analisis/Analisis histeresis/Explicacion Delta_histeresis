@@ -1,0 +1,9 @@
+El grafico corresponde a la diferencia entre la corriente del SiPM en subida y la corriente del SiPM en bajada, cada punto para
+una dada corriente del LED, y normalizado por el valor mas grande del par.
+
+Se puede observar que las diferencias parecerian ser random alrededor del 0, tanto positivas como negativas. Es decir, en algunos
+puntos la subida fue mayor y en otros la bajada fue mayor. Por lo tanto, la histeresis en principio pareceria estar dada por error
+instrumental o estadistico.
+
+Sin embargo, en el histograma de esta diferencia se puede observar que si se simula una distribucion uniforme con el promedio y l
+a desviacion estandar de la muestra, no dan parecidos. Tampoco parece ser Gaussiano.

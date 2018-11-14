@@ -18,7 +18,9 @@ plt.ylabel(r'$I_{sipm}$ (A)', size = 15)
 plt.grid(True)
 
 #%%
-data2 = np.loadtxt('/home/tomas/Desktop/Labo 6 y 7/Labo-7/Mediciones/Experimento LED/Medicion i vs i 0-20mA fina/res/1 (res).txt', skiprows=1)
+path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Mediciones/Experimento LED/Medicion i vs i 0-20mA fina/res/1 (res).txt'
+path2 = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led PID/0-188mA, step 1mA, wait 10ms/res/1 (res).txt'
+data2 = np.loadtxt(path2, skiprows=1)
 R = data2[:, 1]
 N = data2[:, 0]
 
@@ -27,14 +29,14 @@ R_err = error_R(R, 0.000097)
 T = [(i - 1000)/3.815 for i in R]
 T_err = [i / 3.815 for i in R_err]
 
-plt.figure(2)
+plt.figure(3)
 #plt.errorbar(N, T, yerr = T_err, fmt = 'k.', capsize = 3)
-plt.plot(N, T, '.')
-plt.plot(N, [T[i] + T_err[i] for i in range(len(T))], 'r-')
-plt.plot(N, [T[i] - T_err[i] for i in range(len(T))], 'r-')
+plt.plot(N, T, 'k.')
+#plt.plot(N, [T[i] + T_err[i] for i in range(len(T))], 'r-')
+#plt.plot(N, [T[i] - T_err[i] for i in range(len(T))], 'r-')
 plt.ylabel('Temperatura (C)', size = 15)
 plt.xlabel('Numero de medicion', size = 14)
-plt.axvline(N[int(len(N)/2)], lw = 4)
+#plt.axvline(N[int(len(N)/2)], lw = 4)
 plt.grid(True)
 #%%
 ############# I_SiPM vs I_LED  de 0 A a 0.188 A con control de temperatura ####################
