@@ -40,13 +40,16 @@ plt.grid(True)
 
 I_led_dif, I_sipm_dif = dif(I_led, I_sipm)
     
-plt.figure(2)
-plt.plot(I_led_dif, I_sipm_dif, 'og')
-#plt.hist(dif, bins = 200, normed=True)
-plt.xlabel(r'$I_{led} (A)$', size = 15)
-plt.ylabel(r'$\Delta I_{sipm} (Normalizado)$', size = 15)
-plt.grid(True)
-
+fig, (ax1, ax2) = plt.subplots(2, 1)
+ax1.plot(I_led_dif, I_sipm_dif, 'og')
+ax1.set_xlabel(r'$I_{led} (A)$', size = 15)
+ax1.set_ylabel(r'$\Delta I_{sipm} (Normalizado)$', size = 15)
+ax1.grid(True)
+values, bins = np.histogram(I_sipm_dif, bins = len(I_sipm_dif))
+ax2.plot(bins[:-1], values, lw=2)
+ax2.set_xlabel(r'$\Delta I_{sipm} (Normalizado)$', size = 15)
+ax2.set_ylabel('# Entradas', size = 15)
+plt.tight_layout()
 #%%
 ''' Simulacion de datos gaussianos y uniformes para comparar con lo medido'''
 
@@ -63,7 +66,7 @@ uniform = []
 for i in range(20000):
     uniform.append(np.random.uniform(a, b))  
     
-plt.figure(3)
+plt.figure(4)
 plt.hist(I_sipm_dif, bins = 200, normed=True)
 plt.hist(uniform, bins = 200, normed=True)
 plt.vlines(mean, 0, 100)
@@ -72,7 +75,7 @@ plt.vlines(mean - sigma, 0, 100)
 plt.xlabel(r'$\Delta I_{sipm} (Normalizado)$', size = 15)
 
 print('')
-print('Test de Kolmogorov-Smirnof para una muestra uniforme' +
+print('Test de Kolmogorov-Smirnov para una muestra uniforme' +
       ' y los datos: ')
 print('p-value = ' + str(stats.ks_2samp(uniform, I_sipm_dif)[1]))
 
@@ -80,7 +83,7 @@ c = []
 for i in range(20000):
     c.append(stats.norm.rvs(loc = mean, scale = sigma))
 
-plt.figure(4)
+plt.figure(5)
 plt.hist(I_sipm_dif, bins = 200, normed=True)
 plt.hist(c, bins = 200, normed=True)
 plt.vlines(mean, 0, 200)
@@ -89,12 +92,12 @@ plt.vlines(mean - sigma, 0, 200)
 plt.xlabel(r'$\Delta I_{sipm} (Normalizado)$', size = 15)
 
 print('')
-print('Test de Kolmogorov-Smirnof para una muestra gaussiana' +
+print('Test de Kolmogorov-Smirnov para una muestra gaussiana' +
       ' y los datos: ') 
 print('p-value = ' + str(stats.ks_2samp(c, I_sipm_dif)[1]))
 #%%
 # Pruebo hacer el mismo analisis filtrando los datos que se alejan mucho de la curva
-# Criterio: mas de 2 sigmas
+# Criterio: me quedo solo con la nube de puntos alrededor del 0.
 print('')
 print('Test para datos filtrados dentro del primer sigma.')
 
@@ -103,11 +106,11 @@ sigma = np.std(I_sipm_dif, ddof=1)
 dif_filtro = []
 led_filtro = []
 for i in range(len(I_sipm_dif)):
-    if I_sipm_dif[i] < mean + sigma and I_sipm_dif[i] > mean - sigma:
-        dif_filtro.append(I_sipm_dif[i])
-        led_filtro.append(I_led_dif[i])
-        
-plt.figure(5)
+    if I_sipm_dif[i] < mean + 0.005 and I_sipm_dif[i] > mean - 0.005: #el 0.005 viene de 
+        dif_filtro.append(I_sipm_dif[i])                              #quedarme con la nube
+        led_filtro.append(I_led_dif[i])                               #de puntos de
+                                                                      #alrededor del 0.
+plt.figure(6)
 plt.plot(led_filtro, dif_filtro, 'og')
 #plt.hist(dif, bins = 200, normed=True)
 plt.xlabel(r'$I_{led} (A)$', size = 15)
@@ -121,17 +124,18 @@ b = mean + sigma
 uniform = []
 for i in range(20000):
     uniform.append(np.random.uniform(a, b))  
-    
-plt.figure(6)
-plt.hist(dif_filtro, bins = 200, normed=True)
-plt.hist(uniform, bins = 200, normed=True)
+
+bins = np.linspace(np.min(dif_filtro), np.max(dif_filtro), 200)
+plt.figure(7)
+plt.hist(dif_filtro, bins = bins, normed=True)
+plt.hist(uniform, bins = bins, normed=True)
 plt.vlines(mean, 0, 100)
 plt.vlines(mean + sigma, 0, 100)
 plt.vlines(mean - sigma, 0, 100)
 plt.xlabel(r'$\Delta I_{sipm} (Normalizado)$', size = 15)
 
 print('')
-print('Test de Kolmogorov-Smirnof para una muestra uniforme' +
+print('Test de Kolmogorov-Smirnov para una muestra uniforme' +
       ' y los datos: ')
 print('p-value = ' + str(stats.ks_2samp(uniform, dif_filtro)[1]))
 
@@ -139,15 +143,26 @@ c = []
 for i in range(20000):
     c.append(stats.norm.rvs(loc = mean, scale = sigma))
 
-plt.figure(7)
-plt.hist(dif_filtro, bins = 200, normed=True)
-plt.hist(c, bins = 200, normed=True)
+plt.figure(8)
+plt.hist(dif_filtro, bins = bins, normed=True)
+plt.hist(c, bins = bins, normed=True)
 plt.vlines(mean, 0, 200)
 plt.vlines(mean + sigma, 0, 200)
 plt.vlines(mean - sigma, 0, 200)
 plt.xlabel(r'$\Delta I_{sipm} (Normalizado)$', size = 15)
 
 print('')
-print('Test de Kolmogorov-Smirnof para una muestra gaussiana' +
+print('Test de Kolmogorov-Smirnov para una muestra gaussiana' +
       ' y los datos: ') 
 print('p-value = ' + str(stats.ks_2samp(c, dif_filtro)[1]))
+
+fig2, (ax1, ax2) = plt.subplots(2, 1)
+ax1.plot(led_filtro, dif_filtro, 'og')
+ax1.set_xlabel(r'$I_{led} (A)$', size = 15)
+ax1.set_ylabel(r'$\Delta I_{sipm} (Normalizado)$', size = 15)
+ax1.grid(True)
+values, bins = np.histogram(dif_filtro, bins = len(dif_filtro))
+ax2.plot(bins[:-1], values, lw=2)
+ax2.set_xlabel(r'$\Delta I_{sipm} (Normalizado)$', size = 15)
+ax2.set_ylabel('# Entradas', size = 15)
+plt.tight_layout()
