@@ -884,7 +884,7 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
         
         temp = []
         
-        if R_condition[-1] < condition:
+        if R_condition[-1] < (condition + tolerance) and R_condition[-1] > (condition - tolerance):
             print(i)
 
             smu_2612b.write('smub.source.leveli = ' + str(i))
@@ -908,13 +908,14 @@ def led4(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
             i += iStep
                 
             #smu_2612b.write('smua.nvbuffer1.clear()')
-            
+        elif R_condition[-1] < (condition - tolerance):
+            smu_2612b.write('smub.source.leveli = ' + '0.180')
+            time.sleep(1)
+            smu_2612b.write('smub.source.leveli = ' + '0')
         else:
             time.sleep(3)
             
-            
     i -= iStep
-    
     
     if return_sweep == 1:
         
