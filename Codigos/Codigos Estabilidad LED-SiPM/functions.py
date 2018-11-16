@@ -374,7 +374,7 @@ def thermostatInitial(smu, tolerance):
         while (step <= 150):
             smu.write('smua.measure.r(smua.nvbuffer1)')
             step += 1 
-        time.sleep(5)
+        time.sleep(10)
             
         readingsRLimit_temp = readBuffer(smu, 'a')[0]
         
