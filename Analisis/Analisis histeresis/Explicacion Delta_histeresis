@@ -7,3 +7,6 @@ instrumental o estadistico.
 
 Sin embargo, en el histograma de esta diferencia se puede observar que si se simula una distribucion uniforme con el promedio y l
 a desviacion estandar de la muestra, no dan parecidos. Tampoco parece ser Gaussiano.
+
+
+Finalmente, si sacamos los puntos malos del SMU y nos quedamos con la nube central, vemos que la distribuciond de puntos es gaussiana con un p-value de 0.8.
