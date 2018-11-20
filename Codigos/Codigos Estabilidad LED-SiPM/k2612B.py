@@ -69,7 +69,7 @@ def run(n, mode, group_path, plotFlag, saveFlag, wait_time, NPLC, iPolarization_
         [smu_2612b, smu_2400, rm]  = gpib2(address_2612b, address_2400)
         
         #polarization voltage for sipm on led1 test
-        vPolarization_sipm = 0
+        vPolarization_sipm = 30
         
         [readingsI_sipm, readingsV_led, readingsI_led, 
          readingsR, readingsIR] = led1(smu_2612b,

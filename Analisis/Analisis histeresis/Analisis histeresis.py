@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import Funciones as f
 
-path = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led PID/0-20mA, step 25 uA, wait 10ms/iv/1 (iv).txt'
+path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led PID/0-20mA, step 25 uA, wait 10ms, bis bis/iv/1 (iv).txt'
 data = np.loadtxt(path)
 I_sipm = data[:, 0]
 I_led = data[:, 2]
@@ -167,17 +167,17 @@ print('Test de Kolmogorov-Smirnov para una muestra gaussiana' +
 print('p-value = ' + str(stats.ks_2samp(c, dif_filtro)[1]))
 
 #%%
-#import time
-pvalue = []
-for i in range(5000):
-#    t0 = time.time()
-    c = []
-    for i in range(10000):
-        c.append(stats.norm.rvs(loc = mean, scale = sigma))
-    pvalue.append(stats.ks_2samp(c, dif_filtro)[1])
-#    print(time.time() - t0)
-m, bins, _ = plt.hist(pvalue, bins = 50)
-bins_err = bins + (bins[2] - bins[1])/2
-plt.errorbar(bins_err[:-1], m, yerr = [np.sqrt(i) for i in m], fmt = '.r', capsize = 3)
-plt.xlabel('Pvalues', size = 15)
-plt.ylabel('# Entradas', size = 15)
+##import time
+#pvalue = []
+#for i in range(5000):
+##    t0 = time.time()
+#    c = []
+#    for i in range(10000):
+#        c.append(stats.norm.rvs(loc = mean, scale = sigma))
+#    pvalue.append(stats.ks_2samp(c, dif_filtro)[1])
+##    print(time.time() - t0)
+#m, bins, _ = plt.hist(pvalue, bins = 50)
+#bins_err = bins + (bins[2] - bins[1])/2
+#plt.errorbar(bins_err[:-1], m, yerr = [np.sqrt(i) for i in m], fmt = '.r', capsize = 3)
+#plt.xlabel('Pvalues', size = 15)
+#plt.ylabel('# Entradas', size = 15)
