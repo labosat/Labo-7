@@ -363,13 +363,13 @@ def thermostat(R, tolerance):
 def thermostatInitial(smu, tolerance):
     import numpy as np
     import time
-    readingsRLimit_temp = []
-    readingsRLimit = []
        
     condition = True
     
     smu.write('smua.source.output = smua.OUTPUT_ON')
     while condition:
+        readingsRLimit_temp = []
+        readingsRLimit = []
         step = 0 
         while (step <= 150):
             smu.write('smua.measure.r(smua.nvbuffer1)')

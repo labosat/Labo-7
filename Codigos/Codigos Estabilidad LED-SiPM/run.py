@@ -11,7 +11,7 @@ import time
 
 N = 1
 wait_time = 10*P('m')
-group_path = '0-20mA, step 5 uA, wait 10ms'
+group_path = '0-20mA, step 25 uA, wait 10ms, peltier 12 V bis'
 
 #modes available: 'iv', 'led1', 'led2' (refer to help for specifics)
 mode = 'led4'
@@ -33,7 +33,6 @@ import time
 wait_time = [1e-7, 1e-6, 1e-5, 0.0001, 0.001, 0.01, 0.025, 0.05, 0.075, 0.1]
 
 N = 1
-wait_time = 10*P('m')
 group_path = ["1e-7", "1e-6", "1e-5", "0.0001", "0.001", "0.01", "0.025", "0.05", "0.075", "0.1"]
 
 #modes available: 'iv', 'led1', 'led2' (refer to help for specifics)
@@ -44,9 +43,9 @@ iPolarization_led = "none"
 plotFlag = 1
 saveFlag = 1
 
-for j in wait_time:
-    run(1, mode, group_path[j], plotFlag, saveFlag, j, NPLC, iPolarization_led)
-    time.sleep(45)
+for j in range(len(wait_time)):
+    run(1, mode, group_path[j], plotFlag, saveFlag, wait_time[j], NPLC, iPolarization_led)
+    time.sleep(60)
     
     
 #%%
