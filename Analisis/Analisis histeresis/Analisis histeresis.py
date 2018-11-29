@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import Funciones as f
 
-path = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led PID/0-20mA, step 25 uA, wait 10ms/iv/1 (iv).txt'
+path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led 0-20/Estacionario 5/iv/7 (iv).txt'
 data = np.loadtxt(path)
 I_sipm = data[:, 0]
 I_led = data[:, 2]
@@ -25,32 +25,35 @@ def dif(x, y):
 '''Plot de diferencias entre curva de subida y de bajada normalizadas.'''
 
 plt.figure(1)
-plt.errorbar(I_led[1:int(len(I_sipm)/2)], I_sipm[1:int(len(I_sipm)/2)], 
-                   yerr=I_sipm_err[1:int(len(I_sipm)/2)], xerr=I_led_err[1:int(len(I_sipm)/2)],
+plt.errorbar(I_led[1:int(len(I_sipm)/2)]*1000, 1000*I_sipm[1:int(len(I_sipm)/2)], 
+                   yerr=1000*np.asarray(I_sipm_err[1:int(len(I_sipm)/2)]), xerr=1000*np.asarray(I_led_err[1:int(len(I_sipm)/2)]),
                    fmt='.b', capsize = 1, label = 'Ida')
-plt.errorbar(I_led[int(len(I_sipm)/2):-1], I_sipm[int(len(I_sipm)/2):-1], 
-                   yerr=I_sipm_err[int(len(I_sipm)/2):-1], xerr=I_led_err[int(len(I_sipm)/2):-1],
+plt.errorbar(1000*I_led[int(len(I_sipm)/2):-1], 1000*I_sipm[int(len(I_sipm)/2):-1], 
+                   yerr=1000*np.asarray(I_sipm_err[int(len(I_sipm)/2):-1]), xerr=1000*np.asarray(I_led_err[int(len(I_sipm)/2):-1]),
                    fmt='.r', capsize = 1, label = 'Vuelta')
 #plt.plot(I_led[1:int(len(I_sipm)/2)], I_sipm[1:int(len(I_sipm)/2)], '.', label = 'Ida')
 #plt.plot(I_led[int(len(I_sipm)/2):-1], I_sipm[int(len(I_sipm)/2):-1], '.', label = 'Vuelta')
-plt.xlabel(r'$I_{led} (A)$', size = 15)
-plt.ylabel(r'$I_{sipm} (A)$', size = 15)
+plt.xlabel(r'$I_{led} (mA)$', size = 15)
+plt.ylabel(r'$I_{sipm} (mA)$', size = 15)
 plt.legend()
 plt.grid(True)
 plt.yscale('log')
 plt.xscale('log')
+plt.scatter(11.3, 0.355)
 
 I_led_dif, I_sipm_dif = dif(I_led, I_sipm)
+I_sipm_err_dif = [np.sqrt(I_sipm_err[1:int(len(I_sipm)/2)][i]**2 - I_sipm_err[int(len(I_sipm)/2):-1][i]**2) for i in range(len(I_sipm_err[int(len(I_sipm)/2):-1]))]
     
 fig, (ax1, ax2) = plt.subplots(2, 1)
-ax1.plot(I_led_dif, I_sipm_dif, 'og')
-ax1.set_xlabel(r'$I_{led} (A)$', size = 15)
-ax1.set_ylabel(r'$\Delta I_{sipm}$', size = 15)
+#ax1.plot(I_led_dif, [-i*10**3 for i in I_sipm_dif], 'og')
+ax1.errorbar(I_led_dif, [-i*10**3 for i in I_sipm_dif],xerr=f.error_I(I_led_dif, '2612', source=True), yerr=[i*10**3 for i in I_sipm_err_dif], fmt='og', capsize=3)
+ax1.set_xlabel(r'$I_{led} (mA)$', size = 15)
+ax1.set_ylabel(r'$\Delta I_{sipm} (mA)$', size = 15)
 ax1.grid(True)
 values, bins = np.histogram(I_sipm_dif, bins = len(I_sipm_dif))
-m, bins, _ = ax2.hist(I_sipm_dif, bins=50)
+m, bins, _ = ax2.hist([-i*10**3 for i in I_sipm_dif], bins=10)
 #ax2.plot(bins[:-1], values, lw=2)
-ax2.set_xlabel(r'$\Delta I_{sipm}$', size = 15)
+ax2.set_xlabel(r'$\Delta I_{sipm} (mA)$', size = 15)
 ax2.set_ylabel('# Entradas', size = 15)
 bins_err = bins + (bins[2] - bins[1])/2
 ax2.errorbar(bins_err[:-1], m, yerr = [np.sqrt(i) for i in m], fmt = '.r', capsize = 3)
