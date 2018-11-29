@@ -1,0 +1,5 @@
+Falta:
+
+- Poner imagen de Vbr en eps  (en el poster esta en png)
+
+- Poner ajuste lineal en los primeros puntos de corriente oscura para llenar jeje
