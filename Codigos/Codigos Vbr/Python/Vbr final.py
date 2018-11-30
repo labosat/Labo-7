@@ -283,6 +283,13 @@ def fit_calc(beta, sd_beta, value, perfect = False):
             return j, temp2[i], temp3[i]
 
 
+def QuadSum(v):
+    result = 0
+    for i in range(len(v)):
+        result += v[i]*v[i]
+        
+    return np.sqrt(result/len(v))
+
 m = 3.815
 R0 = 1000
 max_limit = 0
@@ -302,7 +309,7 @@ Vbr_lista = []
 Vbr_err_lista = []
 for i in range(1, folders + 1):
     
-    path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
     Vbr_temp = []
     T_temp = []
     Vbr_err_temp = []
@@ -356,7 +363,7 @@ for i in range(1, folders + 1):
                 #chi_2.append(dispersion(V_fit, I_fit, I_err_fit, out.beta))
                 beta.append(out.beta)
                 sd_beta.append(out.sd_beta)
-#                print(h)
+                print(h)
 
 
       
@@ -373,9 +380,9 @@ for i in range(1, folders + 1):
     Vbr_err_lista.append(Vbr_err_temp)
     
     T.append(np.mean(T_temp))
-    T_err.append(np.mean(T_err_temp))
+    T_err.append(QuadSum(T_err_temp))
     Vbr.append(np.mean(Vbr_temp))
-    Vbr_err.append(np.mean(Vbr_err_temp))
+    Vbr_err.append(QuadSum(Vbr_err_temp))
     
 #    plt.plot(V, I, '.')
 #    plt.plot(V, fit_function(beta[index_chi], V))
@@ -398,3 +405,20 @@ chi2 = out.res_var
 plt.plot(T, [T[i]*m + b for i in range(len(T))])
 plt.xlabel('Temperatura (C)')
 plt.ylabel('Breakdown Voltage (V)')
+
+#%%
+
+N = []
+for i in range(len(Vbr)):
+    N.append(i)
+
+np.savetxt("/home/lucas/Desktop/vbr(T) con estadistica.txt", np.c_[N, Vbr, Vbr_err, T, T_err])
+
+
+
+
+
+
+
+
+
