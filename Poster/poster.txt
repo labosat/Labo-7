@@ -3,3 +3,7 @@ Falta:
 - Poner imagen de Vbr en eps  (en el poster esta en png)
 
 - Poner ajuste lineal en los primeros puntos de corriente oscura para llenar jeje
+
+- Histeresis: todavia estoy resolviendo esta seccion. Nose si poner en la primera imagen una CON histeresis, y la segunda imagen 
+	      (los histogramas y demas) ponerlas SIN histeresis para que se vea como la eliminamos. El tema es que quede claro que una
+	      imagen no se corresponde con la otra, y hay poco lugar para detallar esto.	

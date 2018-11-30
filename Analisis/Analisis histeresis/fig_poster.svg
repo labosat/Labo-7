@@ -933,9 +933,9 @@
      inkscape:window-height="713"
      id="namedview871"
      showgrid="false"
-     inkscape:zoom="0.49614142"
-     inkscape:cx="649.76409"
-     inkscape:cy="112.42034"
+     inkscape:zoom="2.359012"
+     inkscape:cx="490.78749"
+     inkscape:cy="159.22879"
      inkscape:window-x="67"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -986,6 +986,7 @@
      id="tspan28797">10</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,208.3583,41.26683)"
    style="font-variant:normal;font-weight:normal;font-size:7px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -993,6 +994,7 @@
      x="0"
      y="0"
      id="tspan28801">0</tspan></text>
+
 
 
 </g></g></g><g
@@ -1025,6 +1027,7 @@
      id="tspan28829">10</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,382.0823,41.35433)"
    style="font-variant:normal;font-weight:normal;font-size:7px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -1032,6 +1035,7 @@
      x="0"
      y="0"
      id="tspan28833">1</tspan></text>
+
 
 
 </g><path
@@ -1181,6 +1185,7 @@
      id="tspan28907">I</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,232.25783,16.67306)"
    style="font-variant:normal;font-weight:normal;font-size:10.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -1191,6 +1196,7 @@
      id="tspan28911">led</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,248.71013,19.134)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -1198,6 +1204,7 @@
      x="0"
      y="0"
      id="tspan28915">(</tspan></text>
+
 
 
 <text
@@ -1210,6 +1217,7 @@
      id="tspan28919">mA</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,279.43547,19.134)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -1217,6 +1225,7 @@
      x="0"
      y="0"
      id="tspan28923">)</tspan></text>
+
 
 
 </g></g></g><g
@@ -1249,6 +1258,7 @@
      id="tspan28951">10</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,47.4082,124.80313)"
    style="font-variant:normal;font-weight:normal;font-size:7px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -1257,6 +1267,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan28955">−2</tspan></text>
+
 
 
 </g></g></g><g
@@ -1289,6 +1300,7 @@
      id="tspan28983">10</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,47.4082,231.69713)"
    style="font-variant:normal;font-weight:normal;font-size:7px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -1297,6 +1309,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan28987">−1</tspan></text>
+
 
 
 </g><path
@@ -1486,6 +1499,7 @@
      id="tspan29081">I</tspan></text>
 
 
+
 <text
    transform="matrix(0,1,1,0,27.42384,163.35583)"
    style="font-variant:normal;font-weight:normal;font-size:10.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -1496,6 +1510,7 @@
      id="tspan29085">sipm</tspan></text>
 
 
+
 <text
    transform="matrix(0,1,1,0,24.9629,189.04683)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -1503,6 +1518,7 @@
      x="0"
      y="0"
      id="tspan29089">(</tspan></text>
+
 
 
 <text
@@ -1515,6 +1531,7 @@
      id="tspan29093">mA</tspan></text>
 
 
+
 <text
    transform="matrix(0,1,1,0,24.9629,219.77217)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -1522,6 +1539,7 @@
      x="0"
      y="0"
      id="tspan29097">)</tspan></text>
+
 
 
 </g></g></g><g
@@ -11214,6 +11232,7 @@
      id="tspan33955">Ida</tspan></text>
 
 
+
 </g><path
              d="m 795.879,3047.14 h 100"
              style="fill:none;stroke:#ff0000;stroke-width:15;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
@@ -11274,6 +11293,7 @@
      id="tspan33985">Vuelta</tspan></text>
 
 
+
 </g></g></g></g><g
        id="g49071"
        transform="matrix(0.0707348,0,0,0.0707348,258.96423,51.08218)"
@@ -11318,6 +11338,7 @@
      id="tspan49109">11.0</tspan></text>
 
 
+
 </g></g></g><g
          id="g49113"><g
            id="g49115"
@@ -11346,6 +11367,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan49137">11.2</tspan></text>
+
 
 
 </g></g></g><g
@@ -11378,6 +11400,7 @@
      id="tspan49165">11.4</tspan></text>
 
 
+
 </g></g></g><g
          id="g49169"><g
            id="g49171"
@@ -11408,6 +11431,7 @@
      id="tspan49193">11.6</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,117.555,-9.38826)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -11415,6 +11439,7 @@
      x="0"
      y="0"
      id="tspan49197">I</tspan></text>
+
 
 
 <text
@@ -11427,6 +11452,7 @@
      id="tspan49201">led</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,138.43113,-9.38826)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -11434,6 +11460,7 @@
      x="0"
      y="0"
      id="tspan49205">(</tspan></text>
+
 
 
 <text
@@ -11446,6 +11473,7 @@
      id="tspan49209">mA</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,169.15608,-9.38826)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -11453,6 +11481,7 @@
      x="0"
      y="0"
      id="tspan49213">)</tspan></text>
+
 
 
 </g></g></g><g
@@ -11485,6 +11514,7 @@
      id="tspan49241">0.345</tspan></text>
 
 
+
 </g></g></g><g
          id="g49245"><g
            id="g49247"
@@ -11513,6 +11543,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan49269">0.350</tspan></text>
+
 
 
 </g></g></g><g
@@ -11545,6 +11576,7 @@
      id="tspan49297">0.355</tspan></text>
 
 
+
 </g></g></g><g
          id="g49301"><g
            id="g49303"
@@ -11573,6 +11605,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan49325">0.360</tspan></text>
+
 
 
 </g></g></g><g
@@ -11605,6 +11638,7 @@
      id="tspan49353">0.365</tspan></text>
 
 
+
 <text
    transform="matrix(0,1,1,0,-8.9,67.4813)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -11612,6 +11646,7 @@
      x="0"
      y="0"
      id="tspan49357">I</tspan></text>
+
 
 
 <text
@@ -11624,6 +11659,7 @@
      id="tspan49361">sipm</tspan></text>
 
 
+
 <text
    transform="matrix(0,1,1,0,-8.9,97.59613)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -11631,6 +11667,7 @@
      x="0"
      y="0"
      id="tspan49365">(</tspan></text>
+
 
 
 <text
@@ -11643,6 +11680,7 @@
      id="tspan49369">mA</tspan></text>
 
 
+
 <text
    transform="matrix(0,1,1,0,-8.9,128.32108)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -11650,6 +11688,7 @@
      x="0"
      y="0"
      id="tspan49373">)</tspan></text>
+
 
 
 </g></g></g><g
@@ -12126,6 +12165,7 @@
      id="tspan49623">Ida</tspan></text>
 
 
+
 </g><path
              d="m 503.5,1516.63 h 100"
              style="fill:none;stroke:#ff0000;stroke-width:15;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
@@ -12184,6 +12224,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan49653">Vuelta</tspan></text>
+
 
 
 </g></g></g></g><rect
@@ -12255,6 +12296,7 @@
      id="tspan54849">0.0000</tspan></text>
 
 
+
 </g></g></g><g
          id="g54853"><g
            id="g54855"
@@ -12283,6 +12325,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan54877">0.0025</tspan></text>
+
 
 
 </g></g></g><g
@@ -12315,6 +12358,7 @@
      id="tspan54905">0.0050</tspan></text>
 
 
+
 </g></g></g><g
          id="g54909"><g
            id="g54911"
@@ -12343,6 +12387,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan54933">0.0075</tspan></text>
+
 
 
 </g></g></g><g
@@ -12375,6 +12420,7 @@
      id="tspan54961">0.0100</tspan></text>
 
 
+
 </g></g></g><g
          id="g54965"><g
            id="g54967"
@@ -12403,6 +12449,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan54989">0.0125</tspan></text>
+
 
 
 </g></g></g><g
@@ -12435,6 +12482,7 @@
      id="tspan55017">0.0150</tspan></text>
 
 
+
 </g></g></g><g
          id="g55021"><g
            id="g55023"
@@ -12463,6 +12511,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan55045">0.0175</tspan></text>
+
 
 
 </g></g></g><g
@@ -12495,6 +12544,7 @@
      id="tspan55073">0.0200</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,230.108,185.3489)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -12502,6 +12552,7 @@
      x="0"
      y="0"
      id="tspan55077">I</tspan></text>
+
 
 
 <text
@@ -12514,6 +12565,7 @@
      id="tspan55081">led</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,250.98413,185.3489)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -12521,6 +12573,7 @@
      x="0"
      y="0"
      id="tspan55085">(</tspan></text>
+
 
 
 <text
@@ -12533,6 +12586,7 @@
      id="tspan55089">mA</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,281.70908,185.3489)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -12540,6 +12594,7 @@
      x="0"
      y="0"
      id="tspan55093">)</tspan></text>
+
 
 
 </g></g></g><g
@@ -12572,6 +12627,7 @@
      id="tspan55121">0.000</tspan></text>
 
 
+
 </g></g></g><g
          id="g55125"><g
            id="g55127"
@@ -12600,6 +12656,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan55149">0.001</tspan></text>
+
 
 
 </g></g></g><g
@@ -12632,6 +12689,7 @@
      id="tspan55177">0.002</tspan></text>
 
 
+
 <text
    transform="matrix(0,1,1,0,24.8859,236.023)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -12641,6 +12699,7 @@
      id="tspan55181">Δ</tspan></text>
 
 
+
 <text
    transform="matrix(0,1,1,0,24.8859,246.2843)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -12648,6 +12707,7 @@
      x="0"
      y="0"
      id="tspan55185">I</tspan></text>
+
 
 
 <text
@@ -12660,6 +12720,7 @@
      id="tspan55189">sipm</tspan></text>
 
 
+
 <text
    transform="matrix(0,1,1,0,24.8859,276.39913)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -12667,6 +12728,7 @@
      x="0"
      y="0"
      id="tspan55193">(</tspan></text>
+
 
 
 <text
@@ -12679,6 +12741,7 @@
      id="tspan55197">mA</tspan></text>
 
 
+
 <text
    transform="matrix(0,1,1,0,24.8859,307.12408)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -12686,6 +12749,7 @@
      x="0"
      y="0"
      id="tspan55201">)</tspan></text>
+
 
 
 </g></g></g><g
@@ -16580,6 +16644,7 @@
      id="tspan57173">0.0000</tspan></text>
 
 
+
 </g><path
              d="m 2231.79,513.762 v -35"
              style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -16598,6 +16663,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan57183">0.0005</tspan></text>
+
 
 
 </g><path
@@ -16620,6 +16686,7 @@
      id="tspan57193">0.0010</tspan></text>
 
 
+
 </g><path
              d="m 3850.57,513.762 v -35"
              style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -16640,6 +16707,7 @@
      id="tspan57203">0.0015</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,220.608,19.3293)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -16649,6 +16717,7 @@
      id="tspan57207">Δ</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,230.8689,19.3293)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -16656,6 +16725,7 @@
      x="0"
      y="0"
      id="tspan57211">I</tspan></text>
+
 
 
 <text
@@ -16668,6 +16738,7 @@
      id="tspan57215">sipm</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,260.98413,19.3293)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -16675,6 +16746,7 @@
      x="0"
      y="0"
      id="tspan57219">(</tspan></text>
+
 
 
 <text
@@ -16687,6 +16759,7 @@
      id="tspan57223">mA</tspan></text>
 
 
+
 <text
    transform="matrix(1,0,0,-1,291.70908,19.3293)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -16694,6 +16767,7 @@
      x="0"
      y="0"
      id="tspan57227">)</tspan></text>
+
 
 
 </g><path
@@ -16713,6 +16787,7 @@
      x="0"
      y="0"
      id="tspan57237">0</tspan></text>
+
 
 
 </g><path
@@ -16735,6 +16810,7 @@
      id="tspan57247">10</tspan></text>
 
 
+
 </g><path
              d="m 701.359,1404.98 h -35"
              style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -16755,6 +16831,7 @@
      id="tspan57257">20</tspan></text>
 
 
+
 <text
    transform="matrix(0,1,1,0,43.2922,66.5883)"
    style="font-variant:normal;font-weight:normal;font-size:15px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -16763,6 +16840,7 @@
      y="0"
      sodipodi:role="line"
      id="tspan57261">#ΔEntradas</tspan></text>
+
 
 
 </g></g></g><g
