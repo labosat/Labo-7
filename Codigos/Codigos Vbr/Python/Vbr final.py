@@ -2,6 +2,7 @@ from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.odr import ODR, Model, RealData
+import time
 
 def LogData(x, y, y_err):
     v = [np.log(a) for a in y]
@@ -294,7 +295,7 @@ m = 3.815
 R0 = 1000
 max_limit = 0
 folders = 12 
-tolerancia = 0.03
+tolerancia = 0.1
 #j = 5
 
 T = []
@@ -308,18 +309,21 @@ T_err_lista = []
 Vbr_lista = []
 Vbr_err_lista = []
 for i in range(1, folders + 1):
-    
-    path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    i = 10
+    #path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    path = 'C:/Users/lucas/Documents/GitHub/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
     Vbr_temp = []
     T_temp = []
     Vbr_err_temp = []
     T_err_temp = []
     #casa
     array = pulidor(tolerancia, path)
+    end = len(array)
     
+    start = time.time()
     for j in array:
     #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
-    
+        
         path_group_i = '/iv/%s (iv).txt' % j
         path_group_r = '/res/%s (res).txt' % j
         data_i = np.loadtxt(path + path_group_i, skiprows=1)
@@ -361,9 +365,10 @@ for i in range(1, folders + 1):
                 out = odr.run()
                 
                 #chi_2.append(dispersion(V_fit, I_fit, I_err_fit, out.beta))
-                beta.append(out.beta)
-                sd_beta.append(out.sd_beta)
-                print(h)
+                if not np.isnan(out.beta[0]):
+                    beta.append(out.beta)
+                    sd_beta.append(out.sd_beta)
+                #print(h)
 
 
       
@@ -372,6 +377,8 @@ for i in range(1, folders + 1):
         Vbr_err_temp.append(vbr_err)
         T_temp.append(t)
         T_err_temp.append(t_err)
+        print("%s/%s" % (j, end))
+        print(str(time.time() - start) + " seconds")
         
     #aca estan los datos antes de promediar como lista de listas
     T_lista.append(T_temp)
@@ -388,6 +395,7 @@ for i in range(1, folders + 1):
 #    plt.plot(V, fit_function(beta[index_chi], V))
     #p0.append(beta[])
     print("success!: "+ str(i))
+    break
 
 
 plt.figure(1)
@@ -406,19 +414,25 @@ plt.plot(T, [T[i]*m + b for i in range(len(T))])
 plt.xlabel('Temperatura (C)')
 plt.ylabel('Breakdown Voltage (V)')
 
+
+R = T[0]*3.815 + 1000
+dR = T_err[0]*3.815 + 2.6
+
+print("9\t"+str(Vbr[0])+"\t"+str(Vbr_err[0]*np.sqrt(len(Vbr_err_temp)))+"\t"+str(Vbr_err[0])+"\t"+str(Vbr_err[0]/np.sqrt(len(Vbr_err_temp)))+"\t"+str(R)+"\t"+str(dR))
+
 #%%
 
-N = []
-for i in range(len(Vbr)):
-    N.append(i)
+import numpy as np
+import matplotlib.pyplot as plt
 
-np.savetxt("/home/lucas/Desktop/vbr(T) con estadistica.txt", np.c_[N, Vbr, Vbr_err, T, T_err])
+data = np.loadtxt("C:/Users/lucas/Desktop/vbr(T).txt", skiprows=1)
 
+Vbr = data[:, 1]
+dVbr = data[:, 4]
+T = (data[:, 5] - 1000)/3.815
+dT = data[:, 6]/3.815
 
-
-
-
-
-
+plt.errorbar(T, Vbr, yerr=dVbr, xerr=dT, fmt='.')
+plt.grid(True)
 
 
