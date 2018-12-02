@@ -425,14 +425,35 @@ print("9\t"+str(Vbr[0])+"\t"+str(Vbr_err[0]*np.sqrt(len(Vbr_err_temp)))+"\t"+str
 import numpy as np
 import matplotlib.pyplot as plt
 
-data = np.loadtxt("C:/Users/lucas/Desktop/vbr(T).txt", skiprows=1)
+def QuadSum(v):
+    result = 0
+    for i in range(len(v)):
+        result += v[i]*v[i]
+        
+    return np.sqrt(result)/len(v)
 
-Vbr = data[:, 1]
-dVbr = data[:, 4]
-T = (data[:, 5] - 1000)/3.815
-dT = data[:, 6]/3.815
+T = []
+Vbr = []
+dT = []
+dVbr = []
+
+for i in range(1, 13):
+
+    path = "C:/Users/lucas/Documents/GitHub/Labo-7/Mediciones/Vbr/Para informe/Vbr_final_para_informe/%s.txt" % i
+    data = np.loadtxt(path)
+    Vbr_temp = data[:, 1]
+    dVbr_temp = data[:, 3]
+    T_temp = data[:, 0]
+    dT_temp = data[:, 2] + 2.6
+    
+    T.append(np.mean(T_temp))
+    Vbr.append(np.mean(Vbr_temp))
+    dT.append(QuadSum(dT_temp))
+    dVbr.append(QuadSum(dVbr_temp))
 
 plt.errorbar(T, Vbr, yerr=dVbr, xerr=dT, fmt='.')
 plt.grid(True)
+
+np.savetxt("C:/Users/Lucas/Desktop/vbr_final.txt", np.c_[T, Vbr, dT, dVbr])
 
 
