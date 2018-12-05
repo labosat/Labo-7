@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import Funciones as f
 
 
-path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led 0-20/Estacionario 6/iv/6 (iv).txt'
+#path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led 0-20/Estacionario 6/iv/6 (iv).txt'
+path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led PID/0-20mA, step 100 uA, wait 10ms, Peltier 8V bis/iv/1 (iv).txt'
 
 data = np.loadtxt(path)
 I_sipm = data[:, 0]
@@ -40,8 +41,8 @@ plt.ylabel(r'$I_{sipm} (mA)$', size = 22)
 plt.tick_params(labelsize=22)
 plt.legend()
 plt.grid(True)
-plt.yscale('log')
-plt.xscale('log')
+#plt.yscale('log')
+#plt.xscale('log')
 
 I_led_dif, I_sipm_dif = dif(I_led, I_sipm)
 I_sipm_err_dif = [np.sqrt(I_sipm_err[1:int(len(I_sipm)/2)][i]**2 - I_sipm_err[int(len(I_sipm)/2):-1][i]**2) for i in range(len(I_sipm_err[int(len(I_sipm)/2):-1]))]
@@ -61,6 +62,7 @@ ax2.set_ylabel('# Entradas', size = 20)
 bins_err = bins + (bins[2] - bins[1])/2
 ax2.errorbar(bins_err[:-1], m, yerr = [np.sqrt(i) for i in m], fmt = '.r', capsize = 3)
 ax2.tick_params(labelsize=20)
+#ax2.vlines(0, ymin=0, ymax=24)
 #%%
 ''' Simulacion de datos gaussianos y uniformes para comparar con lo medido'''
 
@@ -173,17 +175,17 @@ print('Test de Kolmogorov-Smirnov para una muestra gaussiana' +
 print('p-value = ' + str(stats.ks_2samp(c, dif_filtro)[1]))
 
 #%%
-##import time
-#pvalue = []
-#for i in range(5000):
-##    t0 = time.time()
-#    c = []
-#    for i in range(10000):
-#        c.append(stats.norm.rvs(loc = mean, scale = sigma))
-#    pvalue.append(stats.ks_2samp(c, dif_filtro)[1])
-##    print(time.time() - t0)
-#m, bins, _ = plt.hist(pvalue, bins = 50)
-#bins_err = bins + (bins[2] - bins[1])/2
-#plt.errorbar(bins_err[:-1], m, yerr = [np.sqrt(i) for i in m], fmt = '.r', capsize = 3)
-#plt.xlabel('Pvalues', size = 15)
-#plt.ylabel('# Entradas', size = 15)
+#import time
+pvalue = []
+for i in range(5000):
+#    t0 = time.time()
+    c = []
+    for i in range(10000):
+        c.append(stats.norm.rvs(loc = mean, scale = sigma))
+    pvalue.append(stats.ks_2samp(c, dif_filtro)[1])
+#    print(time.time() - t0)
+m, bins, _ = plt.hist(pvalue, bins = 50)
+bins_err = bins + (bins[2] - bins[1])/2
+plt.errorbar(bins_err[:-1], m, yerr = [np.sqrt(i) for i in m], fmt = '.r', capsize = 3)
+plt.xlabel('Pvalues', size = 15)
+plt.ylabel('# Entradas', size = 15)

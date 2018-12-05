@@ -30,16 +30,22 @@ b_err = out.sd_beta[1]
 chi2 = out.res_var
 
 
-
+font = {'family': 'arial',
+        'color':  'black',
+        'weight': 'normal',
+        'size': 25,
+        }
 plt.figure(1)
-plt.errorbar(T, np.log(I), xerr=dT, yerr=[dI[i] / I[i] for i in range(len(I))], fmt='sk', capsize=3)
-plt.grid(True)
-plt.plot(T[0:13], [m*i + b for i in T[0:13]], 'b--', lw = 2)
-plt.xlabel('Temperatura (C)', size=22)
-plt.ylabel('Dark Current (log(A))', size=22)
+plt.errorbar(T, I, xerr=dT, yerr=dI, fmt='sk', capsize=3)
+plt.plot(T[0:13], [np.exp(m*i + b) for i in T[0:13]], 'b--', lw = 2)
+plt.xlabel('Temperatura [°C]', size=20, fontdict=font)
+plt.ylabel('Dark Current [A]', size=22, fontdict=font)
+plt.xticks([-35, -15, 0, 15,  35])
 plt.tick_params(labelsize=22)
-plt.axvspan(-35, 7, alpha=0.5, color='red')
-plt.text(-30, -13, 'Linear region', fontsize=25)
+plt.axvspan(-36, 7, alpha=0.5, color='darkorange')
+plt.text(-32, 3*10**(-6), 'Región \nexponencial', fontsize=25, fontdict=font)
+plt.yscale('log')
+plt.grid(True)
 #%%  AJUSTE TODO EL RANGO
 
 T = [(i-1000)/3.815 for i in R]
