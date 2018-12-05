@@ -273,6 +273,8 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
     smu_2400.write(':SOUR:VOLT:LEV ' + str(vPolarization_sipm))
     #protection for sipm is 18mA
     smu_2400.write('SENS:CURR:PROT ' + str(0.018))
+    
+    smu_2400.write('SENS:CURR:NPLC ' + str(0.35))
        
     
     # -------------------------------------------------------------------------
@@ -299,10 +301,11 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
         
         readingsI_sipm.append(sipm_current)
         
-        if i != iEnd:
-            i += iStep
+#        if i != iEnd:
+        i += iStep
             
-        #time.sleep(3)
+    #smu_2612b.write('smub.source.leveli = ' + str(0))
+    #time.sleep(3)
 
     #--------------------------------------------------------------------------
         
@@ -324,6 +327,15 @@ def led1(smu_2612b, smu_2400, fourWire, i_cca, v_cca, iRanga, vRanga, iLevela,
             i -= iStep
             
             #time.sleep(3)
+        smu_2612b.write('smub.source.leveli = ' + str(0))
+        time.sleep(wait_time)
+        smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
+        smu_2612b.write('smua.measure.r(smua.nvbuffer1)')
+
+        auxRead = smu_2400.query(':READ?')
+        sipm_current = float(cast(auxRead)[1])
+    
+        readingsI_sipm.append(sipm_current)
     
     
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')

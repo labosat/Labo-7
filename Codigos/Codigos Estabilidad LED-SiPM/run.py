@@ -10,20 +10,20 @@ import time
 #                   'led3': N = 50, wait_time = 0.01
 
 N = 1
-wait_time = 10*P('m')
-group_path = '0-20mA, step 25 uA, wait 10ms, peltier 12 V bis'
+wait_time = 6*P('m')
+group_path = 'Auto calentamiento, dt = 6ms, NPLC = 0.1, espera 10s, datos=6 BIS'
 
 #modes available: 'iv', 'led1', 'led2' (refer to help for specifics)
-mode = 'led4'
-NPLC = 1
+mode = 'led1'
+NPLC = 0.001
 iPolarization_led = "none"
 
 plotFlag = 1
-saveFlag = 1
+saveFlag = 0
 
 for j in range(1, N + 1):
     run(j, mode, group_path, plotFlag, saveFlag, wait_time, NPLC, iPolarization_led)
-    #time.sleep(60)
+    #time.sleep(10)
 
 #%%  # ESTA FUNCION ES PARA MEDIR UNA CURVA ISIPM ILED EN FUNCION DEL WAIT TIME.
 from k2612B import run
