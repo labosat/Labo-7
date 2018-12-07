@@ -7,12 +7,13 @@ def setup():
    
     #for smua only (r measurement) --------------------------------------------
     
+    
     fourWire       = 1          # 1 for 4-wire sensing
     i_cca          = 300*P('u')
     v_cca          = 0.3
     
-    iRanga         = 100*P('u')
-    vRanga         = 0.2
+    iRanga         = 'AUTO'
+    vRanga         = 'AUTO'
     
     iLevela        = 97*P('u')
     

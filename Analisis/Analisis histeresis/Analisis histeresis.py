@@ -1,46 +1,55 @@
+from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 import Funciones as f
+
 
 def dif(x, y):
     ''' Esta funcion agarra una curva ida y vuelta (con mismo eje x), y calcula la 
     diferencia entre la ida y la vuelta para cada x, normalizado por el maximo del par.'''
     pesos = []
-    y_flip = np.flip(y[int(len(y)/2):-1], axis=0)
-    for i in range(len(y[1:int(len(y)/2)])):
+    y_flip = np.flip(y[int(len(y)/2.):-1], axis=0)
+    for i in range(len(y[1:int(len(y)/2.)])):
         pesos.append(np.max([y[i], y_flip[i]]))
     
-    dif_temp = y[1:int(len(y)/2)] - y_flip
-    y_dif = [dif_temp[i]/1 for i in range(len(dif_temp))] #pesos[i] en 1
-    x_dif = x[1:int(len(x)/2)]
+    dif_temp = y[1:int(len(y)/2.)] - y_flip
+    y_dif = [dif_temp[i] for i in range(len(dif_temp))] #pesos[i] en 1
+    x_dif = x[1:int(len(x)/2.)]
     return x_dif, y_dif
 
 #path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led 0-20/Estacionario 6/iv/6 (iv).txt'
-path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led/Auto calentamiento, dt = 30ms, NPLC = 0.1, espera 10s, datos=6/iv/10 (iv).txt'
+path = 'C:/Users/LINE/Desktop/Labosat Medicion/results/Mediciones autocalentamiento 4/'
 N = 25
 I_sipm_dif = []
 I_led_dif = []
-I_sipm_err_dif
-for i in range(1, N+1):
-    data = np.loadtxt(path + '%s.txt' % i, skiprows=1)
-    I_sipm = data[:, 0]
-    I_led = data[:, 2]
+I_sipm_err_dif = []
+for j in range(1, N+1):
+    data = np.loadtxt(path + '%s.txt' % j, skiprows=1)
+    I_sipm = data[:, 1]
+    I_led = data[:, 3]
     I_led_err = f.error_I(I_led, '2612', source=True)
-    I_sipm_err = f.error_I(I_sipm, '2400', source=False)
+    I_sipm_err = f.error_I(I_sipm, '2612', source=False)
     I_led_dif_temp, I_sipm_dif_temp = dif(I_led, I_sipm)
     I_sipm_dif.append(I_sipm_dif_temp)
     I_led_dif.append( I_led_dif_temp)
-    I_sipm_err_dif.append([np.sqrt(I_sipm_err[1:int(len(I_sipm)/2)][i]**2 - I_sipm_err[int(len(I_sipm)/2):-1][i]**2) for i in range(len(I_sipm_err[int(len(I_sipm)/2):-1]))])
-        
+    I_sipm_err_dif.append([np.sqrt(I_sipm_err[1:int(len(I_sipm)/2.)][i]**2 - I_sipm_err[int(len(I_sipm)/2.):-1][i]**2) for i in range(len(I_sipm_err[int(len(I_sipm)/2.):-1]))])
+    print(j)
+    
+I_sipm_delta = [item for sublist in I_sipm_dif for item in sublist]
+I_sipm_err_delta = [item for sublist in I_sipm_err_dif for item in I_sipm_dif]
 fig, (ax1, ax2) = plt.subplots(2, 1)
-#ax1.plot(I_led_dif, [-i*10**3 for i in I_sipm_dif], 'og')
-ax1.errorbar(I_led_dif, [-i*10**3 for i in I_sipm_dif],xerr=f.error_I(I_led_dif, '2612', source=True), yerr=[i*10**3 for i in I_sipm_err_dif], fmt='og', capsize=3)
+for k in range(len(I_sipm_dif)):
+    ax1.plot(I_led_dif[k], [-i*10**3 for i in I_sipm_dif[k]], 'og')
+    ax1.errorbar(I_led_dif[k], [-i*10**3 for i in I_sipm_dif[k]],
+                 xerr=f.error_I(I_led_dif[k], '2612', source=True),
+                 yerr=[i*10**3 for i in I_sipm_err_dif[k]], fmt='og', capsize=3)
 ax1.set_xlabel(r'$I_{led} (mA)$', size = 20)
 ax1.set_ylabel(r'$\Delta I_{sipm} (mA)$', size = 20)
 ax1.tick_params(labelsize=20)
+ax1.set_xscale('log')
 ax1.grid(True)
-values, bins = np.histogram(I_sipm_dif, bins = len(I_sipm_dif))
-m, bins, _ = ax2.hist([-i*10**3 for i in I_sipm_dif], bins=10)
+values, bins = np.histogram(I_sipm_delta, bins = len(I_sipm_delta))
+m, bins, _ = ax2.hist([-i*10**3 for i in I_sipm_delta], bins=int(100))#np.sqrt(len(I_sipm_delta))))
 #ax2.plot(bins[:-1], values, lw=2)
 ax2.set_xlabel(r'$\Delta I_{sipm} (mA)$', size = 20)
 ax2.set_ylabel('# Entradas', size = 20)
@@ -94,8 +103,8 @@ import scipy.stats as stats
 print('')
 print('Test para datos sin filtro.')
 
-mean = np.mean(I_sipm_dif)
-sigma = np.std(I_sipm_dif, ddof=1)
+mean = np.mean(I_sipm_delta)
+sigma = np.std(I_sipm_delta, ddof=1)
 a = mean - sigma
 b = mean + sigma
 uniform = []
@@ -120,7 +129,7 @@ for i in range(100000):
     c.append(stats.norm.rvs(loc = mean, scale = sigma))
 
 plt.figure(5)
-plt.hist(I_sipm_dif, bins = 200, normed=True)
+plt.hist(I_sipm_delta, bins = 100, normed=True)
 plt.hist(c, bins = 800, normed=True)
 plt.vlines(mean, 0, 200)
 plt.vlines(mean + sigma, 0, 200)
@@ -130,7 +139,7 @@ plt.xlabel(r'$\Delta I_{sipm} (Normalizado)$', size = 15)
 print('')
 print('Test de Kolmogorov-Smirnov para una muestra gaussiana' +
       ' y los datos: ') 
-print('p-value = ' + str(stats.ks_2samp(c, I_sipm_dif)[1]))
+print('p-value = ' + str(stats.ks_2samp(c, I_sipm_delta)[1]))
 #%%
 # Pruebo hacer el mismo analisis filtrando los datos que se alejan mucho de la curva
 # Criterio: me quedo solo con la nube de puntos alrededor del 0.
