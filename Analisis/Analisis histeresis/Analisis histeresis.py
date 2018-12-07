@@ -4,7 +4,7 @@ import Funciones as f
 
 
 #path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led 0-20/Estacionario 6/iv/6 (iv).txt'
-path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led PID/0-20mA, step 100 uA, wait 10ms, Peltier 8V bis/iv/1 (iv).txt'
+path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led/Auto calentamiento, dt = 30ms, NPLC = 0.1, espera 10s, datos=6/iv/10 (iv).txt'
 
 data = np.loadtxt(path)
 I_sipm = data[:, 0]
