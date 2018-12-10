@@ -1,0 +1,23 @@
+1:
+NPLC = 0.16
+N = 40
+delay = 20 ms
+resting time = 30 s
+
+2:
+NPLC = 1
+N = 40
+delay = 20 ms
+resting time = 30 s
+
+3:
+NPLC = 0.01
+N = 40
+delay = 20 ms
+resting time = 30 s
+
+4:
+NPLC = 0.16
+N = 40
+delay = 5 ms
+resting time = 30 s
