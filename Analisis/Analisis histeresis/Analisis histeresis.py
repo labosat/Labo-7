@@ -16,17 +16,17 @@ def dif(x, y):
     return x_dif, y_dif
 
 #path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led 0-20/Estacionario 6/iv/6 (iv).txt'
-path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Codigos/Codigos Estabilidad LED-SiPM/results led/Auto calentamiento, dt = 30ms, NPLC = 0.1, espera 10s, datos=6/iv/10 (iv).txt'
-N = 25
+path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led 0-20/Estacionario 7/iv'
+N = 10
 I_sipm_dif = []
 I_led_dif = []
-I_sipm_err_dif
+I_sipm_err_dif = []
 for i in range(1, N+1):
-    data = np.loadtxt(path + '%s.txt' % i, skiprows=1)
-    I_sipm = data[:, 0]
-    I_led = data[:, 2]
+    data = np.loadtxt(path + '/%s (iv).txt' % i, skiprows=1)
+    I_sipm = data[:-1, 0]
+    I_led = data[:-1, 2]
     I_led_err = f.error_I(I_led, '2612', source=True)
-    I_sipm_err = f.error_I(I_sipm, '2400', source=False)
+    I_sipm_err = f.error_I(I_sipm, '2612', source=False)
     I_led_dif_temp, I_sipm_dif_temp = dif(I_led, I_sipm)
     I_sipm_dif.append(I_sipm_dif_temp)
     I_led_dif.append( I_led_dif_temp)
@@ -34,7 +34,11 @@ for i in range(1, N+1):
         
 fig, (ax1, ax2) = plt.subplots(2, 1)
 #ax1.plot(I_led_dif, [-i*10**3 for i in I_sipm_dif], 'og')
-ax1.errorbar(I_led_dif, [-i*10**3 for i in I_sipm_dif],xerr=f.error_I(I_led_dif, '2612', source=True), yerr=[i*10**3 for i in I_sipm_err_dif], fmt='og', capsize=3)
+I_led_err = []
+for i in range(1, N):
+    I_led_err.append(f.error_I(I_led_dif[i], '2612', source=True))
+ax1.errorbar(I_led_dif, [-i*10**3 for i in I_sipm_dif],
+             xerr=I_led_err, yerr=[i*10**3 for i in I_sipm_err_dif], fmt='og', capsize=3)
 ax1.set_xlabel(r'$I_{led} (mA)$', size = 20)
 ax1.set_ylabel(r'$\Delta I_{sipm} (mA)$', size = 20)
 ax1.tick_params(labelsize=20)
