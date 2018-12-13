@@ -16,50 +16,96 @@ def dif(x, y):
     y_dif = [dif_temp[i] for i in range(len(dif_temp))] #pesos[i] en 1
     x_dif = x[1:int(len(x)/2.)]
     return x_dif, y_dif
-
+#%%
 #path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led 0-20/Estacionario 6/iv/6 (iv).txt'
 
-path = 'C:/Users/LINE/Desktop/Labosat Medicion/results/Mediciones autocalentamiento 4/'
-N = 25
+path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led 0-20/Estacionario 7/iv/'
+N = 10
 I_sipm_dif = []
 I_led_dif = []
 I_sipm_err_dif = []
 for j in range(1, N+1):
-    data = np.loadtxt(path + '%s.txt' % j, skiprows=1)
-    I_sipm = data[:, 1]
-    I_led = data[:, 3]
-
-    I_led_err = f.error_I(I_led, '2612', source=True)
-    I_sipm_err = f.error_I(I_sipm, '2612', source=False)
-    I_led_dif_temp, I_sipm_dif_temp = dif(I_led, I_sipm)
-    I_sipm_dif.append(I_sipm_dif_temp)
-    I_led_dif.append( I_led_dif_temp)
-    I_sipm_err_dif.append([np.sqrt(I_sipm_err[1:int(len(I_sipm)/2.)][i]**2 - I_sipm_err[int(len(I_sipm)/2.):-1][i]**2) for i in range(len(I_sipm_err[int(len(I_sipm)/2.):-1]))])
-    print(j)
+    data = np.loadtxt(path + '%s (iv).txt' % j, skiprows=1)
+    if len(data[:int(len(data[:, 0])/2), 0]) == len(data[int(len(data[:, 0])/2):, 1]):
+        I_sipm = data[:, 0]
+        I_led = data[:, 2]
+    
+        I_led_err = f.error_I(I_led, '2612', source=True)
+        I_sipm_err = f.error_I(I_sipm, '2612', source=False)
+        I_led_dif_temp, I_sipm_dif_temp = dif(I_led, I_sipm)
+        I_sipm_dif.append(I_sipm_dif_temp)
+        I_led_dif.append( I_led_dif_temp)
+        I_sipm_err_dif.append([np.sqrt(I_sipm_err[1:int(len(I_sipm)/2.)][i]**2 - I_sipm_err[int(len(I_sipm)/2.):-1][i]**2) for i in range(len(I_sipm_err[int(len(I_sipm)/2.):-1]))])
+        print(j)
+    else:
+        I_sipm = data[:-1, 0]
+        I_led = data[:-1, 2]
+    
+        I_led_err = f.error_I(I_led, '2612', source=True)
+        I_sipm_err = f.error_I(I_sipm, '2612', source=False)
+        I_led_dif_temp, I_sipm_dif_temp = dif(I_led, I_sipm)
+        I_sipm_dif.append(I_sipm_dif_temp)
+        I_led_dif.append( I_led_dif_temp)
+        I_sipm_err_dif.append([np.sqrt(I_sipm_err[1:int(len(I_sipm)/2.)][i]**2 - I_sipm_err[int(len(I_sipm)/2.):-1][i]**2) for i in range(len(I_sipm_err[int(len(I_sipm)/2.):-1]))])
+        print(j)
     
 I_sipm_delta = [item for sublist in I_sipm_dif for item in sublist]
 I_sipm_err_delta = [item for sublist in I_sipm_err_dif for item in I_sipm_dif]
 fig, (ax1, ax2) = plt.subplots(2, 1)
 
 for k in range(len(I_sipm_dif)):
-    ax1.plot(I_led_dif[k], [-i*10**3 for i in I_sipm_dif[k]], 'og')
-    ax1.errorbar(I_led_dif[k], [-i*10**3 for i in I_sipm_dif[k]],
-                 xerr=f.error_I(I_led_dif[k], '2612', source=True),
+    x_err = f.error_I(I_led_dif[k], '2612', source=True)
+    ax1.plot(1000*I_led_dif[k], [-i*10**3 for i in I_sipm_dif[k]], 'og')
+    ax1.errorbar(1000*I_led_dif[k], [-i*10**3 for i in I_sipm_dif[k]],
+                 xerr=[1000*i for i in x_err],
                  yerr=[i*10**3 for i in I_sipm_err_dif[k]], fmt='og', capsize=3)
 
-ax1.set_xlabel(r'$I_{led} (mA)$', size = 20)
-ax1.set_ylabel(r'$\Delta I_{sipm} (mA)$', size = 20)
+ax1.set_xlabel(r'$I_{led} [mA]$', size = 20)
+ax1.set_ylabel(r'$\Delta I_{sipm} [mA]$', size = 20)
 ax1.tick_params(labelsize=20)
-ax1.set_xscale('log')
+#ax1.set_xscale('log')
 ax1.grid(True)
-values, bins = np.histogram(I_sipm_delta, bins = len(I_sipm_delta))
-m, bins, _ = ax2.hist([-i*10**3 for i in I_sipm_delta], bins=int(100))#np.sqrt(len(I_sipm_delta))))
+values, bins = np.histogram(I_sipm_delta, bins = np.linspace(-0.0005, 0.0018, 150))# len(I_sipm_delta))
+m, bins, _ = ax2.hist([-i*10**3 for i in I_sipm_delta], bins = np.linspace(-0.0005, 0.0018, 150))  #150)
 #ax2.plot(bins[:-1], values, lw=2)
-ax2.set_xlabel(r'$\Delta I_{sipm} (mA)$', size = 20)
+ax2.set_xlabel(r'$\Delta I_{sipm} [mA]$', size = 20)
 ax2.set_ylabel('# Entradas', size = 20)
 bins_err = bins + (bins[2] - bins[1])/2
 ax2.errorbar(bins_err[:-1], m, yerr = [np.sqrt(i) for i in m], fmt = '.r', capsize = 3)
 ax2.tick_params(labelsize=20)
+
+
+#%%
+data = np.loadtxt('/home/tomas/Desktop/Labo 6 y 7/Labo-7/Analisis/Analisis histeresis/Mediciones histeresis/results led PID/0-20mA, step 25 uA, wait 10ms/iv/1 (iv).txt')
+I_sipm = data[:, 0]
+I_led = data[:, 2]
+
+I_led_err = f.error_I(I_led, '2612', source=True)
+I_sipm_err = f.error_I(I_sipm, '2612', source=False)
+I_led_dif, I_sipm_dif = dif(I_led, I_sipm)
+
+I_sipm_err_dif = [np.sqrt(I_sipm_err[1:int(len(I_sipm)/2.)][i]**2 - I_sipm_err[int(len(I_sipm)/2.):-1][i]**2) for i in range(len(I_sipm_err[int(len(I_sipm)/2.):-1]))]
+
+fig, (ax1, ax2) = plt.subplots(2, 1)
+x_err = f.error_I(I_led_dif, '2612', source=True)
+ax1.plot(1000*I_led_dif, [-i*10**3 for i in I_sipm_dif], 'og')
+ax1.errorbar(1000*I_led_dif, [-i*10**3 for i in I_sipm_dif],
+             xerr=[1000*i for i in x_err],
+             yerr=[i*10**3 for i in I_sipm_err_dif], fmt='og', capsize=3)
+ax1.set_xlabel(r'$I_{led} [mA]$', size = 20)
+ax1.set_ylabel(r'$\Delta I_{sipm} [mA]$', size = 20)
+ax1.tick_params(labelsize=20)
+#ax1.set_xscale('log')
+ax1.grid(True)
+values, bins = np.histogram(I_sipm_dif, bins = 50)# len(I_sipm_delta))
+m, bins, _ = ax2.hist([-i*10**3 for i in I_sipm_dif], bins = 50)  #150)
+#ax2.plot(bins[:-1], values, lw=2)
+ax2.set_xlabel(r'$\Delta I_{sipm} [mA]$', size = 20)
+ax2.set_ylabel('# Entradas', size = 20)
+bins_err = bins + (bins[2] - bins[1])/2
+ax2.errorbar(bins_err[:-1], m, yerr = [np.sqrt(i) for i in m], fmt = '.r', capsize = 3)
+ax2.tick_params(labelsize=20)
+
 #%% 
 '''Plot de diferencias entre curva de subida y de bajada normalizadas.'''
 
