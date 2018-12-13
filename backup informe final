@@ -138,9 +138,9 @@ Director del trabajo: \ \ \ Dr. Federico Izraelevitch - email: izraelevitch@gmai
 
 \section{Introducción}
 
-Los fotomultiplicadores de silicio (SiPM) se estan volviendo populares en areas científicas e industriales, que requieren mediciones rapidas, eficientes y capacidad de resolver corrientes producidas por un solo fotón. Estos detectores tienen mucha utilidad en fisica de astropartículas o física de altas energías. Estos dispositivos son una buena alternativa a los tubos PMT, ya que son detectores robustos de estado sólido, tienen una eficiencia de detección alta, son pequeños, y operan con voltajes del orden de las decenas de Volts. \\
+Los fotomultiplicadores de silicio (SiPM) se están volviendo cada vez más populares en áreas científicas e industriales que requieren mediciones rápidas, eficientes y con capacidad de resolver corrientes producidas por un solo fotón. Estos detectores son de gran utilidad en física de astropartículas o física de altas energías. A la vez, presentan una buena alternativa a los tubos PMT ya que son detectores robustos de estado sólido, tienen una eficiencia de detección alta, son pequeños, y operan con voltajes del orden de las decenas de Volts. \\
 
-Los SiPMs consisten en un arreglo de celdas, que son una juntura P-N en serie con una resistencia, llamada ``resistencia de quenching''. En la FIG. \ref{fig:circuito_sipm} se observa un esquema de un SiPM típico junto con su circuito electrónico equivalente.
+Los SiPMs consisten en un arreglo de celdas conectadas en paralelo, donde cada celdas es una juntura P-N en serie con una resistencia denominada \textit{resistencia de quenching}. En la FIG. \ref{fig:circuito_sipm} se observa un esquema de un SiPM típico junto con su circuito electrónico equivalente.
 
 \begin{figure}[H]
 \centering
@@ -149,13 +149,13 @@ Los SiPMs consisten en un arreglo de celdas, que son una juntura P-N en serie co
 \label{fig:circuito_sipm}
 \end{figure}
 
-Cuando un fotón incide sobre una celda, se genera una avalancha de electrones, que es medible desde cualquiera de los outputs disponibles. Se ubica una resistencia de quenching en serie para aniquilar la avalancha generada luego de detectar un fotón y reiniciar la celda para mediciones subsecuentes. La señal de salida medida en cualquiera de los outputs es la suma de las señales de todos los canales de la red. Como cada celda es escencialmente un diodo con una resistencia en serie, al conectar el SiPM en inversa (en modo detección de fotones), éste tendrá una tensión de ruptura como un diodo ordinario. Es importante que el SiPM sea polarizado a una tensión mayor a la de ruptura si se quiere detectar fotones, ya que la incidencia de fotones en un SiPM polarizado a una tensión menor no podrá generar avalanchas en las celdas, y por ende no se generará ninguna corriente.
+Cuando un fotón incide sobre una celda, se genera una avalancha de electrones que es medible desde cualquiera de los outputs disponibles. Se ubica una resistencia de quenching en serie para aniquilar la avalancha generada luego de detectar un fotón y reiniciar la celda para mediciones subsecuentes. La señal de salida medida en cualquiera de los outputs es la suma de las señales de todos los canales de la red. Como cada celda es escencialmente un diodo con una resistencia en serie, al conectar el SiPM en inversa (en modo detección de fotones), éste tendrá una tensión de ruptura como un diodo ordinario. Es importante que el SiPM sea polarizado a una tensión mayor a la de ruptura si se quiere detectar fotones, ya que la incidencia de fotones en un SiPM polarizado a una tensión menor no podrá generar avalanchas en las celdas, y por ende no se generará ninguna corriente.
 
 Para una referencia más detallada sobre el funcionamiento de los SiPMs, se recomiendan las referencias \cite{func}, \cite{func2}, \cite{func3}. \\
 
 \subsection{Marco Teórico}
 
-La resistencia de quenching debe tener un valor de centenas de $k\Omega$ si se quiere que la avalancha se extinga en tiempos cortos, del orden de $\mu A$. Estas resistencias se ubican sobre la superficie del SiPM, como se ve en la FIG. \ref{fig:circuito_sipm}, y son del orden de los $\mu m$. Esto quiere decir que es necesario utilizar materiales que tengan mucha resistividad por unidad de longitud, lo que parecería indicar que éste tipo de resistencias no podría estar fabricada con metales, ya que sería dificil cumplir las especificaciones mencionadas anteriormente con estos materiales. Es por eso que las resistencias de quenching son fabricadas con materiales semiconductores, como el poly-Si. El poly-Si es básicamente un conjunto de cristales microscópicos de silicio agrupados entre sí. Al agruparse dos de estos cristales, se forma una frontera con desperfectos entre ellos. Si se dopa sustitucionalmente los cristales de Si con impurezas P, lo que ocurrirá es que las inhomogeneidades de la frontera servirán como trampas de carga y la frontera se cargará positivamente. De esta manera, se forma una región de vacío de carga entre la frontera y el cristal de silicio, generandose un \textit{built-in potential}. Esta frontera se puede modelar como una juntura semiconductor-semiconductor. Calculando el transporte en una de estas junturas se conigue el modelo presentado en la ecuación (\ref{eq:modelo_rq}) \cite{modelo_rq}
+La resistencia de quenching debe tener un valor de centenas de $k\Omega$ para que la avalancha se extinga en tiempos cortos, del orden de $\mu A$. Estas resistencias se ubican sobre la superficie del SiPM, como se ve en la FIG. \ref{fig:circuito_sipm}, y son del orden de los $\mu m$. Esto quiere decir que es necesario utilizar materiales que tengan mucha resistividad por unidad de longitud, lo que parecería indicar que éste tipo de resistencias no podría estar fabricada con metales, ya que sería dificil cumplir las especificaciones mencionadas anteriormente con estos materiales. Es por eso que las resistencias de quenching son fabricadas con materiales semiconductores, como el poly-Si. El poly-Si es básicamente un conjunto de cristales microscópicos de silicio agrupados entre sí. Al agruparse dos de estos cristales, se forma una frontera con desperfectos entre ellos. Si se dopa sustitucionalmente los cristales de Si con impurezas P, lo que ocurrirá es que las inhomogeneidades de la frontera servirán como trampas de carga y la frontera se cargará positivamente. De esta manera, se forma una región de vacío de carga entre la frontera y el cristal de silicio, generándose así un \textit{built-in potential}. Esta frontera se puede modelar como una juntura semiconductor-semiconductor. Calculando el transporte en una de estas junturas se conigue el modelo presentado en la ecuación (\ref{eq:modelo_rq}) \cite{modelo_rq}
 
 \begin{equation}
     R(T) = \alpha \frac{exp ({\frac{q V_B}{k T}})}{\sqrt{T} sinh(\frac{\gamma}{T})},
@@ -169,7 +169,7 @@ Si $V_B >> kT$, se formará una juntura rectificante en el poly-Si, pero si $V_B
 
 \subsection{Motivación}
 
-El grupo de investigación está desarrollando una plataforma para realizar experimentos en ambientes hostiles llamada LabOSat. Se está desarrollando una plaqueta para hacer experimentos sobre SiPMs que se mandará al espacio en un satélite de la empresa Satellogic. Actualmente hay varias plaquetas en órbita realizando mediciones sobre memorias resistivas, pero la próxima misión será la primera del grupo en enviar SiPMs al espacio. En la FIG. \ref{fig:plaqueta} se muestra una foto de la plaqueta LabOSat en desarrollo.
+El grupo de investigación está desarrollando una plataforma para realizar experimentos en ambientes hostiles llamada LabOSat. Se está desarrollando una plaqueta para hacer experimentos sobre SiPMs que se mandará al espacio en un satélite de la empresa Satellogic. Actualmente hay varias plaquetas en órbita realizando mediciones sobre memorias resistivas, y la próxima misión será la primera del grupo en enviar SiPMs al espacio. En la FIG. \ref{fig:plaqueta} se muestra una foto de la plaqueta LabOSat en desarrollo.
 
 \begin{figure}[H]
 \centering
@@ -181,15 +181,15 @@ El grupo de investigación está desarrollando una plataforma para realizar expe
 
 En órbita, el SiPM será polarizado en un voltaje constante de $30V$. Se medirá la corriente a oscuras del SiPM a esta tensión y también se medirá la corriente conseguida en el SiPM al iluminarlo con distintas intensidades de un LED. \\
 
-Hay 3 objetivos marcados para la próxima misión con SiPMs, que se detallan a continuación:
+Existen 3 objetivos marcados para la próxima misión con SiPMs, que se detallan a continuación:
 
 \begin{enumerate}
     \item Comprobar que se puede enviar un SiPM al espacio; Ésto no es algo trivial, ya que el grupo de investigación es uno de los primeros en poner SiPMs en órbita.
-    \item Comprobar la funcionalidad de la plaqueta y contrastar de que las mediciones realizadas en órbita son compatibles con aquellas realizadas en tierra.
+    \item Comprobar la funcionalidad de la plaqueta y que las mediciones realizadas en órbita son compatibles con aquellas realizadas en tierra.
     \item Verificar si el SiPM se degrada con el tiempo al estar sujeto a condiciones hostiles de presión y temperatura.
 \end{enumerate}
 
-Para poder asegurar que la plaqueta funciona correctamente, es necesario realizar mediciones de los distintos parámetros del SiPM en tierra para luego comparar con los valores medidos en órbita. Se quiere medir estos parámetros en un rango de temperaturas de $-40^oC$ a $40^oC$, debido a que el satélite podría encontrarse a una temperatura cualquiera dentro de este rango. \\
+Para poder asegurar que la plaqueta funciona correctamente, es necesario realizar mediciones de los distintos parámetros del SiPM en tierra para luego comparar con los valores medidos en órbita. Se necesitan medir estos parámetros en un rango de temperaturas de $-40^oC$ a $40^oC$, debido a que el satélite podría encontrarse a una temperatura cualquiera dentro de este rango. \\
 
 \begin{center}
     \noindent\rule{5cm}{0.2pt}
@@ -198,22 +198,22 @@ Para poder asegurar que la plaqueta funciona correctamente, es necesario realiza
 
 \vspace{1cm}
 
-En este trabajo se explican las metodologias desarrolladas para la obtención de la resistencia de quenching $R_q$, el voltaje de ruptura $V_{br}$ y la corriente oscura $I_{dark}$ a partir de los datos experimentales desarrolladas en el marco de Laboratorio 6. Se realiza un estudio en temperatura de estos parámetros en un rango de $-40^{o}C$ hasta  $40^{o}C$. Se estudia tambien el comportamiento del SiPM al ser iluminado con distintas intensidades de un LED azul. \\
+En este trabajo se explican las distintas metodologías desarrolladas para el cálculo de la resistencia de quenching $R_q$, el voltaje de ruptura $V_{br}$ y la medición de la corriente oscura $I_{dark}$ a partir de las experiencias desarrolladas en el marco de Laboratorio 6. Se realiza un estudio en temperatura de estos parámetros en un rango de $-40^{o}C$ hasta  $40^{o}C$. Se estudia también el comportamiento del SiPM al ser iluminado con distintas intensidades de un LED azul. \\
 
-El SiPM que se dispuso es un SENSL C-Series 60035-SMT \cite{cseries} cuadrado de $6 mm$ de lado. Este modelo contiene 18980 celdas o pixeles, lo que indica que cada celda tiene un lado de $35 \mu m$. Este modelo es el de mayor área que fabrica SENSL y no ha sido estudiado tan exhaustivamente como los SiPMs más pequeños. Ésto presenta una oportunidad importante para estudiar en órbita un componente electrónico novedoso.
+El SiPM que se dispuso es un SENSL C-Series 60035-SMT \cite{cseries} cuadrado de $6 mm$ de lado. Este modelo contiene 18980 celdas o píxeles, lo que indica que cada celda tiene un lado de $35 \mu m$. Este modelo es el de mayor área que fabrica SENSL y no ha sido estudiado tan exhaustivamente como los SiPMs más pequeños. Ésto presenta una oportunidad importante para estudiar en órbita un componente electrónico novedoso.
 
 
 Los valores medidos en tierra presentan una variación muy pequeña \cite{sensl} con la temperatura, y por eso gran parte del trabajo fue en desarrollar métodos para obtener mediciones de precisión de los parámetros a estudiar. Por ejemplo, el fabricante estima un valor de $V_{br} \sim 24.5 V$ a temperatura ambiente con una variación de $21.5 mV/ \degree C$, lo que implica que el parámetro a estudiar cambia solamente una milésima por $\degree C$. \\
 
 
-En la sección 2 se presentan los diseños experimentales usados, en la sección 3 se presentan las metodologías desarrolladas en Laboratorio 6, en la sección 4 se presentan los resultados y su discusión, y en la sección 5 se presentan las conclusiones.
+En la sección 2 se presentan los diseños experimentales usados, en la sección 3 se presentan las metodologías desarrolladas en Laboratorio 6, en la sección 4 se presentan los resultados y su discusión, y en la sección 5 se presenta un protocolo de medición en órbita que se armó a partir de los resultados del trabajo.
 
 
 \section{Diseños Experimentales}
 
 \subsection{Encapsulado con SiPM y LED}
 
-El estudio del SiPM a oscuras requiere una oscuridad muy buena, ya que debido a su funcionamiento, la incidencia de solamente un par de fotones perturba cualquier medición de corriente. Con ésto en mente, el grupo de investigación diseñó con antelación un encapsulado que pudiera contener al SiPM junto con un LED azul. Este diseño es el que se incorporará a LabOSat en la misión espacial, ya que para varias pruebas se requiere el SiPM a oscuras. El diseño puede obervarse en la FIG. \ref{fig:encapsulado}.
+El estudio de algunos parámetros del SiPM requiere una oscuridad extrema ya que debido a su funcionamiento, la incidencia de solamente algunos fotones perturba cualquier medición de corriente. Con ésto en mente, el grupo de investigación diseñó con antelación un encapsulado que pudiera contener al SiPM junto con un LED azul. Este diseño es el que se incorporará a LabOSat en la misión espacial, ya que para varias pruebas se requiere el SiPM a oscuras. El diseño puede obervarse en la FIG. \ref{fig:encapsulado}.
 
 \begin{figure}[H]
 \centering
@@ -222,9 +222,9 @@ El estudio del SiPM a oscuras requiere una oscuridad muy buena, ya que debido a 
 \label{fig:encapsulado}
 \end{figure}
 
-El esquema a escala del encapsulado a oscuro se presenta en el apéndice A. Si bien el encapsulado fue diseñado con antelación, se fabricó y se pobló con un LED y un SiPM durante el marco de Laboratorio 7. \\
+El esquema a escala del encapsulado oscuro se presenta en el apéndice A. Si bien el encapsulado fue diseñado con antelación, se fabricó y se pobló con un LED y un SiPM durante el marco de Laboratorio 7. \\
 
-Los encapsulados oscuros diseñados son contenedores de aluminio de 10X10 $mm^2$ en forma de ``cenicero''. Se colocó el SiPM boca arriba en la parte inferior del contenedor y se lo recubrió de epoxy transparente. Luego de que éste secara, se colocó el LED azul boca abajo encima y se recubrió todo el encapsulado con un epoxy negro. De esta manera, se pudo conseguir un encapsulado liviano, pequeño y completamente oscuro para estudiar el SiPM sin fotones incidentes, pero que también es versatil y permite iluminar el SiPM si se desea.  Otra ventaja de este encapsulado es que, si se quiere iluminar el LED, uno se puede asegurar que todos los fotones detectados salen del LED, por lo que uno podría saber de antemano cual es el flujo de fotones que esperaría ver en el SiPM. La corriente oscura (o ruido electrónico) del dispositivo adentro del encapsulado a temperatura ambiente es de aproximadamente $2 \mu A$, que es 4 veces más chica que la conseguida con la cámara oscura que se fabricó en laboratorio 6. Además de ser más oscuro, el encapsulado es significantemente más pequeño y liviano que la cámara de laboratorio 6, y puede ser puesto dentro del micro satélite de Satellogic sin ningun problema. 
+Los encapsulados oscuros diseñados son contenedores de aluminio de 10X10 $mm^2$ en forma de \textit{cenicero}. Se colocó el SiPM boca arriba en la parte inferior del contenedor y se lo recubrió de epoxy transparente. Luego de que éste secara, se colocó el LED azul boca abajo encima y se recubrió todo el encapsulado con un epoxy negro. De esta manera, se logró un encapsulado liviano, pequeño y completamente oscuro para estudiar el SiPM sin fotones externos, pero que también es versatil y permite iluminar el SiPM si se desea.  Otra ventaja de este encapsulado es que, si se quiere iluminar el LED, uno se puede asegurar que todos los fotones detectados son emitidos por el LED, por lo que uno podría saber de antemano cual es el flujo de fotones que esperaría ver en el SiPM. La corriente oscura (o ruido electrónico) del dispositivo dentro del encapsulado a temperatura ambiente es de aproximadamente $2 \mu A$, que es 4 veces más chica que la conseguida con la cámara oscura que se fabricó en laboratorio 6. Además de ser más oscuro, el encapsulado es significantemente más pequeño y liviano que la cámara de laboratorio 6, y puede ser puesto dentro del micro satélite de Satellogic sin mayores complicaciones. 
 
 \subsection{Dispositivo Experimental}
 
@@ -232,12 +232,12 @@ Para el estudio en temperatura del SiPM, se diseñó un dispositivo experimental
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{dispexp.pdf}
+\includegraphics[scale=0.7]{dispexp.pdf}
 \caption{\textit{Dispositivo experimental para el análisis en temperatura.}}
 \label{fig:dispexp}
 \end{figure}
 
-Se deben utilizar dos celdas peltier si se quiere llegar a un límite inferior de $-40^oC$, ya que con una sola celda solo se puede llegar a $-30^oC$ a lo sumo. Se decidió usar un radiador con watercoolng debido a la alta potencia a disipar debido a las dos peltier en ``serie térmica'' \cite{peltier}. Se estimó que la potencia total a disipar era $\sim 200 W$, y que el uso de disipadores pasivos hubiera requerido un conductor de un tamaño muy grande. El valor de potencia a disipar resultó muy grande ya que no sólo había que disipar la potencia por calentamiento joule de cada peltier, sino también el calor que era transportado por ambas peltier hacia el radiador. Este módulo de watercooling era un pedazo de aluminio hueco, al que se le bombeaba agua con hielo con una bomba pequeña. De esta manera, se pudo disipar el calor estimado en un principio para llegar facilmente a $-40 \degree C$. Se decidió conseguir un peltier más grande y más potente para la etapa inferior, ya que ésta es la que debe sacar todo el calor del sistema hacia el radiador. Al hacer el diseño y el esquema del experimento, se trató de estudiar y reproducir las características de peltier de dos etapas. No se utilizó una de éstas peltier por su falta de disponibilidad en lugares de electrónica.
+Se deben utilizar dos celdas peltier si se quiere llegar a un límite inferior de $-40^oC$, ya que con una sola celda solo se puede llegar a $-30^oC$. Se decidió usar un radiador con watercoolng debido a la alta potencia a disipar debido a las dos peltier en \textit{serie térmica} \cite{peltier}. Se estimó que la potencia total a disipar era $\sim 200 W$, y que el uso de disipadores pasivos hubiera requerido un conductor de un tamaño mucho mayor. El valor de potencia a disipar es considerable ya que no sólo había que disipar la potencia por calentamiento joule de cada peltier, sino también el calor que era transportado por ambas peltier hacia el radiador. El módulo de watercooling consiste en un pedazo de aluminio hueco por donde circula agua con hielo mediante una bomba pequeña. De esta manera, se logró disipar el calor estimado en un principio para llegara $-40 \degree C$. Se decidió conseguir un peltier más grande y más potente para la zona inferior, ya que ésta es la que debe extraer todo el calor del sistema hacia el radiador. Al hacer el diseño y el esquema del experimento, se trató de estudiar y reproducir las características de peltier de dos etapas. No se utilizó una de éstas peltier por su falta de disponibilidad en lugares de electrónica.
 
 
 Para llegar a las temperaturas más frías, la peltier inferior se utilizó a su máximo valor posible de $12V$, mientras que la peltier superior se alimentó de 0 a $70\%$ de su valor máximo. Se observó que si la peltier superior se coloca a su máximo de tensión permitido de $5V$, la disipación de potencia total es mayor que el poder del sistema a enfriar para dichos voltajes. Ésto aumenta el límite inferior al que el sistema puede llegar, y termina afectando la eficiencia del experimento a la hora de enfriar. Se determinó que el valor óptimo para lograr $-40 \degree C$ es de $3.5V$ para la peltier superior y de $12 V$ para la inferior.
@@ -247,7 +247,7 @@ Se utilizó el arreglo de ambas peltier para estudiar un rango $-40 \degree C$ h
 
 La celda inferior más potente se alimentó con una fuente de computadora de 300W que se acondicionó para poder entregar $12V$ a $6A$, mientras que la peltier superior se alimentó con una fuente de tensión Keithley 2281S-20-6 \cite{k2281}.
 
-Se observó que si se ubican ambas peltier en contacto, el sistema es altamente no lineal y poco estable. En esta disposición, la peltier inferior se encuentra anclada a un foco frio, mientras que la superior no. La peltier superior se encuentra ``flotante'', ya que está ubicada sobre otra peltier. Como la peltier no es un conductor térmico y tiene un tiempo de respuesta en temperatura inmediato, la temperatura del lado inferior cambia apreciablemente en un tiempo corto y esto presenta un problema de estabilidad. Para solucionar esto, se decidió colocar un conductor térmico de aluminio entre ambas peltier. De esa manera, se alimenta primero la peltier inferior y se espera que el conductor se enfríe. Se prende luego la peltier superior, y se observa una mejora substancial de estabilidad. Como el tiempo de respuesta en temperatura del aluminio es largo comparado con el tiempo que le tarda al sistema pasar el régimen no lineal inicial, se puede considerar la temperatura del aluminio como cuasiestacionaria durante éste. De esta manera, se logró proporcionar un foco frío a la peltier superior, solucionando el problema de estabilidad del dispositivo. Para temperaturas por debajo de ambiente, luego de esperar al estacionario, se pudo conseguir una estabilidad muy buena con fluctuaciones de tan solo $0.07 \degree C$ para mediciones de 5 segundos. Para temperaturas más calientes que ambiente, se pudo conseguir la misma estabilidad en mediciones de 5 segundos, pero la temperatura total presentaba una deriva en temperatura de $0.15 \degree$ por minuto. Esta deriva es chica para los tiempos de medicion usados, por lo que se hizo las mediciones en el régimen cuasiestacionario. Por cuestiones de tiempo limitado, no fue posible esperar hasta un estacionario absoluto al calentar por sobre la temperatura ambiente, ya que el sistema tardaba mucho tiempo en llegar a éste.
+Se observó que si se ubican ambas peltier en contacto, el sistema es altamente no lineal y poco estable. En esta disposición, la peltier inferior se encuentra anclada a un foco frio, mientras que la superior no. La peltier superior se encuentra \textit{flotando}, ya que está ubicada sobre otra peltier. Como la peltier no es un conductor térmico y tiene un tiempo de respuesta en temperatura inmediato, la temperatura del lado inferior cambia apreciablemente en un tiempo corto y esto presenta un problema de estabilidad. Para solucionar esto, se decidió colocar un conductor térmico de aluminio entre ambas peltier. De esa manera, se alimenta primero la peltier inferior y se espera que el conductor se enfríe. Se prende luego la peltier superior, y se observa una mejora substancial de estabilidad. Como el tiempo de respuesta en temperatura del aluminio es largo comparado con el tiempo que le tarda al sistema pasar el régimen no lineal inicial, se puede considerar la temperatura del aluminio como cuasiestacionaria durante éste. De esta manera, se logró proporcionar un foco frío a la peltier superior, solucionando el problema de estabilidad del dispositivo. Para temperaturas por debajo de ambiente, luego de esperar al estacionario, se pudo conseguir una estabilidad muy buena con fluctuaciones de tan solo $0.07 \degree C$ para mediciones de 5 segundos. Para temperaturas más calientes que ambiente, se pudo conseguir la misma estabilidad en mediciones de 5 segundos, pero la temperatura total presentaba una deriva en temperatura de $0.15 \degree$ por minuto. Esta deriva es chica para los tiempos de medicion, por lo que se realizaron las mediciones en el régimen cuasiestacionario. Por cuestiones de tiempo limitado, no fue posible esperar hasta un estacionario absoluto al calentar por sobre la temperatura ambiente, ya que el sistema tardaba mucho tiempo en llegar a éste.
 
 
 %Se puede mostrar un gráfico de la estabilidad acá. Que pasa con los errores en temperatura?
@@ -255,11 +255,11 @@ Se observó que si se ubican ambas peltier en contacto, el sistema es altamente 
 
 El criterio que se tomó para decidir si una medición se realizó a temperatura constante, fue que la fluctuación de la temperatura en toda la medición fuera menor a $\Delta_T = 0.1^oC$. \\
 
-Para garantizar que la rtd estuviera a la misma temperatura que el encapsulado, se puso ambos en contacto utilizando grasa siliconada y se recubrió ambos con aluminio. Como en la misión espacial sólo irán el LED y el SiPM dentro del encapsulado, se decidió no ubicar la rtd también dentro de éste. La placa LabOSat medirá temperatura sobre la placa a través de un circuito integrado externo al encapsulado. Todo el dispositivo experimental mostrado en la FIG. \ref{fig:dispexp} fue recubierto en una cámara de telgopor para evitar fluctuaciones térmicas propias del ambiente del laboratorio.
+Para garantizar que la rtd estuviera a la misma temperatura que el encapsulado, se los pusieron en contacto utilizando grasa siliconada y se recubrió el paquete con papel de aluminio. Como en la misión espacial sólo irán el LED y el SiPM dentro del encapsulado, se decidió no ubicar la rtd también dentro de éste. La placa LabOSat medirá temperatura sobre la placa a través de un circuito integrado externo al encapsulado. Todo el dispositivo experimental mostrado en la FIG. \ref{fig:dispexp} fue recubierto en una cámara de telgopor para evitar fluctuaciones térmicas propias del ambiente del laboratorio.
 
-Para las pruebas a oscuras, el SiPM fue conectado en inversa y en directa al canal de un SMU Keithley 2612B \cite{k2612}, mientras que la resistencia de la PT1000 \cite{rtd} fue medida a 4 puntas con el otro canal del mismo instrumento. Se eligió una rtd por sobre otros sensores de temperatura por su respuesta lineal; Se eligió una pt1000 por sobre una pt100 por la mayor sensibilidad con la temperatura y por la capacidad de poder medir con menor error con el instrumento de medición.
+Para las pruebas a oscuras, el SiPM fue conectado en inversa y en directa al canal de un SMU Keithley 2612B \cite{k2612}, mientras que la resistencia de la PT1000 \cite{rtd} fue medida a 4 puntas con el otro canal del mismo instrumento. Se eligió una rtd por sobre otros sensores de temperatura por su respuesta lineal. A la vez, se eligió una pt1000 por sobre una pt100 por la mayor sensibilidad con la temperatura y para reducir el error en las mediciones.
 
-Se realizó una calibración de la rtd midiendo su resistencia a $100^oC$ y a $0^oC$, obteniendo una pendiente de $m = (3.81 \pm 0.01) \Omega/^oC$. Este valor es compatible con el valor de $3.815 \Omega/^oC$ reportado en la hoja de datos de la rtd.
+Se realizó una calibración de la rtd midiendo su resistencia a $100^oC$ (en agua hirviendo) y a $0^oC$ (en agua con hielo), obteniendo una pendiente de $m = (3.81 \pm 0.01) \Omega/^oC$. Este valor es compatible con el valor de $3.815 \Omega/^oC$ reportado en la hoja de datos de la rtd.
 
 %hace falta decir algo más del error y explicar porqué se dice?
 
@@ -486,7 +486,7 @@ Sin embargo, la transferencia de energía en el choque de los portadores depende
 
 \section{Estudio con LED}
 
-Uno de los objetivos de la misión espacial es estudiar si el SiPM se degrada en el tiempo estando en órbita. Para esto, se van a realizar mediciones periódicas de la respuesta del SiPM en corriente (con un voltaje fijo de 30 V) para distintas corrientes del LED en un rango de corrientes de 0 mA a 20 mA, en la configuracion de la FIG. \ref{fig:encapsulado} montada en una placa en el satélite. Es decir, se va a medir la corriente del SiPM en función de la corriente del LED también midiendo en paralelo la temperatura del encapsulado.
+Uno de los objetivos de la misión espacial es estudiar si el SiPM se degrada en el tiempo estando en órbita. Para esto, se van a realizar mediciones periódicas de la respuesta del SiPM en corriente (con un voltaje fijo de 30 V) para distintas corrientes del LED en un rango de 0 mA a 20 mA, en la configuracion de la FIG. \ref{fig:encapsulado} montada en una placa en el satélite. Es decir, se va a medir la corriente del SiPM en función de la corriente del LED también midiendo en paralelo la temperatura del encapsulado.
 
 Sin embargo, para entender si el SiPM se degrada o no en el tiempo es necesario tener una referencia del funcionamiento en tierra para comparar las curvas medidas, por lo que se realizaron dichos experimentos en el laboratorio y para distintas temperaturas. 
 
@@ -501,7 +501,7 @@ Se midió una curva de corriente del SiPM en funcion de la corriente aplicada al
 
 La aparición de histéresis en estas curvas presenta un desafío extra para la misión. Por lo tanto, nos propusimos entender la naturaleza de la histéresis para optimizar las mediciones en órbita. Es decir, estudiar si la histéresis es instrínseca del funcionamiento del SiPM o si proviene de la forma en que se miden estas curvas. De esta manera se pueden extraer conclusiones que ayuden a planear los experimentos en órbita.
 
-Para estudiar de forma cuantitativa la histéresis se tomó la diferencia entre la curva de \textit{vuelta} y la curva de \textit{ida} y se graficó el resultado tanto en función de la intensidad del LED como en un histograma de diferencias. De esta forma, si hay histéresis se esperan puntos se encuentren en valores positivos dado que la curva de \textit{vuelta} se encuentre por arriba de la curva de \textit{ida}, o en valores negativos en el caso contrario. En la FIG. \ref{fig:histograma_hist} se puede observar que esta curva presenta histéresis. Estos datos corresponden a la diferencia entre la \textit{vuelta} y la \textit{ida} de 10 curvas a la misma temperatura.
+Para estudiar de forma cuantitativa la histéresis se tomó la diferencia entre la curva de \textit{vuelta} y la curva de \textit{ida} y se graficó el resultado tanto en función de la intensidad del LED como en un histograma de diferencias. De esta forma, si hay histéresis se espera que los puntos se encuentren en valores positivos dado que la curva de \textit{vuelta} se encuentra por arriba de la curva de \textit{ida}, o en valores negativos en el caso contrario. En la FIG. \ref{fig:histograma_hist} se puede observar que esta curva presenta histéresis. Estos datos corresponden a la diferencia entre la \textit{vuelta} y la \textit{ida} de 10 curvas a la misma temperatura, y se observa el mismo comportamiento para todas.
 
 \begin{figure}[H]
     \centering
@@ -520,11 +520,11 @@ Para formar una hipótesis primero se midieron estas curvas para distintas tempe
     \label{fig:led_vs_temperatura}
 \end{figure}
 
-Una vez estudiado el comportamiento en temperatura, se supuso que la histéresis es producto del aumento de temperatura durante la medicón debido a la potencia disipada por el LED. Es decir, a lo largo de la medición el LED va calentando el encapsulado, por lo que la corriente del SiPM crece de acuerdo a lo observado en la FIG. \ref{fig:led_vs_temperatura}. Esto también explicaía por que las diferencias observadas en la FIG. \ref{fig:histograma_hist} son en general positivas, lo que indica que la curva de la \textit{vuelta} se midió a mayor temperatura que la de \textit{ida}. 
+Una vez estudiado el comportamiento en temperatura, se formuló una hipótesis en la que la histéresis es producto del aumento de temperatura durante la medicón debido a la potencia disipada por el LED. Es decir, a lo largo de la medición el LED va calentando el encapsulado, por lo que la corriente del SiPM crece de acuerdo a lo observado en la FIG. \ref{fig:led_vs_temperatura}. Esto también explicaría por que las diferencias observadas en la FIG. \ref{fig:histograma_hist} son en general positivas, lo que indica que la curva de la \textit{vuelta} se midió a mayor temperatura que la de \textit{ida}. 
 
-Para probar experimentalmente esta hipótesis se desarrolló un software controlador de temperatura en Python que se asegure que todos los puntos de la curva se midan dentro de una banda de temperaturas previamente determinada, y que incluya fluctuaciones estadísticas de la temperatura. Para esto, el software inicia la medición tomando 150 mediciones de temperatura, y formando la banda permitida a partir del valor medio $ \langle T \rangle$ y la dispersión de esos puntos $\Delta T$. Luego, el programa toma una medicion de corriente si la temperatura del encapsulado se encuentra en esa banda. Si la temperatura es mayor al máximo permitido $\langle T \rangle + \Delta T$, el programa espera a que la temperatura baje hasta volver a encontrarse en la banda. Si la temperatura disminuye por debajo del mínimo permitido $\langle T \rangle - \Delta T$ por fluctuaciones del ambiente del laboratorio, se enciende el LED para que suba la temperatura del encapsulado hasta encontrarse nuevamente dentro de la banda, y seguir con las mediciones.
+Para probar experimentalmente esta hipótesis se desarrolló un software controlador de temperatura en Python que se asegure que todos los puntos de la curva se midan dentro de una banda de temperaturas previamente determinada, y que incluya fluctuaciones estadísticas de la temperatura. Para esto, el software inicia la medición tomando 150 mediciones de temperatura y formando la banda permitida a partir del valor medio $ \langle T \rangle$ y la dispersión de esos puntos $\Delta T$. Luego, el programa toma una medición de corriente si la temperatura del encapsulado se encuentra dentro de esa banda. Si la temperatura es mayor al máximo permitido $\langle T \rangle + \Delta T$, el programa espera a que la temperatura baje hasta volver a encontrarse en la banda. Si la temperatura disminuye por debajo del mínimo permitido $\langle T \rangle - \Delta T$ por fluctuaciones del ambiente del laboratorio, se enciende el LED en una intensidad media para que suba la temperatura del encapsulado hasta encontrarse nuevamente dentro de la banda, y seguir con las mediciones.
 
-Se midio nuevamente la corriente del SiPM en funcion de la corriente del LED esta vez con el controlador de temperatura y se observo que la histeresis desaparece. Como se puede observar en la FIG. \ref{fig:histograma_sin_hist}, la diferencia entre la corriente de \textit{vuelta} y de \textit{ida} resulta distribuida alteatoriamente alrededor del 0 para todas las corrientes del LED. 
+Se midió nuevamente la corriente del SiPM en función de la corriente del LED, esta vez con el controlador de temperatura y se observó que la histéresis desaparece. Como se puede observar en la FIG. \ref{fig:histograma_sin_hist}, la diferencia entre la corriente de \textit{vuelta} y de \textit{ida} resulta distribuida alteatoriamente alrededor del 0 para todas las corrientes del LED. 
 
 \begin{figure}[H]
     \centering
@@ -532,9 +532,9 @@ Se midio nuevamente la corriente del SiPM en funcion de la corriente del LED est
     \caption{\textit{a) Diferencia entre la curva de vuelta y la curva de ida de la figura \ref{fig:histeresis_zoom} en función de la corriente del LED.  b) Histograma de las diferencias en (a). En ambos graficos se puede observar que las diferencias se encuentran distribuidas alrededor del 0, por lo que no hay histeresis.}}
     \label{fig:histograma_sin_hist}
 \end{figure}
-%este grafico hay que corregirlo con mas bines para el histograma.
 
-De esta forma se concluyo que la histeresis observada en curvas de corriente del SiPM polarizado a 30 V en funcion de la corriente del LED es debida a la diferencia de temperatura entre ambas curvas, dada por la disipacion de potencia del LED.
+
+De esta forma se concluó que la histéresis observada en curvas de corriente del SiPM polarizado a 30 V en función de la corriente del LED es debida a la diferencia de temperatura entre ambas curvas, dada por la disipación de potencia del LED.
 
 
 
@@ -543,17 +543,21 @@ De esta forma se concluyo que la histeresis observada en curvas de corriente del
 
 %estaria bueno poner aca como estamos pensando con fede medir en el espacio, a partir de toda la info que juntamos con las secciones pasadas. Contar que vamos a medir en escala logaritmica, con muy poco tiempo de medicion, como determinamos ese tiempo, etc.
 
-El objetivo de este trabajo es la caracterizacion en modo corriente y el desarrollo de metodologias para el calculo de parametros de fotomultiplicadores de silicio (SiPM). Luego, con la informacion obtenida se armo un protocolo de medicion de curvas del SiPM para cuando se encuentre en orbita. El objetivo de estas mediciones van a ser estudiar la integridad del SiPM en funcion del tiempo comparando con las curvas y parametros medidos en el laboratorio.
+El objetivo de este trabajo fue la caracterización en modo corriente y el desarrollo de metodologías para el cálculo de parametros de fotomultiplicadores de silicio (SiPM). Luego, con la información obtenida se armó un protocolo de medición de curvas del SiPM para cuando se encuentre en órbita. El objetivo de estas mediciones es estudiar la integridad del SiPM en función del tiempo comparando con las curvas y párametros medidos en el laboratorio.
 
-En el satelite, se polarizara al SiPM a 30 V y se medira la corriente del mismo para distintas corrientes de un LED en un intervalo de 0 a 20 mA. Todo esto se llevara a cabo en la configuracion descripta en la seccion ??, en una placa dentro del satelite.
+En el satélite se polarizará al SiPM a 30 V y se medira la corriente del mismo para distintas corrientes de un LED en un intervalo de 0 a 20 mA. Todo esto se llevará a cabo en la configuracón descripta en la seccion ??, en una placa dentro del satélite.
 
-Una de los principales resultados de este trabajo fue el \textit{descubrimiento} de que el SiPM no presenta histeresis en las curvas medidas.
+Una de los principales resultados de este trabajo fue el \textit{descubrimiento} de que el SiPM no presenta histéresis en las curvas medida previamente, sino que se debe a la medición de estas curvas a distintas temperaturas por la disipación de potencia del LED. Esto se concluyo midiendo con un software controlador de temperatura. Sin embargo, el firmware del satélite no está preparado para utilizar dicho controlador, por lo que se deberá encarar el problema desde otro ángulo. 
+
+Se propuso realizar estas mediciones para valores de corriente del LED extraidos de una esala logarítmica. De esta forma nos aseguramos de tener una gran densidad de valores para corrientes pequeñas de tal forma que el LED no disipe tanta potencia, y algunos valores de corriente grande.
+
+Por otro lado, la placa LabOSat esta programada para medir un cierto numero de veces cada punto, de tal forma que el dato que entregue sea el promedio de los puntos tomados. Debido a la version actual del Firmware se puede medir hasta 16 veces por punto, donde cada punto tarda aproximadamente $<time_on>$ en ser medido. De esta forma la medicion total de un punto de la curva tarda aproximadamente 3.2 ms. Se simuló esta configuración en el laboratorio modificando el tiempo de integración del SMU. Para lograr un tiempo de medición por punto similar al máximo de la placa, se programó al SMU con un tiempo de integración de 0.16 NPLC (number of power line cycles). 
+%hay que chequear estos datos del NPLC, no tenía el cuaderno a mano cuando lo escribi!
+
+Midiendo 40 puntos de esta forma se observó (ver FIG. \ref{fig:escala_log}) que la medición más óptima que la placa puede entregar es lo suficientemente rápida como para evitar el calentamiento del encapsulado, y de esa forma evitar la histéresis.
 
 
 
- previamente, sino que se debe a la medicion de estas curvas a distintas temperaturas por la disipacion de potencia del LED. Esto se concluyo midiendo con un software controlador de temperatura. Sin embargo, el firmware del satelite no esta preparado para utilizar dicho controlador, por lo que se debera encarar el problema desde otro angulo. 
-
-Se propuso realizar estas mediciones para valores de corriente del LED extraidos de una esala logaritmica. De esta forma nos aseguramos de tener una gran densidad de valores para corrientes peque;as de tal forma que el LED no disipe tanta potencia, y algunos valores de corriente grande. Como se puede observar en la FIG. \ref{fig:escala_log} midiendo estas curvas para valores logaritmicos de corriente del LED, con un tiempo despreciable entre mediciones (wait time nulo), no hay histeresis.
 
 \begin{figure}[H]
     \centering
@@ -564,9 +568,10 @@ Se propuso realizar estas mediciones para valores de corriente del LED extraidos
 
 
 
-Luego se realizaron experimentos con el objetivo de encontrar el numero optimo de datos que se medirian por curva, de tal forma que no haya histeresis y que ademas sea compatible con la capacidad de almacenamiento de datos de la placa LabOSat. A la vez, se estudio el maximo \textit{wait time} posible de tal forma que no haya histeresis en las curvas.
+Luego se realizaron experimentos con el objetivo de encontrar el número óptimo de datos que se medirían por curva, de tal forma que no haya histéresis y que además sea compatible con la capacidad de almacenamiento de datos de la placa LabOSat. A la vez, se estudio el maximo \textit{wait time} posible. Esto es importante ya que para \textit{wait time} más largos nos aseguramos una mayor estabilidad del LED y el SiPM.
 
-La placa LabOSat esta programada para medir un cierto numero de veces cada punto, de tal forma que el dato que entregue sea el promedio de los puntos tomados. Debido a la version actual del Firmware se puede medir hasta 16 veces por punto, donde cada punto tarda aproximadamente $<time_on>$ en ser medido. De esta forma la medicion total de un punto de la curva tarda aproximadamente 3.2 ms. Se simulo esta configuracion en el laboratorio modificando el tiempo de integracion del SMU. Para lograr un tiempo de medicion por punto similar al maximo de la placa, se programo al SMU con un tiempo de integracion de 0.16 NPLC (number of power line cycles). De esta forma se observo que la medicion mas optima que la placa puede entregar es lo suficientemente rapida como para evitar el calentamiento del encapsulado, y de esa forma evitar la histeresis.
+%insertar conclusiones de wait time vs histeresis.
+
 
 \section{Conclusiones}
 
