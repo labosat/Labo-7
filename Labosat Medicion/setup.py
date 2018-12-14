@@ -31,7 +31,7 @@ def setup():
 	 # -------------------------------------------------------------------------
 	 # RTD measurement ---------------------------------------------------------
 	
-    fourWire	    = 1
+    fourWire	   = 1
 	
     i_cc_rtd       = 300*P('u')
     v_cc_rtd       = 0.3
@@ -47,11 +47,13 @@ def setup():
 	
     # number of measurements
     
-    N			       = 40
+    N			   = 100
 
-    NPLC           = 0.16        #integration time for k2612b (0.01 - 25)
+    points         = 16          # measurements per point in curve
 	
-    delay		    = 5*P('m')
+    delay		   = 10*P('m')
+    
+    curves         = 1
 
    
     # -------------------------------------------------------------------------
@@ -60,23 +62,24 @@ def setup():
 
     
     return [i_cc_sipm,
-    			v_cc_sipm,
+    		v_cc_sipm,
             i_rang_sipm,
-    			v_rang_sipm,
-    			v_level_sipm,
-    			i_cc_led,
-    			v_cc_led,
-    			i_rang_led,
-    			v_rang_led,
-    			iStart,
-    			iEnd,
-    			fourWire,
-    			i_cc_rtd,
-    			v_cc_rtd,
-    			i_rang_rtd,
-    			r_rang_rtd, 
-    			i_level_rtd,
-    			return_sweep,
+    		v_rang_sipm,
+    		v_level_sipm,
+    		i_cc_led,
+    		v_cc_led,
+    		i_rang_led,
+    		v_rang_led,
+    		iStart,
+    		iEnd,
+    		fourWire,
+    		i_cc_rtd,
+    		v_cc_rtd,
+    		i_rang_rtd,
+    		r_rang_rtd, 
+    		i_level_rtd,
+    		return_sweep,
             N,
-    			NPLC,
-    			delay]
+    		points,
+    		delay,
+            curves]

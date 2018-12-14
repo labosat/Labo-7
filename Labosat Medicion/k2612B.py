@@ -1,6 +1,6 @@
 from functions import clear_all, gpib, plot, save, P
 from setup import setup
-from tests import SelfHeating
+from tests import SelfHeating, SelfHeatingThermostat
 
 def run(n, group_path, plotFlag, saveFlag):
 
@@ -19,7 +19,7 @@ def run(n, group_path, plotFlag, saveFlag):
       
     
     [readingsV_sipm, readingsI_sipm, readingsV_led, readingsI_led, 
-     readingsR] = SelfHeating(smu_2612b,
+     readingsR] = SelfHeatingThermostat(smu_2612b,
                               smu_2400,
                               config[0],
                               config[1],
@@ -41,7 +41,8 @@ def run(n, group_path, plotFlag, saveFlag):
                               config[17],
                               config[18],
                               config[19],
-                              config[20])
+                              config[20],
+                              config[21])
     
    
     smu_2612b.write('reset()')
@@ -63,15 +64,13 @@ def run(n, group_path, plotFlag, saveFlag):
     if plotFlag == 1:
         graphR = plot(Number, readingsR, 'N', 'R', 1)
         graphIV = plot(readingsI_led, readingsI_sipm, 'Iled', 'Isipm', 2, log=True, errorbars_2612=True)
-        graphPOW = plot(led_power, readingsI_sipm, 'Powled', 'Isipm', 3)
         
     else:
         graphR = 'NULL'
         graphIV = 'NULL'
-        graphPOW = 'NULL'
         
     if saveFlag == 1:
         save(readingsV_sipm, readingsI_sipm, readingsV_led, readingsI_led, 
-             readingsR, graphIV, graphR, graphPOW, n, group_path)
+             readingsR, graphIV, graphR, n, group_path)
 
     return 

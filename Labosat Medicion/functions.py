@@ -90,7 +90,8 @@ def plot(x, y, char1, char2, n, log=False, errorbars_2400=False, errorbars_2612=
 
 
 def save(readingsV_sipm, readingsI_sipm, readingsV_led, readingsI_led, 
-            readingsR, graphIV, graphR, graphPOW, number, group_path):
+            readingsR, graphIV, graphR, number, group_path):
+    
     #[unused,unused,dateString] = date_time_now()
     # For makin this cross platform, change the path name
     path            = ".\\results\\" + group_path + "\\"
@@ -99,7 +100,6 @@ def save(readingsV_sipm, readingsI_sipm, readingsV_led, readingsI_led,
     ext_txt         = ".txt" 
     figure_nameIV   = path_fig + str(number) + " (iv)" + ext_fig
     figure_nameR    = path_fig + str(number) + " (res)" + ext_fig
-    figure_namePOW  = path_fig + str(number) + " (pow)" + ext_fig
     text_name       = path + str(number) + ext_txt
     
     """
@@ -127,9 +127,6 @@ def save(readingsV_sipm, readingsI_sipm, readingsV_led, readingsI_led,
         graphIV.savefig(figure_nameIV, dpi=250, bbox_inches='tight')
     if graphR != 'NULL':
         graphR.savefig(figure_nameR, dpi=250, bbox_inches='tight')
-    if graphPOW != 'NULL':
-        pass
-        #graphPOW.savefig(figure_namePOW, dpi=250, bbox_inches='tight')
 
 
 def P(prefix):
@@ -171,38 +168,41 @@ def cast(string):
        out.append(float(aux))
    return out
 
-def thermostat(R, tolerance):
-    import numpy as np
-    if np.std(R) <= tolerance:
-        return np.mean(R) + tolerance
+def Thermostat(smu, R_condition, condition, tolerance, i):
+    if R_condition > (condition + tolerance):
+        smu.write('smub.level.i = 0')
+        time.sleep(30)
+    elif R_condition < (condition - tolerance):
+        smu.write('smub.level.i = 0.02')
+        time.sleep(5)
     
-def thermostatInitial(smu, tolerance):
+    smu.write('smub.level.i = ' + str(i))
+    return
+    
+def ThermostatInitial(smu, tolerance):
     import numpy as np
     import time
        
     condition = True
+    readingsRLimit = []
     
-    smu.write('smua.source.output = smua.OUTPUT_ON')
+    smu.write('OUTP ON')
     while condition:
-        readingsRLimit_temp = []
         readingsRLimit = []
         step = 0 
         while (step <= 150):
-            smu.write('smua.measure.r(smua.nvbuffer1)')
+            auxRead = smu.query(':READ?')
+            rtd_r = float(cast(auxRead)[2])
+            readingsRLimit.append(rtd_r)
             step += 1 
         time.sleep(10)
-            
-        readingsRLimit_temp = readBuffer(smu, 'a')[0]
-        
-        readingsRLimit = cast(readingsRLimit_temp)
         
         if np.std(readingsRLimit) <= tolerance:
             condition = False
             time.sleep(2)
     
 
-    smu.write('smua.source.output = smua.OUTPUT_OFF')
-    smu.write('smua.nvbuffer1.clear()')    
+    smu.write('OUTP OFF')    
     return np.mean(readingsRLimit)
 
 
