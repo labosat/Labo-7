@@ -2,10 +2,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 868 sin led
-data_sinled = np.loadtxt("C:/Users/lucas/Documents/GitHub/Labo-7/Mediciones/Vbr/Para informe/Vbr/Estacionario 2/iv/9 (iv).txt")
+#data_sinled = np.loadtxt("C:/Users/lucas/Documents/GitHub/Labo-7/Mediciones/Vbr/Para informe/Vbr/Estacionario 2/iv/9 (iv).txt")
+data_sinled = np.loadtxt("C:/Users/labosat/Documents/GitHub/Labo-7/Mediciones/Vbr/Para informe/Vbr/Estacionario 2/iv/9 (iv).txt")
+
 
 # 870 con led
-data_conled = np.loadtxt("C:/Users/lucas/Documents/GitHub/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario 2/iv/4 (iv).txt")
+#data_conled = np.loadtxt("C:/Users/lucas/Documents/GitHub/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario 2/iv/4 (iv).txt")
+data_conled = np.loadtxt("C:/Users/labosat/Documents/GitHub/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario 2/iv/4 (iv).txt")
+
+
+
 
 fig=plt.figure()
 ax=fig.add_subplot(111, label="1")
@@ -19,7 +25,7 @@ ax.tick_params(axis='y', colors="tab:red")
 plt.yscale('log')
 plt.grid(True)
 
-ax2.scatter(data_sinled[:, 0], data_sinled[:, 1], color="tab:blue")
+ax2.plot(data_sinled[:, 0], data_sinled[:, 1], color="tab:blue")
 ax2.xaxis.tick_top()
 ax2.yaxis.tick_right()
 ax2.set_xlabel('Voltaje [V]', color="tab:blue", fontsize=18) 
@@ -28,7 +34,7 @@ ax2.xaxis.set_label_position('top')
 ax2.yaxis.set_label_position('right') 
 ax2.tick_params(axis='x', colors="tab:blue")
 ax2.tick_params(axis='y', colors="tab:blue")
-ax2.set_ylim(5E-9, 3E-7)
+ax2.set_ylim(6E-9, 1E-7)
 plt.yscale('log')
 plt.grid(True)
 
