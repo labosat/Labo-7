@@ -1,0 +1,31 @@
+1:
+NPLC = 0.16
+points = 16
+N = 40
+delay = 10 ms
+resting time = 60 s
+curves = 3
+
+2:
+NPLC = 0.16
+points = 16
+N = 40
+delay = 30 ms
+resting time = 60 s
+curves = 3
+
+3:
+NPLC = 0.16
+points = 16
+N = 40
+delay = 100 ms
+resting time = 60 s
+curves = 3
+
+4:
+NPLC = 0.16
+points = 16
+N = 40
+delay = 5 ms
+resting time = 60 s
+curves = 3
