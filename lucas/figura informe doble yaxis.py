@@ -44,28 +44,52 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
 import matplotlib.mlab as mlab
+import scipy.stats as stats
 
-path = 'C:/Users/lucas/Documents/GitHub/Labo-7/Mediciones/Rq/Estacionario 4/res/'
+path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Mediciones/Rq/Estacionario 31/res/'
 
 
 T = []
-for i in range(1, 33):
+for i in range(1, 31):
     R_temp = np.loadtxt(path + "%s (res).txt" % i, skiprows=1)[:, 1]
     for j in range(len(R_temp)):
         T.append((R_temp[j] - 1000)/3.815)
         
 (mu, sigma) = norm.fit(T)
         
-n, bins, patches = plt.hist(T, bins=50)
+plt.figure(1)
+m, bins, _ = plt.hist(T, bins=35)
 plt.ylabel("Entradas", fontsize=20)
 plt.xlabel("Temperatura [ºC]", fontsize=20)
-plt.xlim(-32.06, -32)
+plt.xlim(np.min(T), np.max(T))
+bins_err = bins + (bins[2] - bins[1])/2
+plt.errorbar(bins_err[:-1], m, yerr = [np.sqrt(i) for i in m], fmt = '.r', capsize = 3)
+plt.tick_params(labelsize=20)
 
-#♠y = mlab.normpdf( bins, mu, sigma)
+#y = mlab.normpdf( bins, mu, sigma)
 #l = plt.plot(bins, y, 'r--', linewidth=3)
-        
-        
-        
+#        
+mean = np.mean(T)
+sigma = np.std(T, ddof=1)
+a = mean - sigma
+b = mean + sigma
+uniform = []
+for i in range(20000):
+    uniform.append(np.random.uniform(a, b))  
+    
+plt.figure(2)
+plt.hist(T, bins = 200, normed=True)
+plt.hist(uniform, bins = 200, normed=True)
+plt.vlines(mean, 0, 7)
+plt.vlines(mean + sigma, 0, 7)
+plt.vlines(mean - sigma, 0, 7)
+plt.xlabel(r'$T (Normalizado)$', size = 15)
+
+print('')
+print('Test de Kolmogorov-Smirnov para una muestra uniforme' +
+      ' y los datos: ')
+print('p-value = ' + str(stats.ks_2samp(uniform, T)[1]))
+
         
         
         
