@@ -137,13 +137,15 @@ I_led = [1000*i for i in I_led_delta[2:]]
 
 #calculo el promedio para cada punto del LED
 pvalues_mean = []
+pvalues_mean_err = []
 for i in range(len(pvalues[1])):
-    m = 0
+    m = []
     for k in range(len(pvalues)):
-        m += pvalues[k][i]
-    pvalues_mean.append(m/len(pvalues))
+        m.append(pvalues[k][i])
+    pvalues_mean.append(np.mean(m))
+    pvalues_mean_err.append(np.std(m))
     
-plt.plot(I_led, pvalues_mean, 'o')
+plt.errorbar(I_led, pvalues_mean, yerr=pvalues_mean_err, fmt = 'o', capsize=3)
 plt.plot(I_led, [0.05 for i in range(len(I_led))], 'r', lw=2.5, label='0.05')
 plt.xlabel(r'$I_{led} [mA]$', size = 20)
 plt.ylabel(r'P-values', size=20)
