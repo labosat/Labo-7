@@ -124,10 +124,10 @@ def SelfHeating(smu_2612b, smu_2400, i_cc_sipm, v_cc_sipm,
     import numpy as np
     
     #calculates logarithmic current sweep
-    #a = (1.0/(N - 1)) * np.log10(iEnd / iStart)
+    a = (1.0/(N - 1)) * np.log10(iEnd / iStart)
     b = np.arange(0, N, 1)
-    #i_led_values = [iStart * 10**(i*a) for i in b]
-    i_led_values = [(iEnd - iStart)/N*i for i in b]
+    i_led_values = [iStart * 10**(i*a) for i in b]
+    #i_led_values = [(iEnd - iStart)/N*i for i in b]
 
     smu_2612b.write('smua.source.output = smua.OUTPUT_ON') 
     smu_2612b.write('smub.source.output = smub.OUTPUT_ON')
@@ -237,7 +237,7 @@ def SelfHeatingThermostat(smu_2612b, smu_2400, i_cc_sipm, v_cc_sipm,
     
     """
     
-    NPLC = round(points*200*P('u')*50)
+    NPLC = round(points*200*P('u')*50, 2)
     tolerance = 0.03
 
     readingsR = []

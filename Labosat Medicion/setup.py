@@ -14,19 +14,19 @@ def setup():
     i_rang_sipm    = 'AUTO'
     v_rang_sipm    = 'AUTO'
     
-    v_level_sipm   = 30
+    v_level_sipm   = 25.5
     
     # -------------------------------------------------------------------------
     # i_LED measurement -------------------------------------------------------
     
     i_cc_led       = 21*P('m')
-    v_cc_led       = 2
+    v_cc_led       = 6
     
     i_rang_led     = 'AUTO'
     v_rang_led     = 'AUTO'
    
-    iStart         = 0
-    iEnd           = 20*P('m')
+    iStart         = 30*P('u')
+    iEnd           = 60*P('u')
 	
 	 # -------------------------------------------------------------------------
 	 # RTD measurement ---------------------------------------------------------
@@ -47,7 +47,7 @@ def setup():
 	
     # number of measurements
     
-    N			       = 450
+    N			       = 300
 
     points         = 16          # measurements per point in curve
 	
