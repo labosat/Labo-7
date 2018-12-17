@@ -16,7 +16,7 @@ def SelfHeating(smu_2612b, smu_2400, i_cc_sipm, v_cc_sipm,
     
     """
     
-    NPLC = round(points*200*P('u')*50)
+    NPLC = round(points*200*P('u')*50, 2)
 
     readingsR = []
     
@@ -124,10 +124,10 @@ def SelfHeating(smu_2612b, smu_2400, i_cc_sipm, v_cc_sipm,
     import numpy as np
     
     #calculates logarithmic current sweep
-    a = (1.0/(N - 1)) * np.log10(iEnd / iStart)
+    #a = (1.0/(N - 1)) * np.log10(iEnd / iStart)
     b = np.arange(0, N, 1)
-    i_led_values = [iStart * 10**(i*a) for i in b]
-    
+    #i_led_values = [iStart * 10**(i*a) for i in b]
+    i_led_values = [(iEnd - iStart)/N*i for i in b]
 
     smu_2612b.write('smua.source.output = smua.OUTPUT_ON') 
     smu_2612b.write('smub.source.output = smub.OUTPUT_ON')
@@ -148,7 +148,7 @@ def SelfHeating(smu_2612b, smu_2400, i_cc_sipm, v_cc_sipm,
             auxRead = smu_2400.query(':READ?')
             rtd_r = float(cast(auxRead)[2])
             readingsR.append(rtd_r)
-            time.sleep(delay)
+            time.sleep(delay + NPLC/50.)
     
     
         smu_2612b.write('waitcomplete()')
@@ -166,10 +166,43 @@ def SelfHeating(smu_2612b, smu_2400, i_cc_sipm, v_cc_sipm,
                 auxRead = smu_2400.query(':READ?')
                 rtd_r = float(cast(auxRead)[2])
                 readingsR.append(rtd_r)
-                time.sleep(delay)
+                time.sleep(delay + NPLC/50.)
 
     
         smu_2612b.write('waitcomplete()')
+        
+#        #startTime = time.time()
+#        for j in range(len(i_led_values)):
+#            
+#            smu_2612b.write('smub.source.leveli = ' + str(i_led_values[j]))
+#            smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
+#            smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+#            
+#            auxRead = smu_2400.query(':READ?')
+#            rtd_r = float(cast(auxRead)[2])
+#            readingsR.append(rtd_r)
+#            time.sleep(delay + NPLC/50.)
+#    
+#    
+#        smu_2612b.write('waitcomplete()')
+#    
+#        
+#        if return_sweep == 1:
+#            
+#            n = len(i_led_values)
+#            for j in range(len(i_led_values)):
+#                
+#                smu_2612b.write('smub.source.leveli = ' + str(i_led_values[n - j - 1]))
+#                smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
+#                smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+#                            
+#                auxRead = smu_2400.query(':READ?')
+#                rtd_r = float(cast(auxRead)[2])
+#                readingsR.append(rtd_r)
+#                time.sleep(delay + NPLC/50.)
+#
+#    
+#        smu_2612b.write('waitcomplete()')
             
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
     smu_2612b.write('smub.source.output = smub.OUTPUT_OFF')

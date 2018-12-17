@@ -19,30 +19,30 @@ def run(n, group_path, plotFlag, saveFlag):
       
     
     [readingsV_sipm, readingsI_sipm, readingsV_led, readingsI_led, 
-     readingsR] = SelfHeatingThermostat(smu_2612b,
-                              smu_2400,
-                              config[0],
-                              config[1],
-                              config[2],
-                              config[3],
-                              config[4],
-                              config[5],
-                              config[6],
-                              config[7],
-                              config[8],
-                              config[9],
-                              config[10],
-                              config[11],
-                              config[12],
-                              config[13],
-                              config[14],
-                              config[15],
-                              config[16],
-                              config[17],
-                              config[18],
-                              config[19],
-                              config[20],
-                              config[21])
+     readingsR] = SelfHeating(smu_2612b,
+                                          smu_2400,
+                                          config[0],
+                                          config[1],
+                                          config[2],
+                                          config[3],
+                                          config[4],
+                                          config[5],
+                                          config[6],
+                                          config[7],
+                                          config[8],
+                                          config[9],
+                                          config[10],
+                                          config[11],
+                                          config[12],
+                                          config[13],
+                                          config[14],
+                                          config[15],
+                                          config[16],
+                                          config[17],
+                                          config[18],
+                                          config[19],
+                                          config[20],
+                                          config[21])
     
    
     smu_2612b.write('reset()')
@@ -64,6 +64,7 @@ def run(n, group_path, plotFlag, saveFlag):
     if plotFlag == 1:
         graphR = plot(Number, readingsR, 'N', 'R', 1)
         graphIV = plot(readingsI_led, readingsI_sipm, 'Iled', 'Isipm', 2, log=True, errorbars_2612=True)
+        graphIVLed = plot(readingsV_led, readingsI_led, 'Vled', 'I', 3)
         
     else:
         graphR = 'NULL'

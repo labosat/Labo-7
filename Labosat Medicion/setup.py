@@ -8,8 +8,8 @@ def setup():
     # -------------------------------------------------------------------------
     # i_SIPM measurement ------------------------------------------------------
     
-    i_cc_sipm      = 20*P('m')
-    v_cc_sipm      = 31
+    i_cc_sipm      = 15*P('m')
+    v_cc_sipm      = 30
     
     i_rang_sipm    = 'AUTO'
     v_rang_sipm    = 'AUTO'
@@ -19,19 +19,19 @@ def setup():
     # -------------------------------------------------------------------------
     # i_LED measurement -------------------------------------------------------
     
-    i_cc_led       = 200*P('m')
+    i_cc_led       = 21*P('m')
     v_cc_led       = 2
     
     i_rang_led     = 'AUTO'
     v_rang_led     = 'AUTO'
    
-    iStart         = 10*P('u')
+    iStart         = 0
     iEnd           = 20*P('m')
 	
 	 # -------------------------------------------------------------------------
 	 # RTD measurement ---------------------------------------------------------
 	
-    fourWire	   = 1
+    fourWire	    = 1
 	
     i_cc_rtd       = 300*P('u')
     v_cc_rtd       = 0.3
@@ -47,11 +47,11 @@ def setup():
 	
     # number of measurements
     
-    N			   = 100
+    N			       = 450
 
     points         = 16          # measurements per point in curve
 	
-    delay		   = 10*P('m')
+    delay		    = 10*P('m')
     
     curves         = 1
 
@@ -62,24 +62,24 @@ def setup():
 
     
     return [i_cc_sipm,
-    		v_cc_sipm,
+        		v_cc_sipm,
             i_rang_sipm,
-    		v_rang_sipm,
-    		v_level_sipm,
-    		i_cc_led,
-    		v_cc_led,
-    		i_rang_led,
-    		v_rang_led,
-    		iStart,
-    		iEnd,
-    		fourWire,
-    		i_cc_rtd,
-    		v_cc_rtd,
-    		i_rang_rtd,
-    		r_rang_rtd, 
-    		i_level_rtd,
-    		return_sweep,
+        		v_rang_sipm,
+        		v_level_sipm,
+        		i_cc_led,
+        		v_cc_led,
+        		i_rang_led,
+        		v_rang_led,
+        		iStart,
+        		iEnd,
+        		fourWire,
+        		i_cc_rtd,
+        		v_cc_rtd,
+        		i_rang_rtd,
+        		r_rang_rtd, 
+        		i_level_rtd,
+        		return_sweep,
             N,
-    		points,
-    		delay,
+        		points,
+        		delay,
             curves]
