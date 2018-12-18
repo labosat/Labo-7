@@ -17,7 +17,7 @@ def dif(x, y):
     x_dif = x[1:int(len(x)/2.)]
     return x_dif, y_dif
 
-path = '/home/tomas/Desktop/Labo 6 y 7/Labo-7/Labosat Medicion/results/Mediciones autocalentamiento/Mediciones autocalentamiento 4/'
+path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Labosat Medicion/results/Mediciones autocalentamiento/Mediciones autocalentamiento 4'
 #%%
 # Analisis clasico de histeresis para todo el grupo de mediciones
 
@@ -85,7 +85,7 @@ ax2.tick_params(labelsize=20)
 #%%
 #Hago el analisis de los pvalues en funcion de la corriente del LED para una sola curva.
 pvalues = []
-data = np.loadtxt(path + '%s.txt' % 5, skiprows=1)
+data = np.loadtxt(path + '/%s.txt' % 5, skiprows=1)
 I_led_delta, I_sipm_delta = dif(data[:, 3], data[:, 1])
 for k in range(2, len(I_sipm_delta)):    
     values = []
@@ -115,7 +115,7 @@ j = 1
 while True:
     try:
         pvalues_temp = []
-        data = np.loadtxt(path + '%s.txt' % j, skiprows=1)
+        data = np.loadtxt(path + '/%s.txt' % j, skiprows=1)
         I_led_delta, I_sipm_delta = dif(data[:, 3], data[:, 1])
         for k in range(2, len(I_sipm_delta)):    
             values = []
@@ -143,7 +143,7 @@ for i in range(len(pvalues[1])):
     for k in range(len(pvalues)):
         m.append(pvalues[k][i])
     pvalues_mean.append(np.mean(m))
-    pvalues_mean_err.append(np.std(m))
+    pvalues_mean_err.append(np.std(m)/np.sqrt(len(m)))
     
 plt.errorbar(I_led, pvalues_mean, yerr=pvalues_mean_err, fmt = 'o', capsize=3)
 plt.plot(I_led, [0.05 for i in range(len(I_led))], 'r', lw=2.5, label='0.05')
@@ -152,3 +152,4 @@ plt.ylabel(r'P-values', size=20)
 plt.tick_params(labelsize=20)
 plt.xscale('log')
 plt.grid(True)
+plt.legend()
