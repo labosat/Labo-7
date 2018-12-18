@@ -84,7 +84,7 @@ def SelfHeating(smu_2612b, smu_2400, i_cc_sipm, v_cc_sipm,
     smu_2612b.write('smub.source.limiti = ' + str(i_cc_led))
     smu_2612b.write('smub.source.limitv = ' + str(v_cc_led))
 	
-    smu_2612b.write('smub.measure.delay = ' + str(delay))
+#    smu_2612b.write('smub.measure.delay = ' + str(delay))
 	
 
     #smu_2612b.write('smub.measure.nplc = ' + str(NPLC))
