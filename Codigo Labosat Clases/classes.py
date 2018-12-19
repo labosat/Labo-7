@@ -170,10 +170,10 @@ class Experiment:
              self.instruments[0].smu.measure("a")
              v += vStep
              
-        readings_v = cast(readBuffer(self.instruments[0].smu, 'a')[1])
-        readings_i = cast(readBuffer(self.instruments[0].smu, 'a')[0])
+        readings_measure = cast(readBuffer(self.instruments[0].smu, 'a')[1])
+        readings_source = cast(readBuffer(self.instruments[0].smu, 'a')[0])
          
         import matplotlib.pyplot as plt
-        plt.plot(readings_v, readings_i)
+        plt.plot(readings_source, readings_measure)
         
-        return [readings_v, readings_i]
+        return [readings_source, readings_measure]
