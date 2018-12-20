@@ -1,5 +1,6 @@
+from functions import P
+
 def setup1():
-    from functions import P
    
     # -------------------------------------------------------------------------
     # Channel a: SIPM ---------------------------------------------------------
@@ -55,7 +56,6 @@ def setup1():
             delay_b]
     
 def setup2():
-    from functions import P  
 	
     # -------------------------------------------------------------------------
 	# RTD ---------------------------------------------------------------------    
@@ -75,12 +75,7 @@ def setup2():
             measure_rang]
     
 def experiment_setup():
-    from functions import P
-    
-#    iStart         = 100*P('u')
-#    iEnd           = 235*P('u')
-#    i_level_rtd    = 97*P('u')
-#	
+	
 #	# ------------------------------------------------------------------------- 
 #    
 #    return_sweep   = 1
@@ -91,13 +86,12 @@ def experiment_setup():
 #
 #    points         = 16          # measurements per point in curve
 #	
-#    delay		   = 10*P('m')
 #    
 #    curves         = 1
     
-    vStart = 0
-    vEnd   = 1
-    vStep  = 0.01 
+    source_start = 0
+    source_end   = 1
+    source_step  = 0.01 
     
-    return [vStart, vEnd, vStep]
+    return [source_start, source_end, source_step]
     

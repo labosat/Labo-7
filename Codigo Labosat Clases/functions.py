@@ -1,5 +1,4 @@
 from __future__ import division
-import visa
 import time
 import matplotlib.pyplot as plt
 import os
@@ -14,29 +13,6 @@ def clear_all():
         if 'module' in str(globals()[var]): continue
 
         del globals()[var]
-
-
-def gpib(address1, address2):
-
-    rm = visa.ResourceManager()
-    equipment_id1 = 'GPIB0::' + str(address1) + '::INSTR'
-    equipment_id2 = 'GPIB0::' + str(address2) + '::INSTR'
-    
-    smu_2612b = rm.open_resource(equipment_id1)
-    smu_2400 = rm.open_resource(equipment_id2)
-
-    print("Installed equipment:")
-    
-    smu_2612b.write('smua.reset()')
-    smu_2612b.write('smub.reset()')
-    
-    print(smu_2612b.query("*IDN?"))
-    print(smu_2400.query("*IDN?"))
-       
-    smu_2612b.write('reset()')
-    smu_2400.write("*RST")
-    
-    return smu_2612b, smu_2400, rm
 
 
 #could pur a flag on plot to decide what data to plot (I, V, R)
@@ -168,42 +144,42 @@ def cast(string):
        out.append(float(aux))
    return out
 
-def Thermostat(smu, R_condition, condition, tolerance, i):
-    if R_condition > (condition + tolerance):
-        smu.write('smub.level.i = 0')
-        time.sleep(30)
-    elif R_condition < (condition - tolerance):
-        smu.write('smub.level.i = 0.02')
-        time.sleep(5)
-    
-    smu.write('smub.level.i = ' + str(i))
-    return
-    
-def ThermostatInitial(smu, tolerance):
-    import numpy as np
-    import time
-       
-    condition = True
-    readingsRLimit = []
-    
-    smu.write('OUTP ON')
-    while condition:
-        readingsRLimit = []
-        step = 0 
-        while (step <= 150):
-            auxRead = smu.query(':READ?')
-            rtd_r = float(cast(auxRead)[2])
-            readingsRLimit.append(rtd_r)
-            step += 1 
-        time.sleep(10)
-        
-        if np.std(readingsRLimit) <= tolerance:
-            condition = False
-            time.sleep(2)
-    
-
-    smu.write('OUTP OFF')    
-    return np.mean(readingsRLimit)
+#def Thermostat(smu, R_condition, condition, tolerance, i):
+#    if R_condition > (condition + tolerance):
+#        smu.write('smub.level.i = 0')
+#        time.sleep(30)
+#    elif R_condition < (condition - tolerance):
+#        smu.write('smub.level.i = 0.02')
+#        time.sleep(5)
+#    
+#    smu.write('smub.level.i = ' + str(i))
+#    return
+#    
+#def ThermostatInitial(smu, tolerance):
+#    import numpy as np
+#    import time
+#       
+#    condition = True
+#    readingsRLimit = []
+#    
+#    smu.write('OUTP ON')
+#    while condition:
+#        readingsRLimit = []
+#        step = 0 
+#        while (step <= 150):
+#            auxRead = smu.query(':READ?')
+#            rtd_r = float(cast(auxRead)[2])
+#            readingsRLimit.append(rtd_r)
+#            step += 1 
+#        time.sleep(10)
+#        
+#        if np.std(readingsRLimit) <= tolerance:
+#            condition = False
+#            time.sleep(2)
+#    
+#
+#    smu.write('OUTP OFF')    
+#    return np.mean(readingsRLimit)
 
 
 

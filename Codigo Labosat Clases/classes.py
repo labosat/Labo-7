@@ -1,5 +1,5 @@
 import visa
-from functions import cast, readBuffer
+from functions import cast, readBuffer, error_V, error_I
 
 class smu2612b:
     
@@ -56,6 +56,7 @@ class smu2612b:
         
         if enable_a == 1:
             if source_a == 'V' and measure_a == 'I':
+                self.measure_a = 'I'
                 
                 # -------------------------------------------------------------------------   
                 # smua configuration
@@ -90,6 +91,7 @@ class smu2612b:
         
         if enable_b == 1:
             if source_b == 'I' and measure_b == 'V':
+                self.measure_b = 'V'
                 
                 # -------------------------------------------------------------------------   
                 # smua configuration
@@ -121,15 +123,23 @@ class smu2612b:
         else:
             print("Channel b not enabled.")
             
-    def measure(self, channel):
-        #ver esto
-        measure_func = self.smu.query('smu%s.source.func?' % str(channel))
+    def measure(self, channel, option=True):
+        if channel == 'a':
+            measure_func = self.measure_a
+        elif channel == 'b':
+            measure_func = self.measure_b
+                
+        self.smu.write('smu%s.source.output = smu%s.OUTPUT_ON' % (str(channel), str(channel)))
+        
         if measure_func == 'I':
             self.smu.write('smu%s.measure.i(smu%s.nvbuffer1)' % (str(channel), str(channel)))
         elif measure_func == 'V':
             self.smu.write('smu%s.measure.v(smu%s.nvbuffer1)' % (str(channel), str(channel)))
         else:
             print("Invalid SMU channel")
+            
+        if option:
+            self.smu.write('smu%s.source.output = smu%s.OUTPUT_OFF' % (str(channel), str(channel)))
         return
 
 
@@ -156,24 +166,52 @@ class Experiment:
             
         for i in range(len(self.instruments)):
             print("Instruments in experiment:")
-            print("%s. %s" % (i, instruments[i].name))
+            print("%s. %s" % (i, self.instruments[i].name))
             self.instruments[i].setup(instrument_setup[i])
             
         self.experiment_setup = experiment_setup
         return
     
-    def iv_a(self):
-        [vStart, vEnd, vStep] = self.experiment_setup
+    def iv_curve(self, channel):
+        
+        """
+        
+        Function to perform iv curve with smu2612b
+        
+        """
+        [start, end, step] = self.experiment_setup
+        output_flag = False
+        
+        if channel == 'a':
+            source_func = self.instruments[0].measure_a
+        elif channel == 'b':
+            source_func = self.instruments[0].measure_b
          
-         v = vStart
-         while v <= vEnd:
-             self.instruments[0].smu.measure("a")
-             v += vStep
-             
-        readings_measure = cast(readBuffer(self.instruments[0].smu, 'a')[1])
-        readings_source = cast(readBuffer(self.instruments[0].smu, 'a')[0])
+        j = start
+        while j <= end:
+            if source_func == 'V':
+                self.instruments[0].smu.write('smu%s.source.levelv = %s' % (str(channel), str(j)))
+            elif source_func == 'I':
+                self.instruments[0].smu.write('smu%s.source.leveli = %s' % (str(channel), str(j))) 
+                
+            self.instruments[0].smu.measure(channel, output_flag)
+            j += step
+        
+        if not output_flag:
+            self.instruments[0].smu.write('smu%s.source.output = smu%s.OUTPUT_OFF' % (str(channel), str(channel)))
+        
+        readings_measure = cast(readBuffer(self.instruments[0].smu, str(channel))[1])
+        readings_source = cast(readBuffer(self.instruments[0].smu, str(channel))[0])
+         
+        readings_source_error = error_V(readings_source, '2612')
+        readings_measure_error = error_I(readings_measure, '2612')
          
         import matplotlib.pyplot as plt
-        plt.plot(readings_source, readings_measure)
+        plt.errorbar(readings_source, readings_measure, 
+                     xerr=readings_source_error, yerr=readings_measure_error, fmt='.')
         
-        return [readings_source, readings_measure]
+        return [readings_source, readings_measure, readings_source_error, readings_measure_error]
+    
+    
+    
+    
