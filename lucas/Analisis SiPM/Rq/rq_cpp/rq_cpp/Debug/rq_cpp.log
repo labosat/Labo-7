@@ -1,8 +1,0 @@
-﻿  rq_cpp.cpp
-c:\root_v6.14.04\include\root\libcpp_string_view.h(193): warning C4068: unknown pragma
-c:\root_v6.14.04\include\root\typetraits.hxx(43): fatal error C1001: An internal error has occurred in the compiler.
-  (compiler file 'f:\dd\vctools\compiler\cxxfe\sl\p1\c\convert.cpp', line 677)
-   To work around this problem, try simplifying or changing the program near the locations listed above.
-  Please choose the Technical Support command on the Visual C++ 
-   Help menu, or open the Technical Support help file for more information
-  c:\root_v6.14.04\include\root\typetraits.hxx(46): note: see reference to class template instantiation 'ROOT::Detail::CallableTraitsImpl<T,true>' being compiled
