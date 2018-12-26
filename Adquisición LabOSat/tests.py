@@ -34,6 +34,9 @@ def IVComplete(smu_2612b, smu_2400, config):
 	delay,
     curves] = config
      
+     
+    i_led_level = 210*P('u')
+    
     NPLC = round(points*200*P('u')*50, 2)
 
     readingsR = []
@@ -82,6 +85,28 @@ def IVComplete(smu_2612b, smu_2400, config):
     smu_2612b.write('smua.measure.nplc = ' + str(NPLC))
     
     smu_2612b.write('smua.measure.delay = ' + str(delay))
+    
+    # -------------------------------------------------------------------------   
+    # smua configuration (SiPM)
+    
+    smu_2612b.write('smub.source.func = smub.OUTPUT_DCAMPS')
+    smu_2612b.write('display.smub.measure.func = display.MEASURE_DCVOLTS')
+    
+    if (i_rang_led == 'AUTO'):
+        smu_2612b.write('smub.source.autorangei = smub.AUTORANGE_ON')
+    else:
+        smu_2612b.write('smub.source.rangei = ' + str(i_rang_led))
+    
+    if (v_rang_led == 'AUTO'):
+        smu_2612b.write('smub.measure.autorangev = smub.AUTORANGE_ON')
+    else:
+        smu_2612b.write('smub.measure.rangev = ' + str(v_rang_led))
+
+    #compliance values for I and V
+    smu_2612b.write('smub.source.limiti = ' + str(i_cc_led))
+    smu_2612b.write('smub.source.limitv = ' + str(v_cc_led))
+    
+    smu_2612b.write('smub.source.leveli = ' + str(0))
         
     # -------------------------------------------------------------------------
     # k2400 configuration (R measurement)
@@ -115,9 +140,14 @@ def IVComplete(smu_2612b, smu_2400, config):
     
     # allowed voltage values in sweep
     b = np.arange(0, N, 1)
-    v_sipm_values = [vStart + (vEnd - vStart)/N*i for i in b]
+    v_sipm_values1 = [vStart - (vStart)/N*i for i in b]
+    
+    
+    v_sipm_values2 = [20 + (vEnd - 20)/N*i for i in b]
+   
+    v_sipm_values = np.concatenate((v_sipm_values1, v_sipm_values2))
 
-    smu_2612b.write('smua.source.output = smua.OUTPUT_ON') 
+    smu_2612b.write('smua.source.output = smua.OUTPUT_ON')
     smu_2400.write('OUTP ON')
     
     print("Start of measurement")
@@ -134,9 +164,16 @@ def IVComplete(smu_2612b, smu_2400, config):
             rtd_r = float(cast(auxRead)[2])
             readingsR.append(rtd_r)
             time.sleep(delay + NPLC/50.)
+            
+            if j != len(v_sipm_values) - 1:
+                if (v_sipm_values[j + 1] - v_sipm_values[j]) > 10:
+                        smu_2612b.write('smub.source.output = smub.OUTPUT_ON') 
+                        smu_2612b.write('smub.source.leveli = ' + str(i_led_level)) 
+                
     
     
         smu_2612b.write('waitcomplete()')
+        smu_2612b.write('smub.source.leveli = ' + str(0)) 
         
         if return_sweep == 1:
             
@@ -150,11 +187,17 @@ def IVComplete(smu_2612b, smu_2400, config):
                 rtd_r = float(cast(auxRead)[2])
                 readingsR.append(rtd_r)
                 time.sleep(delay + NPLC/50.)
+                
+                if j != len(v_sipm_values) - 1:
+                    if (v_sipm_values[j + 1] - v_sipm_values[j]) > 10:
+                       smu_2612b.write('smub.source.leveli = ' + str(i_led_level)) 
 
     
             smu_2612b.write('waitcomplete()')
+            smu_2612b.write('smub.source.leveli = ' + str(0)) 
             
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
+    smu_2612b.write('smub.source.output = smub.OUTPUT_OFF')
     smu_2400.write('OUTP OFF')
     
     print("End of measurement")

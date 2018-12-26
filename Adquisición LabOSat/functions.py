@@ -84,6 +84,7 @@ def plot(x, y, char1, char2, n, log=False, errorbars_2400=False, errorbars_2612=
         plt.xscale('log')
         plt.yscale('log')
     plt.grid(True)
+    plt.tight_layout(True)
     
     plt.show()
     return graph
@@ -169,13 +170,17 @@ def save_iv(readingsV_sipm, readingsI_sipm,
         graphR.savefig(figure_nameR, dpi=250, bbox_inches='tight')
         
 
-def save_dark(readingsI_sipm, readingsR, number, group_path):
+def save_dark(readingsI_sipm, readingsR, graphR, number, group_path):
     
     #[unused,unused,dateString] = date_time_now()
     # For makin this cross platform, change the path name
+    
     path            = ".\\results\\" + group_path + "\\"
+    path_fig        = ".\\results\\" + group_path + "\\figures\\"
+    ext_fig         = ".png" 
     ext_txt         = ".txt" 
     text_name       = path + str(number) + ext_txt
+    figure_nameR    = path_fig + str(number) + " (res)" + ext_fig
     
     """
     Check if the folder exists. This is only Windows compatible (because of VISA)
@@ -183,6 +188,9 @@ def save_dark(readingsI_sipm, readingsR, number, group_path):
         
     if not(os.path.exists(path)):
         os.makedirs(path)
+        
+    if not(os.path.exists(path_fig)):
+        os.makedirs(path_fig)
           
     File = open(text_name, 'w')
     
@@ -195,6 +203,8 @@ def save_dark(readingsI_sipm, readingsR, number, group_path):
             
 
     File.close()
+    if graphR != 'NULL':
+        graphR.savefig(figure_nameR, dpi=250, bbox_inches='tight')
     return
 
 
@@ -256,8 +266,9 @@ def split(v, i, r):
             r_pos.append(r[j])
             
     v_neg = v_neg[::-1]
-    v_neg = [-i for i in v_neg]
+    v_neg = [-g for g in v_neg]
     i_neg = i_neg[::-1]
+    i_neg = [-g for g in i_neg]
     r_neg = r_neg[::-1]
     
     return v_neg, v_pos, i_neg, i_pos, r_neg, r_pos

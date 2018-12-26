@@ -1,11 +1,11 @@
 from k2612B import run
 import time
 
-N          = 1
-group_path = 'Encapsulado 1\\1'
+N          = 5
+group_path = 'Encapsulado 1\\2'
 test       = ['iv', 'self_heating']
 plotFlag   = 1
-saveFlag   = 0
+saveFlag   = 1
 
 for i in range(1, N + 1):
     print(str(i))
