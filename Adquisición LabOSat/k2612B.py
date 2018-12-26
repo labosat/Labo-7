@@ -55,8 +55,8 @@ def run(n, test, group_path, plotFlag, saveFlag):
             graphIV_pos = 'NULL'
             
         if saveFlag == 1:
-            group_path_pos = group_path + " (vbr)"
-            group_path_neg = group_path + " (rq)"
+            group_path_pos = group_path + " (rq)"
+            group_path_neg = group_path + " (vbr)"
             save_iv(readingsV_sipm_neg, readingsI_sipm_neg, readingsR_neg, graphIV_neg, 
                     graphR_neg, n, group_path_pos)
             
