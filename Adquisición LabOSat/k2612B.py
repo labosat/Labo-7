@@ -1,6 +1,6 @@
-from functions import clear_all, gpib, plot, save, save_iv, split
+from functions import clear_all, gpib, plot, save, save_iv, save_dark, split
 from setup import setup
-from tests import SelfHeating, IVComplete
+from tests import SelfHeating, IVComplete, DarkCurrent
 
 def run(n, test, group_path, plotFlag, saveFlag):
 
@@ -29,12 +29,6 @@ def run(n, test, group_path, plotFlag, saveFlag):
         smu_2612b.write('smub.nvbuffer1.clear()') 
         smu_2400.write('*CLS')
             
-        rm.close
-        
-        Number = []
-        for i in range(0, len(readingsR)):
-            Number.append(i)
-            
         readingsV_sipm_neg, readingsV_sipm_pos, readingsI_sipm_neg, readingsI_sipm_pos, readingsR_neg, readingsR_pos = split(readingsV_sipm, readingsI_sipm, readingsR)
             
             
@@ -58,7 +52,20 @@ def run(n, test, group_path, plotFlag, saveFlag):
             
             save_iv(readingsV_sipm_pos, readingsI_sipm_pos, readingsR_pos, graphIV_pos, 
                     graphR_pos, n, group_path_neg)
+            
+        [readingsI_sipm, readingsR] = DarkCurrent(smu_2612b, smu_2400, config)
     
+        smu_2612b.write('reset()')
+            
+        smu_2612b.write('smua.nvbuffer1.clear()')
+        smu_2612b.write('smub.nvbuffer1.clear()') 
+        smu_2400.write('*CLS')
+            
+        if saveFlag == 1:
+            group_path_dark = group_path + " (idark)"
+            save_dark(readingsI_sipm, readingsR, 'NULL', 'NULL', n, group_path_dark)
+    
+        rm.close
         return 
 
     

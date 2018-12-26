@@ -167,6 +167,35 @@ def save_iv(readingsV_sipm, readingsI_sipm,
         graphIV.savefig(figure_nameIV, dpi=250, bbox_inches='tight')
     if graphR != 'NULL':
         graphR.savefig(figure_nameR, dpi=250, bbox_inches='tight')
+        
+
+def save_dark(readingsI_sipm, readingsR, number, group_path):
+    
+    #[unused,unused,dateString] = date_time_now()
+    # For makin this cross platform, change the path name
+    path            = ".\\results\\" + group_path + "\\"
+    ext_txt         = ".txt" 
+    text_name       = path + str(number) + ext_txt
+    
+    """
+    Check if the folder exists. This is only Windows compatible (because of VISA)
+    """
+        
+    if not(os.path.exists(path)):
+        os.makedirs(path)
+          
+    File = open(text_name, 'w')
+    
+    File.write("I_sipm\tR_rtd\n")
+    #format is I_sipm, V_led, I_led
+    if len(readingsI_sipm) == len(readingsR):
+        for i in range(0,len(readingsI_sipm)):
+            line = str(readingsI_sipm[i]) + '\t' + str(readingsR[i]) + '\n' 
+            File.write(line)
+            
+
+    File.close()
+    return
 
 
 def P(prefix):
