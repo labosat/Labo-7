@@ -2,7 +2,7 @@ from k2612B import run
 import time
 
 N          = 3
-group_path = 'Encapsulado 1\\13'
+group_path = 'Encapsulado 1\\14'
 test       = ['iv', 'self_heating']
 plotFlag   = 1
 saveFlag   = 1
