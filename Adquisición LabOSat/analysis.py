@@ -585,7 +585,7 @@ m = 3.815
 R0 = 1000
 max_limit = 0
 folders = 15
-tolerancia = 0.1
+tolerancia = 1
 #j = 5
 
 start = time.time()
@@ -612,7 +612,7 @@ for i in range(1, folders + 1):
     Vbr_err_temp = []
     T_err_temp = []
     #casa
-    array = pulidor(0.1, path)
+    array = pulidor(tolerancia, path)
     end = len(array)
     
 
