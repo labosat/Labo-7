@@ -311,6 +311,7 @@ def ThermostatInitial(smu, tolerance):
     return np.mean(readingsRLimit)
 
 
+######## FOR DATA ANALYSIS
 
 def error_I(y, SMU, source = False):
     """
@@ -616,15 +617,25 @@ def weightedMean(measurements, weights):
     .
     .
     """
-    wTotal = 0
+    wTotal = np.sum([1/i**2 for i in weights])
     mwTotal = 0
-    mean = 0
-    for i in range(0, len(weights)):
-        wTotal += 1 / weights[i]**2
+    mean = 0 
+#    for i in range(0, len(weights)):
+#        wTotal += (1 / weights[i]**2)
     for i in range(0, len(measurements)):
         mwTotal += measurements[i]*(1/weights[i]**2)
     mean = mwTotal / wTotal 
     return mean
+
+def weightedError(measurements, weights):
+    """
+    A chequear
+    """
+    wTotal = 0
+    weights = np.asarray(weights)
+    for i in range(0, len(weights)):
+        wTotal += 1 / weights[i]**2
+    return np.sqrt(1/wTotal)
 
 def Linear(M, x):
     m, b = M
@@ -637,3 +648,89 @@ def ClosestToOne(v):
         compliance.append(abs(v[j] - 1))
     return compliance.index(np.min(compliance))
 
+def LogData(x, y, y_err):
+    v = []
+    for i in range(len(y)):
+        try:
+            v.append(np.log(y[i]))
+            
+        except ZeroDivisionError:
+            continue
+        
+    v_err = []
+    for i in range(0, len(y)):
+        v_err.append(y_err[i]/y[i])
+    return x, v, v_err
+
+def DiffData(x, y, x_err, y_err):
+    h = x[1] - x[0]
+    diff = []
+    diff_err = []
+    for i in range(1, len(y) - 1):
+        diff.append((y[i - 1] - y[i + 1])/(2*h))
+        diff_err.append(np.sqrt((abs(y_err[i - 1])**2 + abs(y_err[i + 1])**2))/(2*h))
+        
+    index = [0, len(x) - 1]    
+        
+    x = np.delete(x, index)
+    x_err = np.delete(x_err, index)
+    
+    return x, diff, x_err, diff_err
+
+def fit_function(M, x):
+    a, b = M
+    return a/(x - b)
+
+
+def fit_calc(beta, sd_beta, value, perfect = False):
+    temp = []
+    temp2 = []
+    temp3 = []
+    for i in range(0, len(beta)):
+        if perfect:
+            temp.append(beta[i][0])
+            temp2.append(beta[i][1])
+            temp3.append(sd_beta[i][1])
+        else:
+            if beta[i][0] != value:
+                temp.append(beta[i][0])
+                temp2.append(beta[i][1])
+                temp3.append(sd_beta[i][1])
+    for i in range(0, len(temp)):
+        if perfect:
+            if temp[i] == value:
+                return value
+            
+        else:
+            temp = [x/value for x in temp]
+            i = ClosestToOne(temp)
+            beta_temp = [beta[i][0] for i in range(len(beta))]
+            j = beta_temp.index(value * temp[i])
+            return j, temp2[i], temp3[i]
+        
+def tolerance_dark(tolerancia, path):
+
+    filtro = []
+    i = 0
+    while True:
+        try:
+            i = i+1
+            data = np.loadtxt(path + '/%s.txt' % i, skiprows=1)
+            Res = data[:, 1]
+            if dispersion(Res) <= tolerancia:
+                filtro.append(i)
+        except IOError:
+            break
+        
+    return filtro
+
+def DetectFolders(path):
+    j = 1
+    while True:
+        try:
+            path_j = '%s (rq)/1.txt' % j
+            np.loadtxt(path + path_j, skiprows=1)
+            j += 1
+        except IOError:
+            break
+    return j - 1
