@@ -3,10 +3,12 @@ import os
 import time
 import numpy as np
 import matplotlib.pyplot as plt
-from functions import DetectFolders
 
 #current working directory (all paths relative to this one)
 os.chdir("C:/Users/lucas/Documents/GitHub/Labo-7/Adquisición LabOSat/")
+
+from functions import DetectFolders
+
 
 #constants for data analysis
 
@@ -111,11 +113,7 @@ Vbr_err_lista = []
 
 for i in range(1, folders + 1):
 
-<<<<<<< HEAD
-    path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Adquisición LabOSat/results/Encapsulado 1 con grasa/%s (vbr)' % i
-=======
     path = 'results/Encapsulado %s/%s (vbr)' % (encapsulado, i)
->>>>>>> 86842c650e72e46405d8393255609f2d7a872795
     Vbr_temp = []
     T_temp = []
     Vbr_err_temp = []

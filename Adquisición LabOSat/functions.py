@@ -1,5 +1,5 @@
 from __future__ import division
-import visa
+#import visa
 import time
 import matplotlib.pyplot as plt
 import os
