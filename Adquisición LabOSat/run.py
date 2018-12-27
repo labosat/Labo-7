@@ -3,7 +3,7 @@ import time
 import winsound
 
 N          = 5
-group_path = 'Encapsulado 1 con grasa\\3'
+group_path = 'Encapsulado 1 con grasa\\4'
 test       = ['iv', 'self_heating']
 plotFlag   = 1
 saveFlag   = 1
@@ -16,3 +16,4 @@ for i in range(1, N + 1):
 winsound.Beep(750, 750)
 winsound.Beep(750, 750)
 winsound.Beep(750, 750)
+winsound.Beep(1000, 1100)

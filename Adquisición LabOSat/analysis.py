@@ -549,7 +549,7 @@ Vbr_err_lista = []
 
 for i in range(1, folders + 1):
 
-    path = 'C:/Users/lucas/Documents/GitHub/Labo-7/Adquisición LabOSat/results/Encapsulado 1 con grasa/%s (vbr)' % i
+    path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Adquisición LabOSat/results/Encapsulado 1 con grasa/%s (vbr)' % i
     Vbr_temp = []
     T_temp = []
     Vbr_err_temp = []

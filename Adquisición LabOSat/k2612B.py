@@ -63,7 +63,7 @@ def run(n, test, group_path, plotFlag, saveFlag):
             save_iv(readingsV_sipm_pos, readingsI_sipm_pos, readingsR_pos, graphIV_pos, 
                     graphR_pos, n, group_path_neg)
          
-        time.sleep(60)
+        time.sleep(45)
         [readingsI_sipm, readingsR] = DarkCurrent(smu_2612b, smu_2400, config)
     
         smu_2612b.write('reset()')
