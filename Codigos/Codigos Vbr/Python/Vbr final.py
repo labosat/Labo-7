@@ -228,12 +228,13 @@ def pulidor(tolerancia, path):
     while True:
         try:
             i = i+1
-            data = np.loadtxt(path + '/res/%s (res).txt' % i, skiprows=1)
-            Res = data[:, 1]
+            data = np.loadtxt(path + '/%s.txt' % i, skiprows=1)
+            Res = data[:, 2]
             if dispersion(Res) <= tolerancia:
                 filtro.append(i)
         except IOError:
             break
+        
     return filtro
 
 def ClosestToOne(v):
@@ -248,9 +249,13 @@ def ClosestToOne(v):
     .
     """
     compliance = []
+    compliance_not_1 = []
     for j in range(0, len(v)):
         compliance.append(abs(v[j] - 1))
-    return compliance.index(np.min(compliance))
+    for j in compliance:
+        if j != 1:
+            compliance_not_1.append(j)
+    return compliance_not_1.index(np.min(compliance_not_1))
 
 def fit_function(M, x):
     a, b = M
@@ -284,6 +289,36 @@ def fit_calc(beta, sd_beta, value, perfect = False):
             return j, temp2[i], temp3[i]
 
 
+def weightedMean(measurements, weights):
+    """
+    Devuelve el promedio pesado de una muestra con sus respectivos errores.
+    
+    Input: (X, X_err)  lists
+    
+    Returns: float
+    .
+    .
+    """
+    wTotal = np.sum([1/i**2 for i in weights])
+    mwTotal = 0
+    mean = 0 
+#    for i in range(0, len(weights)):
+#        wTotal += (1 / weights[i]**2)
+    for i in range(0, len(measurements)):
+        mwTotal += measurements[i]*(1/weights[i]**2)
+    mean = mwTotal / wTotal 
+    return mean
+
+def weightedError(measurements, weights):
+    """
+    A chequear
+    """
+    wTotal = 0
+    weights = np.asarray(weights)
+    for i in range(0, len(weights)):
+        wTotal += 1 / weights[i]**2
+    return np.sqrt(1/wTotal)
+
 def QuadSum(v):
     result = 0
     for i in range(len(v)):
@@ -294,10 +329,11 @@ def QuadSum(v):
 m = 3.815
 R0 = 1000
 max_limit = 0
-folders = 12 
+folders = 11
 tolerancia = 0.1
 #j = 5
 
+start = time.time()
 T = []
 T_err = []
 Vbr = []
@@ -308,42 +344,54 @@ T_lista = []
 T_err_lista = []
 Vbr_lista = []
 Vbr_err_lista = []
+
+
+
 for i in range(1, folders + 1):
-    i = 10
+
     #path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
-    path = 'C:/Users/lucas/Documents/GitHub/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
+    path = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Adquisición LabOSat/results/Encapsulado 1/%s (vbr)' % i
+
     Vbr_temp = []
     T_temp = []
     Vbr_err_temp = []
     T_err_temp = []
     #casa
-    array = pulidor(tolerancia, path)
+    array = pulidor(0.1, path)
     end = len(array)
     
-    start = time.time()
+
     for j in array:
     #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
         
-        path_group_i = '/iv/%s (iv).txt' % j
-        path_group_r = '/res/%s (res).txt' % j
-        data_i = np.loadtxt(path + path_group_i, skiprows=1)
-        data_r = np.loadtxt(path + path_group_r, skiprows=1)
-        V = data_i[:, 0]
-        I = data_i[:, 1]
-        R = data_r[:, 1]
+        path_group = '/%s.txt' % j
+#        path_group_r = '/res/%s (res).txt' % j
+        data_vbr = np.loadtxt(path + path_group, skiprows=1)
+        V = data_vbr[:, 0]
+        I = data_vbr[:, 1]
+        R = data_vbr[:, 2]
         V_err = error_V(V)
         I_err = error_I(I)
     
+    
         V, I, I_err = LogData(V, I, I_err)
         V, I, V_err, I_err = DiffData(V, I, V_err, I_err)
-            
+
+#        Para chequear con los dedos.
+#        plt.plot(V, I, '.')
+#        asd = [23.9, 24.12, 24.04, 23.8]
+#        asd_T = [881.7, 926.4, 900.5, 855.9]
+
         #flag to check if data needs to be inverted
-        flag = False
+        I = I[1:]
+        V = V[1:]
+        I_err = I_err[1:]
+        V_err = V_err[1:]
         
         if abs(np.max(I)) > abs(np.min(I)):
-            index = I.index(np.max(I))
+            index = I.index(np.max(I)) + 1
         elif abs(np.max(I)) < abs(np.min(I)):
-            index = I.index(np.min(I))
+            index = I.index(np.min(I)) + 1
             I = [-x for x in I]
             
         chi_2 = []
@@ -351,7 +399,7 @@ for i in range(1, folders + 1):
         beta2 = []
         sd_beta = []
         t = (np.mean(R) - R0)/m
-        t_err = np.std(R)/m
+        t_err = np.sqrt((np.std(R)/m)**2 * 1/len(R) + 1/m**2)
         
         for l in range(0, 5):
             for h in range(l + 1, len(V[index:]) - max_limit):
@@ -361,7 +409,7 @@ for i in range(1, folders + 1):
                 V_err_fit = V_err[index + l:index + h]
                 model = Model(fit_function)
                 data = RealData(V_fit, I_fit, sx=V_err_fit, sy=I_err_fit)
-                odr = ODR(data, model, beta0=[2., 24.], maxit=100000)
+                odr = ODR(data, model, beta0=[2., 24.], maxit=1000000)
                 out = odr.run()
                 
                 #chi_2.append(dispersion(V_fit, I_fit, I_err_fit, out.beta))
@@ -378,7 +426,7 @@ for i in range(1, folders + 1):
         T_temp.append(t)
         T_err_temp.append(t_err)
         print("%s/%s" % (j, end))
-        print(str(time.time() - start) + " seconds")
+        
         
     #aca estan los datos antes de promediar como lista de listas
     T_lista.append(T_temp)
@@ -386,20 +434,23 @@ for i in range(1, folders + 1):
     Vbr_lista.append(Vbr_temp)
     Vbr_err_lista.append(Vbr_err_temp)
     
-    T.append(np.mean(T_temp))
-    T_err.append(QuadSum(T_err_temp))
-    Vbr.append(np.mean(Vbr_temp))
-    Vbr_err.append(QuadSum(Vbr_err_temp))
+    T.append(weightedMean(T_temp, T_err_temp))
+    T_err.append(weightedError(T_temp, T_err_temp))
+    Vbr.append(weightedMean(Vbr_temp, Vbr_err_temp))
+    Vbr_err.append(weightedError(Vbr_temp, Vbr_err_temp))
     
 #    plt.plot(V, I, '.')
 #    plt.plot(V, fit_function(beta[index_chi], V))
     #p0.append(beta[])
     print("success!: "+ str(i))
-    break
+    
 
+print(str(time.time() - start) + " seconds")
 
 plt.figure(1)
-plt.errorbar(T, Vbr, xerr= T_err, yerr= Vbr_err, fmt='.', capsize= 3)
+plt.errorbar(T, Vbr, xerr= T_err, yerr= Vbr_err, fmt='or', capsize= 3)
+plt.grid(True)
+
 linear_model = Model(Linear)
 data = RealData(T, Vbr, sx=T_err, sy=Vbr_err)
 odr = ODR(data, linear_model, beta0=[0., 1.])
@@ -420,40 +471,65 @@ dR = T_err[0]*3.815 + 2.6
 
 print("9\t"+str(Vbr[0])+"\t"+str(Vbr_err[0]*np.sqrt(len(Vbr_err_temp)))+"\t"+str(Vbr_err[0])+"\t"+str(Vbr_err[0]/np.sqrt(len(Vbr_err_temp)))+"\t"+str(R)+"\t"+str(dR))
 
+
+plt.figure(2)
+for k in range(len(T_lista)):
+    plt.errorbar(T_lista[k], Vbr_lista[k], xerr = T_err_lista[k], yerr = Vbr_err_lista[k], fmt = 'ob', capsize = 3)
+plt.grid(True)
+plt.xlabel('Temperatura (C)')
+plt.ylabel('Breakdown Voltage (V)')
+
+
+
 #%%
 
-import numpy as np
-import matplotlib.pyplot as plt
+def pulidor_dark(tolerancia, path):
 
-def QuadSum(v):
-    result = 0
-    for i in range(len(v)):
-        result += v[i]*v[i]
+    filtro = []
+    i = 0
+    while True:
+        try:
+            i = i+1
+            data = np.loadtxt(path + '/%s.txt' % i, skiprows=1)
+            Res = data[:, 1]
+            if dispersion(Res) <= tolerancia:
+                filtro.append(i)
+        except IOError:
+            break
         
-    return np.sqrt(result)/len(v)
+    return filtro
 
-T = []
-Vbr = []
-dT = []
-dVbr = []
-
-for i in range(1, 13):
-
-    path = "C:/Users/lucas/Documents/GitHub/Labo-7/Mediciones/Vbr/Para informe/Vbr_final_para_informe/%s.txt" % i
-    data = np.loadtxt(path)
-    Vbr_temp = data[:, 1]
-    dVbr_temp = data[:, 3]
-    T_temp = data[:, 0]
-    dT_temp = data[:, 2] + 2.6
+m = 3.81
+R0 = 1000
+max_limit = 0
+folders = 11
+tolerancia = 0.1
+I_dark = []
+R_dark = []
+for k in range(1, folders + 1):
     
-    T.append(np.mean(T_temp))
-    Vbr.append(np.mean(Vbr_temp))
-    dT.append(QuadSum(dT_temp))
-    dVbr.append(QuadSum(dVbr_temp))
+    path_dark = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Adquisición LabOSat/results/Encapsulado 1/%s (idark)' % k
+    array = pulidor_dark(1, path_dark)
+    end = len(array)
+    I_dark_temp = []
+    R_dark_temp = []
+    I_dark_err_temp = []
+    R_dark_err_temp = []
 
-plt.errorbar(T, Vbr, yerr=dVbr, xerr=dT, fmt='.')
-plt.grid(True)
+    for j in array:
+        path_group = '/%s.txt' % j
+        data_i_dark = np.loadtxt(path_dark + path_group, skiprows=1)
+        I_dark_temp.append(data_i_dark[:, 0])
+        R_dark_temp.append((data_i_dark[:, 1] - 1000)/m)
+        I_dark_err_temp.append(error_I(data_i_dark[:, 0], '2612'))
+        R_dark_err_temp = 
+        
+    I_dark.append(np.mean(I_dark_temp))
+    R_dark.append(np.mean(R_dark_temp))
 
-np.savetxt("C:/Users/Lucas/Desktop/vbr_final.txt", np.c_[T, Vbr, dT, dVbr])
 
+#plt.figure(3)
+#for k in range(len(I_dark)):
+#    plt.plot(R_dark[k], I_dark[k], '.')
+plt.plot(R_dark, I_dark, '.')
 
