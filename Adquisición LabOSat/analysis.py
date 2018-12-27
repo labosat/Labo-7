@@ -1,105 +1,66 @@
 #%% rq analysis
 
 import numpy as np
-import os
 from functions import tolerance, dispersion, weightedMean, error_R, error_V, error_I, Linear, ClosestToOne
 from scipy.odr import ODR, Model, RealData
 
-def tolerance(tolerancia, path):
-    """
-    Esta funcion itera sobre todos los sets de datos que se encuentren en la carpeta 
-    del path, y filtra las N mediciones para quedarme solo con las que tienen
-    dispersion <= tolerancia. Me devuelve un array sobre el cual tengo analizar los datos,
-    asegurandome de que la dispersion en temperatura fue menor a la deseada.
-    No hay que poner el numero de mediciones, python las cuenta solo. 
-    Solo hay que poner el path!
-    Los archivos a iterar deben estar en una location terminada en '/res/i (res).txt', 
-    donde i es el numero de set de datos (de 1 a N).
-    Tolerancia tipica para mediciones en temperatura en el estacionario ==> 0.03
-    
-    Input: (tolerancia, path)
-    
-    Returns: list
-    .
-    .
-    """
-    filtro = []
-    i = 0
-    while True:
-        try:
-            i = i+1
-            data = np.loadtxt(path + '/%s.txt' % i, skiprows=1)
-            Res = data[:, 2]
-            if dispersion(Res) <= tolerancia:
-                filtro.append(i)
-        except IOError:
-            break
-        
-    return filtro
+#def tolerance(tolerancia, path):
+#    """
+#    Esta funcion itera sobre todos los sets de datos que se encuentren en la carpeta 
+#    del path, y filtra las N mediciones para quedarme solo con las que tienen
+#    dispersion <= tolerancia. Me devuelve un array sobre el cual tengo analizar los datos,
+#    asegurandome de que la dispersion en temperatura fue menor a la deseada.
+#    No hay que poner el numero de mediciones, python las cuenta solo. 
+#    Solo hay que poner el path!
+#    Los archivos a iterar deben estar en una location terminada en '/res/i (res).txt', 
+#    donde i es el numero de set de datos (de 1 a N).
+#    Tolerancia tipica para mediciones en temperatura en el estacionario ==> 0.03
+#    
+#    Input: (tolerancia, path)
+#    
+#    Returns: list
+#    .
+#    .
+#    """
+#    filtro = []
+#    i = 0
+#    while True:
+#        try:
+#            i = i+1
+#            data = np.loadtxt(path + '/%s.txt' % i, skiprows=1)
+#            Res = data[:, 2]
+#            if dispersion(Res) <= tolerancia:
+#                filtro.append(i)
+#        except IOError:
+#            break
+#        
+#    return filtro
 
 
 pixels = 18980
 m = 3.81
-
-mode = 'rq'
-encapsulado = 1
-
 #tolerance in temperature
-tol = 0.03
+tol = 0.1
 
 
-base_path = "results\\Encapsulado %s\\" % encapsulado
-array = []
-T = []
-T_err = []
-Rq = []
-Rq_err = []
-
-i = 1
-while True:
-    path = base_path + str(i) + " " + str(mode) + "\\"
-    if os.path.exists(path):
-        j = 1
-        try:
-            array.append(tolerance(tol, path))
-            
-            data = np.loadtxt(path + str(j) + ".txt", skiprows=1)
-            T_temp = data[:, 2]
-            T_err_syst = error_R(T_temp)
-            T_err_stat = dispersion(T_temp)/np.sqrt(len(T_temp)) 
-
-            T_err = np.sqrt(T_err_stat**2 + T_err_syst**2)
-            
-            T.append((weightedMean(T_temp, T_err) - 1000)/m)
-            
-            #systematic error. Is mean ok here?
-            T_err.append(np.mean(T_err)/m)
-        
-            j += 1
-        except IOError:
-            break
-        
-        i += 1
-    else:
-        break
-    
-   
-folders = 14
+folders = 15
 R0 = 1000
 Rq = []
 T = []
-    
+Rq_err = []
+T_err = []    
+
 for i in range(1, folders + 1):
 
-    #path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
-    path = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Adquisición LabOSat/results/Encapsulado 1/%s (rq)' % i
+    #path = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Adquisición LabOSat/results/Encapsulado 1/%s (rq)' % i
+    path = 'C:/Users/lucas/Documents/GitHub/Labo-7/Adquisición LabOSat/results/Encapsulado 1 con grasa/%s (rq)' % i
 
     Rq_temp = []
     T_temp = []
     Rq_err_temp = []
     T_err_temp = []
     #casa
-    array = tolerance(0.1, path)
+    array = tolerance(tol, path)
     end = len(array)
     
 
@@ -145,10 +106,12 @@ for i in range(1, folders + 1):
         
     Rq.append(np.mean(Rq_temp))
     T.append(np.mean(T_temp))
+    Rq_err.append(np.mean(Rq_err_temp))
+    T_err.append(np.mean(T_err_temp))
     print("success!: "+ str(i))
         
 import matplotlib.pyplot as plt
-plt.plot(T, Rq, '.')
+plt.errorbar(T, Rq, xerr=T_err, yerr=Rq_err, fmt='.k', capsize=3)
     
 #%% vbr analysis
     
@@ -180,25 +143,6 @@ def DiffData(x, y, x_err, y_err):
     
     return x, diff, x_err, diff_err
 
-def Linear(M, x):
-    """
-    Funcion lineal para ajustar con el ODR:
-        
-    >>> linear_model = Model(Linear)
-    >>> data = RealData(X, Y, sx=X_err, sy=Y_err)
-    >>> odr = ODR(data, linear_model, beta0=[0., 1.])
-    >>> out = odr.run()
-    
-    >>> m = out.beta[0]
-    >>> b = out.beta[1]
-    >>> m_err = out.sd_beta[0]
-    >>> b_err = out.sd_beta[1]        
-    >>> chi2 = out.res_var
-    .
-    .
-    """
-    m, b = M
-    return m*x + b
 
 def dispersion(x):
     """
@@ -512,6 +456,7 @@ def ClosestToOne(v):
             compliance_not_1.append(j)
     return compliance_not_1.index(np.min(compliance_not_1))
 
+
 def fit_function(M, x):
     a, b = M
     return a/(x - b)
@@ -581,10 +526,10 @@ def QuadSum(v):
         
     return np.sqrt(result/len(v))
 
-m = 3.815
+m = 3.81
 R0 = 1000
-max_limit = 0
-folders = 15
+max_limit = 25
+folders = 3
 tolerancia = 1
 #j = 5
 
@@ -604,23 +549,18 @@ Vbr_err_lista = []
 
 for i in range(1, folders + 1):
 
-    #path = '/home/lucas/Desktop/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
-    path = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Adquisición LabOSat/results/Encapsulado 1/%s (vbr)' % i
-
+    path = 'C:/Users/lucas/Documents/GitHub/Labo-7/Adquisición LabOSat/results/Encapsulado 1 con grasa/%s (vbr)' % i
     Vbr_temp = []
     T_temp = []
     Vbr_err_temp = []
     T_err_temp = []
-    #casa
+
     array = pulidor(tolerancia, path)
     end = len(array)
     
 
-    for j in array:
-    #path = 'C:/Users/LINE/Desktop/Finazzi-Ferreira/Labo-7/Mediciones/Vbr/Mediciones LED prendido/Estacionario %s' % i
-        
+    for j in array:        
         path_group = '/%s.txt' % j
-#        path_group_r = '/res/%s (res).txt' % j
         data_vbr = np.loadtxt(path + path_group, skiprows=1)
         V = data_vbr[:, 0]
         I = data_vbr[:, 1]
@@ -656,15 +596,15 @@ for i in range(1, folders + 1):
         t = (np.mean(R) - R0)/m
         t_err = np.sqrt((np.std(R)/m)**2 * 1/len(R) + 1/m**2)
         
-        for l in range(0, 5):
-            for h in range(l + 1, len(V[index:]) - max_limit):
+        for l in range(1, 2):
+            for h in range(l + 1, len(V[index:]) + max_limit):
                 V_fit = V[index + l:index + h]
                 I_fit = I[index + l:index + h]
                 I_err_fit = I_err[index + l:index + h]
                 V_err_fit = V_err[index + l:index + h]
                 model = Model(fit_function)
                 data = RealData(V_fit, I_fit, sx=V_err_fit, sy=I_err_fit)
-                odr = ODR(data, model, beta0=[2., 24.], maxit=1000000)
+                odr = ODR(data, model, beta0=[2, 27.], maxit=1000000)
                 out = odr.run()
                 
                 #chi_2.append(dispersion(V_fit, I_fit, I_err_fit, out.beta))
@@ -672,7 +612,6 @@ for i in range(1, folders + 1):
                     beta.append(out.beta)
                     sd_beta.append(out.sd_beta)
                 #print(h)
-
 
       
         index_chi, vbr, vbr_err = fit_calc(beta, sd_beta, 2)
@@ -1018,7 +957,9 @@ I_dark_err = []
 R_dark_err = []
 for k in range(1, folders + 1):
     
-    path_dark = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Adquisición LabOSat/results/Encapsulado 1/%s (idark)' % k
+    #path_dark = '/home/labosat/Desktop/Finazzi-Ferreira/Labo-7/Adquisición LabOSat/results/Encapsulado 1/%s (idark)' % k
+    path_dark = 'C:/Users/lucas/Documents/GitHub/Labo-7/Adquisición LabOSat/results/Encapsulado 1 con grasa/%s (idark)' % k
+
     array = pulidor_dark(1, path_dark)
     end = len(array)
     I_dark_temp = []

@@ -632,16 +632,6 @@ def Linear(M, x):
     
     
 def ClosestToOne(v):
-    """
-    Esta funcion toma una lista, y devuelve el indice del elemento mas cercano a 1 de 
-    la lista.
-    
-    Input: list
-    
-    Returns: int  (index)
-    .
-    .
-    """
     compliance = []
     for j in range(0, len(v)):
         compliance.append(abs(v[j] - 1))
