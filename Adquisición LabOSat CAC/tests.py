@@ -1,4 +1,4 @@
-from functions import cast, readBuffer, P, ThermostatInitial, Thermostat
+from functions import cast, readBuffer, P
 import time
 
 def IVComplete(smu_2612b, config):
@@ -29,7 +29,7 @@ def IVComplete(smu_2612b, config):
     curves] = config
      
      
-    i_led_level = 210*P('u')
+    i_led_level = 500*P('n')
     
     NPLC = round(points*200*P('u')*50, 2)
     
@@ -120,6 +120,7 @@ def IVComplete(smu_2612b, config):
             
             smu_2612b.write('smua.source.levelv = ' + str(v_sipm_values[j]))
             smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+            time.sleep(delay)
             
             if j != len(v_sipm_values) - 1:
                 if (v_sipm_values[j + 1] - v_sipm_values[j]) > 10:
@@ -138,6 +139,7 @@ def IVComplete(smu_2612b, config):
                 
                 smu_2612b.write('smua.source.levelv = ' + str(v_sipm_values[n - j - 1]))
                 smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+                time.sleep(delay)
                 
                 if j != len(v_sipm_values) - 1:
                     if (v_sipm_values[j + 1] - v_sipm_values[j]) > 10:
@@ -147,13 +149,17 @@ def IVComplete(smu_2612b, config):
             smu_2612b.write('waitcomplete()')
             smu_2612b.write('smub.source.leveli = ' + str(0)) 
             
+    time.sleep(5)
+            
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
     smu_2612b.write('smub.source.output = smub.OUTPUT_OFF')
     
     print("End of measurement")
     
-    readingsV_sipm = cast(readBuffer(smu_2612b, 'a')[1])
-    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[0]) 
+    readingsV_sipm = cast(readBuffer(smu_2612b, 'a')[0])
+    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[1]) 
+    
+    
 
     return [readingsV_sipm, readingsI_sipm]
         
@@ -178,8 +184,8 @@ def DarkCurrent(smu_2612b, config):
     v_cc_led,
     i_rang_led,
     v_rang_led,
-    iStart,
-    iEnd,
+    _,
+    _,
     return_sweep,
     N,
     points,
@@ -249,8 +255,9 @@ def DarkCurrent(smu_2612b, config):
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
     
     print("End of measurement")
+    time.sleep(5)
     
-    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[0]) 
+    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[1]) 
 
     return readingsI_sipm
 
@@ -274,13 +281,16 @@ def LEDTest(smu_2612b, config):
     v_cc_led,
     i_rang_led,
     v_rang_led,
-    iStart,
-    iEnd,
+    _,
+    _,
     return_sweep,
     N,
     points,
     delay,
     curves] = config
+     
+    iStart = 0
+    iEnd = 800*P('n')
     
     NPLC = round(points*200*P('u')*50, 2)
     
@@ -329,7 +339,7 @@ def LEDTest(smu_2612b, config):
     smu_2612b.write('smua.source.levelv = 30')
     
     # -------------------------------------------------------------------------   
-    # smua configuration (SiPM)
+    # smub configuration (LED)
     
     smu_2612b.write('smub.source.func = smub.OUTPUT_DCAMPS')
     smu_2612b.write('display.smub.measure.func = display.MEASURE_DCVOLTS')
@@ -357,14 +367,12 @@ def LEDTest(smu_2612b, config):
     
     # allowed voltage values in sweep
     b = np.arange(0, N, 1)
-    i_led_values1 = [iStart - (iStart)/N*i for i in b]
-    i_led_values2 = [20 + (iEnd - 20)/N*i for i in b]
+    i_led_values = [iStart + (iEnd - iStart)/N*i for i in b]
     
-    #can code i_led_values with log scale
-   
-    i_led_values = np.concatenate((i_led_values1, i_led_values2))
+    #can code i_led_values with log scale too
 
     smu_2612b.write('smua.source.output = smua.OUTPUT_ON')
+    smu_2612b.write('smub.source.output = smub.OUTPUT_ON')
     
     print("Start of measurement")
     
@@ -375,9 +383,10 @@ def LEDTest(smu_2612b, config):
             
             smu_2612b.write('smub.source.leveli = ' + str(i_led_values[j]))
             smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+            smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
+            time.sleep(delay)
                     
-        smu_2612b.write('waitcomplete()')
-        smu_2612b.write('smub.source.leveli = ' + str(0)) 
+        smu_2612b.write('waitcomplete()') 
         
         if return_sweep == 1:
             
@@ -386,6 +395,8 @@ def LEDTest(smu_2612b, config):
                 
                 smu_2612b.write('smub.source.leveli = ' + str(i_led_values[n - j - 1]))
                 smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+                smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
+                time.sleep(delay)
     
             smu_2612b.write('waitcomplete()')
             
@@ -393,9 +404,10 @@ def LEDTest(smu_2612b, config):
     smu_2612b.write('smub.source.output = smub.OUTPUT_OFF')
     
     print("End of measurement")
+    time.sleep(3)
     
-    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[0])
-    readingsI_led = cast(readBuffer(smu_2612b, 'b')[1]) 
-    readingsV_led = cast(readBuffer(smu_2612b, 'b')[0]) 
+    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[1])
+    readingsI_led = cast(readBuffer(smu_2612b, 'b')[0]) 
+    readingsV_led = cast(readBuffer(smu_2612b, 'b')[1]) 
 
     return [readingsI_sipm, readingsI_led, readingsV_led]

@@ -18,16 +18,17 @@ def clear_all():
 def gpib(address1):
 
     rm = visa.ResourceManager()
-    equipment_id1 = 'GPIB0::' + str(address1) + '::INSTR'
+    #equipment_id1 = 'GPIB0::' + str(address1) + '::INSTR'
+    equipment_id1 = 'USB0::1510::9730::4040290::INSTR'
     
     smu_2612b = rm.open_resource(equipment_id1)
 
-    print("Installed equipment:")
+    #print("Installed equipment:")
     
     smu_2612b.write('smua.reset()')
     smu_2612b.write('smub.reset()')
     
-    print(smu_2612b.query("*IDN?"))
+    #print(smu_2612b.query("*IDN?"))
        
     smu_2612b.write('reset()')
     
@@ -273,6 +274,7 @@ def readBuffer(smu, char):
         source     = smu.query('printbuffer(1, smub.nvbuffer1.n, smub.nvbuffer1.sourcevalues)')
     
     return measure, source  
+
 
 def cast(string):
    out = []

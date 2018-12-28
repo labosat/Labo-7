@@ -5,13 +5,14 @@ import time
 
 def run(n, test, group_path, plotFlag, saveFlag):
 
+    clear_all()
     # Loading setups configurations
     config = setup()
     
     #rm-list_resources() to find address for smu
     address_2612b = 26
     
-    clear_all()
+
     
     #running tests (smua measures iv and smub measures r)
     
@@ -19,12 +20,8 @@ def run(n, test, group_path, plotFlag, saveFlag):
     
     
     [readingsV_sipm, readingsI_sipm] = IVComplete(smu_2612b, config)
-    
-   
-    smu_2612b.write('reset()')
         
-    smu_2612b.write('smua.nvbuffer1.clear()')
-    smu_2612b.write('smub.nvbuffer1.clear()') 
+    smu_2612b.write('smua.nvbuffer1.clear()')  
         
     readingsV_sipm_neg, readingsV_sipm_pos, readingsI_sipm_neg, readingsI_sipm_pos = split(readingsV_sipm, readingsI_sipm)
     
@@ -44,29 +41,28 @@ def run(n, test, group_path, plotFlag, saveFlag):
         
         save_iv(readingsV_sipm_pos, readingsI_sipm_pos, graphIV_pos, n, group_path_neg)
      
-    time.sleep(45)
-    readingsI_sipm = DarkCurrent(smu_2612b, config)
+    time.sleep(0)
+    readingsI_sipm_dark = DarkCurrent(smu_2612b, config)
 
     smu_2612b.write('reset()')
         
     smu_2612b.write('smua.nvbuffer1.clear()')
-    smu_2612b.write('smub.nvbuffer1.clear()') 
     
     number = []
-    for g in range(len(readingsI_sipm)):
+    for g in range(len(readingsI_sipm_dark)):
         number.append(g)
     
     if plotFlag == 1:
-        graphIV = plot(number, readingsI_sipm, 'N', 'Isipm', 3, log=False, errorbars_2612=True)
+        graphIV = plot(number, readingsI_sipm_dark, 'N', 'Isipm', 3, log=False, errorbars_2612=True)
     else:
         graphIV = 'NULL'  
         
     if saveFlag == 1:
         group_path_dark = group_path + " (idark)"
-        save_dark(readingsI_sipm, graphIV, n, group_path_dark)
+        save_dark(readingsI_sipm_dark, graphIV, n, group_path_dark)
         
     
-    [readingsI_sipm, readingsI_led, readingsV_led] = LEDTest(smu_2612b, config)
+    [readingsI_sipm_led, readingsI_led, readingsV_led] = LEDTest(smu_2612b, config)
     
     smu_2612b.write('reset()')
         
@@ -74,13 +70,13 @@ def run(n, test, group_path, plotFlag, saveFlag):
     smu_2612b.write('smub.nvbuffer1.clear()') 
     
     if plotFlag == 1:
-        graphIV_led = plot(readingsI_led, readingsI_sipm, 'Iled', 'Isipm', 4, log=True, errorbars_2612=True, xflag='I')
+        graphIV_led = plot(readingsI_led, readingsI_sipm_led, 'Iled', 'Isipm', 4, log=True, errorbars_2612=True, xflag='I')
     else:
         graphIV_led = 'NULL'  
         
     if saveFlag == 1:
         group_path_dark = group_path + " (LED)"
-        save_led(readingsI_sipm, readingsI_led, readingsV_led, graphIV_led, n, group_path_dark)
+        save_led(readingsI_sipm_led, readingsI_led, readingsV_led, graphIV_led, n, group_path_dark)
 
     rm.close
     
