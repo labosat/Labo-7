@@ -262,11 +262,11 @@ def P(prefix):
 Configuration functions for 2612B
 ----------------------------------------------------------------------------"""
 
-def readBuffer(smu, char, num_buffer=1, source_values=True):
+def readBuffer(smu, char, name_buffer='nvbuffer1', source_values=True):
     try:
-        measure    = smu.query('printbuffer(1, smu%s.nvbuffer%s.n, smu%s.nvbuffer%s.readings)' % (char, num_buffer, char, num_buffer))
+        measure    = smu.query('printbuffer(1, smu%s.%s.n, smu%s.%s.readings)' % (char, name_buffer, char, name_buffer))
         if source_values:
-            source = smu.query('printbuffer(1, smu%s.nvbuffer%s.n, smu%s.nvbuffer%s.sourcevalues)' % (char, num_buffer, char, num_buffer))
+            source = smu.query('printbuffer(1, smu%s.%s.n, smu%s.%s.sourcevalues)' % (char, name_buffer, char, name_buffer))
             return measure, source 
         return measure
     except ValueError:

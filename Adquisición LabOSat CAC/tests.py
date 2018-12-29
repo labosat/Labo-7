@@ -37,18 +37,31 @@ def IVComplete(smu_2612b, config):
     smu_2612b.write('smua.reset()')
     smu_2612b.write('smub.reset()')
     
+    
     smu_2612b.write('format.data = format.ASCII')
+    
+    smu_2612b.write('iv_buffer = smua.makebuffer(%s)' % 2*N)
+    
 
     # Buffer operations -------------------------------------------------------
     
-    smu_2612b.write('smua.nvbuffer1.clear()')
-    smu_2612b.write('smub.nvbuffer1.clear()')
+#    smu_2612b.write('smua.nvbuffer1.clear()')
+#    smu_2612b.write('smub.nvbuffer1.clear()')
+#    
+#    smu_2612b.write('smua.nvbuffer1.appendmode = 1')
+#    
+#    smu_2612b.write('smua.nvbuffer1.fillcount = ' + str(2*N))  
+#    
+#    smu_2612b.write('smua.nvbuffer1.collectsourcevalues = 1')
+#
+#    smu_2612b.write('smua.measure.count = 1')
+#    
+#    smu_2612b.write('smua.nvbuffer1.clear()')
+#    smu_2612b.write('smub.nvbuffer1.clear()')
     
-    smu_2612b.write('smua.nvbuffer1.appendmode = 1')
+    smu_2612b.write('smua.iv_buffer.appendmode = 1')
     
-    smu_2612b.write('smua.nvbuffer1.fillcount = ' + str(2*N))  
-    
-    smu_2612b.write('smua.nvbuffer1.collectsourcevalues = 1')
+    smu_2612b.write('smua.iv_buffer.collectsourcevalues = 1')
 
     smu_2612b.write('smua.measure.count = 1')
     
@@ -120,7 +133,8 @@ def IVComplete(smu_2612b, config):
         for j in range(len(v_sipm_values)):
             
             smu_2612b.write('smua.source.levelv = ' + str(v_sipm_values[j]))
-            smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+            #smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+            smu_2612b.write('smua.measure.i(smua.iv_buffer)')
             time.sleep(delay)
             
             if j != len(v_sipm_values) - 1:
@@ -138,7 +152,8 @@ def IVComplete(smu_2612b, config):
             for j in range(len(v_sipm_values)):
                 
                 smu_2612b.write('smua.source.levelv = ' + str(v_sipm_values[n - j - 1]))
-                smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+                #smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+                smu_2612b.write('smua.measure.i(smua.iv_buffer)')
                 time.sleep(delay)
                 
                 if j != len(v_sipm_values) - 1:
@@ -156,10 +171,12 @@ def IVComplete(smu_2612b, config):
     
     print("End of measurement")
     
-    readingsV_sipm = cast(readBuffer(smu_2612b, 'a')[1])
-    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[0]) 
+#    readingsV_sipm = cast(readBuffer(smu_2612b, 'a')[1])
+#    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[0]) 
+    readingsV_sipm = cast(readBuffer(smu_2612b, 'a', 'iv_buffer')[1])
+    readingsI_sipm = cast(readBuffer(smu_2612b, 'a', 'iv_buffer')[0]) 
     
-    
+    smu_2612b.write('iv_buffer = nil')
 
     return [readingsV_sipm, readingsI_sipm]
         
@@ -200,19 +217,29 @@ def DarkCurrent(smu_2612b, config):
     
     smu_2612b.write('format.data = format.ASCII')
     
+    smu_2612b.write('dark_buffer = smua.makebuffer(10)')
+    
     # Buffer operations -------------------------------------------------------
     
-    smu_2612b.write('smua.nvbuffer1.clear()')
-    smu_2612b.write('smub.nvbuffer1.clear()')
+#    smu_2612b.write('smua.nvbuffer1.clear()')
+#    smu_2612b.write('smub.nvbuffer1.clear()')
+#    
+#    smu_2612b.write('smua.nvbuffer1.appendmode = 1')
+#    
+#    smu_2612b.write('smua.nvbuffer1.fillcount = 10')
+#    
+#    smu_2612b.write('smua.nvbuffer1.collectsourcevalues = 1')
+#
+#    smu_2612b.write('smua.measure.count = 10')
+#    
+#    smu_2612b.write('smua.nvbuffer1.clear()')
+#    smu_2612b.write('smub.nvbuffer1.clear()')
     
-    smu_2612b.write('smua.nvbuffer1.appendmode = 1')
+    smu_2612b.write('dark_buffer.appendmode = 1')
     
-    smu_2612b.write('smua.nvbuffer1.fillcount = 10')
-    
-    smu_2612b.write('smua.nvbuffer1.collectsourcevalues = 1')
+    smu_2612b.write('dark_buffer.collectsourcevalues = 1')
 
-    smu_2612b.write('smua.measure.count = 1')
-    
+    smu_2612b.write('smua.measure.count = 10')
 
     # -------------------------------------------------------------------------   
     # smua configuration (SiPM)
@@ -247,9 +274,9 @@ def DarkCurrent(smu_2612b, config):
     
     print("Start of measurement")
     
-    for j in range(10):
-        smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
-
+    smu_2612b.write('smua.measure.i(dark_buffer)')
+    #smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+    
     smu_2612b.write('waitcomplete()')
         
     smu_2612b.write('smua.source.output = smua.OUTPUT_OFF')
@@ -257,7 +284,10 @@ def DarkCurrent(smu_2612b, config):
     print("End of measurement")
     time.sleep(5)
     
-    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[0]) 
+    #readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[0])
+    readingsI_sipm = cast(readBuffer(smu_2612b, 'a', 'dark_buffer')[0]) 
+    
+    smu_2612b.write('dark_buffer = nil')
 
     return readingsI_sipm
 
@@ -300,19 +330,35 @@ def LEDTest(smu_2612b, config):
     
     smu_2612b.write('format.data = format.ASCII')
     
+    smu_2612b.write('led_buffer1 = smua.makebuffer(%s)' % N)
+    smu_2612b.write('led_buffer2 = smub.makebuffer(%s)' % N)
+    
     # Buffer operations -------------------------------------------------------
     
-    smu_2612b.write('smua.nvbuffer1.clear()')
-    smu_2612b.write('smub.nvbuffer1.clear()')
+#    smu_2612b.write('smua.nvbuffer1.clear()')
+#    smu_2612b.write('smub.nvbuffer1.clear()')
+#    
+#    smu_2612b.write('smua.nvbuffer1.appendmode = 1')
+#    smu_2612b.write('smub.nvbuffer1.appendmode = 1')
+#    
+#    smu_2612b.write('smua.nvbuffer1.collectsourcevalues = 1')
+#    smu_2612b.write('smub.nvbuffer1.collectsourcevalues = 1')
+#    
+#    smu_2612b.write('smua.nvbuffer1.fillcount = ' + str(N))
+#    smu_2612b.write('smub.nvbuffer1.fillcount = ' + str(N))
+#
+#    smu_2612b.write('smua.measure.count = 1')
+#    smu_2612b.write('smub.measure.count = 1')
+#    
+#        
+#    smu_2612b.write('smua.nvbuffer1.clear()')
+#    smu_2612b.write('smub.nvbuffer1.clear()')
     
-    smu_2612b.write('smua.nvbuffer1.appendmode = 1')
-    smu_2612b.write('smub.nvbuffer1.appendmode = 1')
+    smu_2612b.write('led_buffer1.appendmode = 1')
+    smu_2612b.write('led_buffer2.appendmode = 1')
     
-    smu_2612b.write('smua.nvbuffer1.collectsourcevalues = 1')
-    smu_2612b.write('smub.nvbuffer1.collectsourcevalues = 1')
-    
-    smu_2612b.write('smua.nvbuffer1.fillcount = ' + str(N))
-    smu_2612b.write('smub.nvbuffer1.fillcount = ' + str(N))
+    smu_2612b.write('led_buffer1.collectsourcevalues = 1')
+    smu_2612b.write('led_buffer2.collectsourcevalues = 1')
 
     smu_2612b.write('smua.measure.count = 1')
     smu_2612b.write('smub.measure.count = 1')
@@ -386,8 +432,11 @@ def LEDTest(smu_2612b, config):
         for j in range(len(i_led_values)):
             
             smu_2612b.write('smub.source.leveli = ' + str(i_led_values[j]))
-            smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
-            smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
+            
+            smu_2612b.write('smua.measure.i(led_buffer1)')
+            smu_2612b.write('smub.measure.v(led_buffer2)')
+#            smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+#            smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
             time.sleep(delay)
                     
         smu_2612b.write('waitcomplete()') 
@@ -398,8 +447,11 @@ def LEDTest(smu_2612b, config):
             for j in range(len(i_led_values)):
                 
                 smu_2612b.write('smub.source.leveli = ' + str(i_led_values[n - j - 1]))
-                smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
-                smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
+
+                smu_2612b.write('smua.measure.i(led_buffer1)')
+                smu_2612b.write('smub.measure.v(led_buffer2)')
+#                smu_2612b.write('smua.measure.i(smua.nvbuffer1)')
+#                smu_2612b.write('smub.measure.v(smub.nvbuffer1)')
                 time.sleep(delay)
     
             smu_2612b.write('waitcomplete()')
@@ -410,8 +462,11 @@ def LEDTest(smu_2612b, config):
     print("End of measurement")
     time.sleep(3)
     
-    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[0])
-    readingsI_led = cast(readBuffer(smu_2612b, 'b')[1]) 
-    readingsV_led = cast(readBuffer(smu_2612b, 'b')[0]) 
+    readingsI_sipm = cast(readBuffer(smu_2612b, 'a', 'led_buffer1')[0])
+    readingsI_led = cast(readBuffer(smu_2612b, 'b', 'led_buffer2')[1]) 
+    readingsV_led = cast(readBuffer(smu_2612b, 'b', 'led_buffer2')[0]) 
+    
+    smu_2612b.write('led_buffer1 = nil')
+    smu_2612b.write('led_buffer2 = nil')    
 
     return [readingsI_sipm, readingsI_led, readingsV_led]
