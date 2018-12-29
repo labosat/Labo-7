@@ -23,15 +23,13 @@ def gpib(address1):
     
     smu_2612b = rm.open_resource(equipment_id1)
 
-    #print("Installed equipment:")
+    print("Installed equipment:")
+    print(smu_2612b.query("*IDN?"))
     
+    smu_2612b.write('reset()')    
     smu_2612b.write('smua.reset()')
     smu_2612b.write('smub.reset()')
-    
-    #print(smu_2612b.query("*IDN?"))
-       
-    smu_2612b.write('reset()')
-    
+   
     return smu_2612b, rm
 
 
@@ -264,16 +262,15 @@ def P(prefix):
 Configuration functions for 2612B
 ----------------------------------------------------------------------------"""
 
-def readBuffer(smu, char):
-    
-    if (char == 'a'):
-        measure    = smu.query('printbuffer(1, smua.nvbuffer1.n, smua.nvbuffer1.readings)')
-        source     = smu.query('printbuffer(1, smua.nvbuffer1.n, smua.nvbuffer1.sourcevalues)')
-    if (char == 'b'):
-        measure    = smu.query('printbuffer(1, smub.nvbuffer1.n, smub.nvbuffer1.readings)')
-        source     = smu.query('printbuffer(1, smub.nvbuffer1.n, smub.nvbuffer1.sourcevalues)')
-    
-    return measure, source  
+def readBuffer(smu, char, num_buffer=1, source_values=True):
+    try:
+        measure    = smu.query('printbuffer(1, smu%s.nvbuffer%s.n, smu%s.nvbuffer%s.readings)' % (char, num_buffer, char, num_buffer))
+        if source_values:
+            source = smu.query('printbuffer(1, smu%s.nvbuffer%s.n, smu%s.nvbuffer%s.sourcevalues)' % (char, num_buffer, char, num_buffer))
+            return measure, source 
+        return measure
+    except ValueError:
+        print("Could not read buffer") 
 
 
 def cast(string):

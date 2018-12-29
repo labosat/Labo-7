@@ -33,24 +33,24 @@ def IVComplete(smu_2612b, config):
     
     NPLC = round(points*200*P('u')*50, 2)
     
+    smu_2612b.write('reset()')
     smu_2612b.write('smua.reset()')
     smu_2612b.write('smub.reset()')
     
     smu_2612b.write('format.data = format.ASCII')
-    
+
     # Buffer operations -------------------------------------------------------
     
     smu_2612b.write('smua.nvbuffer1.clear()')
     smu_2612b.write('smub.nvbuffer1.clear()')
     
     smu_2612b.write('smua.nvbuffer1.appendmode = 1')
-    smu_2612b.write('smub.nvbuffer1.appendmode = 1')
+    
+    smu_2612b.write('smua.nvbuffer1.fillcount = ' + str(2*N))  
     
     smu_2612b.write('smua.nvbuffer1.collectsourcevalues = 1')
-    smu_2612b.write('smub.nvbuffer1.collectsourcevalues = 1')
 
     smu_2612b.write('smua.measure.count = 1')
-    smu_2612b.write('smub.measure.count = 1')
     
 
     # -------------------------------------------------------------------------   
@@ -110,6 +110,7 @@ def IVComplete(smu_2612b, config):
     v_sipm_values = np.concatenate((v_sipm_values1, v_sipm_values2))
 
     smu_2612b.write('smua.source.output = smua.OUTPUT_ON')
+    smu_2612b.write('smub.source.output = smub.OUTPUT_ON') 
     
     print("Start of measurement")
     
@@ -124,7 +125,6 @@ def IVComplete(smu_2612b, config):
             
             if j != len(v_sipm_values) - 1:
                 if (v_sipm_values[j + 1] - v_sipm_values[j]) > 10:
-                        smu_2612b.write('smub.source.output = smub.OUTPUT_ON') 
                         smu_2612b.write('smub.source.leveli = ' + str(i_led_level)) 
                 
     
@@ -156,8 +156,8 @@ def IVComplete(smu_2612b, config):
     
     print("End of measurement")
     
-    readingsV_sipm = cast(readBuffer(smu_2612b, 'a')[0])
-    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[1]) 
+    readingsV_sipm = cast(readBuffer(smu_2612b, 'a')[1])
+    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[0]) 
     
     
 
@@ -194,6 +194,7 @@ def DarkCurrent(smu_2612b, config):
      
     NPLC = 25
     
+    smu_2612b.write('reset()')
     smu_2612b.write('smua.reset()')
     smu_2612b.write('smub.reset()')
     
@@ -205,13 +206,12 @@ def DarkCurrent(smu_2612b, config):
     smu_2612b.write('smub.nvbuffer1.clear()')
     
     smu_2612b.write('smua.nvbuffer1.appendmode = 1')
-    smu_2612b.write('smub.nvbuffer1.appendmode = 1')
+    
+    smu_2612b.write('smua.nvbuffer1.fillcount = 10')
     
     smu_2612b.write('smua.nvbuffer1.collectsourcevalues = 1')
-    smu_2612b.write('smub.nvbuffer1.collectsourcevalues = 1')
 
     smu_2612b.write('smua.measure.count = 1')
-    smu_2612b.write('smub.measure.count = 1')
     
 
     # -------------------------------------------------------------------------   
@@ -257,7 +257,7 @@ def DarkCurrent(smu_2612b, config):
     print("End of measurement")
     time.sleep(5)
     
-    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[1]) 
+    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[0]) 
 
     return readingsI_sipm
 
@@ -294,6 +294,7 @@ def LEDTest(smu_2612b, config):
     
     NPLC = round(points*200*P('u')*50, 2)
     
+    smu_2612b.write('reset()')
     smu_2612b.write('smua.reset()')
     smu_2612b.write('smub.reset()')
     
@@ -309,6 +310,9 @@ def LEDTest(smu_2612b, config):
     
     smu_2612b.write('smua.nvbuffer1.collectsourcevalues = 1')
     smu_2612b.write('smub.nvbuffer1.collectsourcevalues = 1')
+    
+    smu_2612b.write('smua.nvbuffer1.fillcount = ' + str(N))
+    smu_2612b.write('smub.nvbuffer1.fillcount = ' + str(N))
 
     smu_2612b.write('smua.measure.count = 1')
     smu_2612b.write('smub.measure.count = 1')
@@ -406,8 +410,8 @@ def LEDTest(smu_2612b, config):
     print("End of measurement")
     time.sleep(3)
     
-    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[1])
-    readingsI_led = cast(readBuffer(smu_2612b, 'b')[0]) 
-    readingsV_led = cast(readBuffer(smu_2612b, 'b')[1]) 
+    readingsI_sipm = cast(readBuffer(smu_2612b, 'a')[0])
+    readingsI_led = cast(readBuffer(smu_2612b, 'b')[1]) 
+    readingsV_led = cast(readBuffer(smu_2612b, 'b')[0]) 
 
     return [readingsI_sipm, readingsI_led, readingsV_led]

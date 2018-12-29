@@ -12,16 +12,12 @@ def run(n, test, group_path, plotFlag, saveFlag):
     #rm-list_resources() to find address for smu
     address_2612b = 26
     
-
-    
     #running tests (smua measures iv and smub measures r)
     
     [smu_2612b, rm]  = gpib(address_2612b)
     
     
     [readingsV_sipm, readingsI_sipm] = IVComplete(smu_2612b, config)
-        
-    smu_2612b.write('smua.nvbuffer1.clear()')  
         
     readingsV_sipm_neg, readingsV_sipm_pos, readingsI_sipm_neg, readingsI_sipm_pos = split(readingsV_sipm, readingsI_sipm)
     
@@ -43,10 +39,6 @@ def run(n, test, group_path, plotFlag, saveFlag):
      
     time.sleep(0)
     readingsI_sipm_dark = DarkCurrent(smu_2612b, config)
-
-    smu_2612b.write('reset()')
-        
-    smu_2612b.write('smua.nvbuffer1.clear()')
     
     number = []
     for g in range(len(readingsI_sipm_dark)):
@@ -63,11 +55,6 @@ def run(n, test, group_path, plotFlag, saveFlag):
         
     
     [readingsI_sipm_led, readingsI_led, readingsV_led] = LEDTest(smu_2612b, config)
-    
-    smu_2612b.write('reset()')
-        
-    smu_2612b.write('smua.nvbuffer1.clear()')
-    smu_2612b.write('smub.nvbuffer1.clear()') 
     
     if plotFlag == 1:
         graphIV_led = plot(readingsI_led, readingsI_sipm_led, 'Iled', 'Isipm', 4, log=True, errorbars_2612=True, xflag='I')

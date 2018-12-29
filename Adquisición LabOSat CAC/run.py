@@ -4,7 +4,7 @@ import time
 
 N          = 1
 group_path = 'test'
-test       = ['iv']
+test       = ['LabOSat']
 plotFlag   = 1
 saveFlag   = 1
 
